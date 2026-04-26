@@ -1,0 +1,61 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "wsl-gcc15-cxx26",
+      "displayName": "WSL GCC 15.2+ C++26",
+      "description": "Canonical LamiaFabrica bleeding-edge C++26 build using GCC 15.2.0 or newer under WSL.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-lamia-runtime",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++-15",
+        "LAMIA_REQUIRE_GCC_TOOLCHAIN": "ON",
+        "LAMIA_MINIMUM_GNU_VERSION": "15.2.0",
+        "LAMIA_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "wsl-gcc15-cxx26-strict",
+      "displayName": "WSL GCC 15.2+ C++26 Strict",
+      "description": "Canonical C++26 build with warnings promoted to errors for release-readiness checks.",
+      "inherits": "wsl-gcc15-cxx26",
+      "binaryDir": "${sourceDir}/build-lamia-runtime-strict",
+      "cacheVariables": {
+        "LAMIA_TREAT_WARNINGS_AS_ERRORS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "wsl-gcc15-cxx26",
+      "configurePreset": "wsl-gcc15-cxx26",
+      "jobs": 2
+    },
+    {
+      "name": "wsl-gcc15-cxx26-strict",
+      "configurePreset": "wsl-gcc15-cxx26-strict",
+      "jobs": 2
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "wsl-gcc15-cxx26",
+      "configurePreset": "wsl-gcc15-cxx26",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "wsl-gcc15-cxx26-strict",
+      "configurePreset": "wsl-gcc15-cxx26-strict",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

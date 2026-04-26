@@ -1,0 +1,75 @@
+# Build directories
+build/
+build-*/
+out/
+dist/
+cmake-build-*/
+.cache/
+
+# Compiled objects and libraries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.pdb
+*.ilk
+
+# Generated release and runtime payloads
+Lamia-Releases/
+lamia_real_output/
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.xcf
+*.log
+*.backup
+*.bak
+desktop.ini
+mod_lamia/web/Medusa_Art/
+mod_lamia/web/assets/Patreon-*.png
+
+# Local editor and agent state
+.cursor/
+.vscode/mcp_settings.json
+*.code-workspace
+
+# Private/generated licensing and deployment state
+master_license*.json
+license_server_config.json
+*_psiforcedb.sql
+database_schema.sql
+generate_master_license*.cpp
+psiforce_*
+build_licensing_system.*
+README_LICENSING_SYSTEM.md
+LICENSING_*.md
+LFSSL-main/
+
+# Quarantined project-specific snapshots that require boundary review
+*_stub.*
+fake_database.h
+websocketpp_stub.hpp
+*credentials*template*
+medusa_absolute_penultimate_*.hpp
+medusa_*credentials*.hpp
+medusa_portal_authentication_system.hpp
+medusa_rts_backup_system.hpp
+medusa_triforce_*.hpp
+medusa_triforce_true.hpp
+medusa_ultimate_purple_pages.hpp
+Lamia-Libs/include/MedusaTriforceDatabase.hpp
+Lamia-Libs/include/MedusaUnifiedServer.hpp
+mod_lamia/medusaserv_auth_fixed.cpp
+
+# Python/runtime caches used by local tooling
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/

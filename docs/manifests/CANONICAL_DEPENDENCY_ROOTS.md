@@ -14,6 +14,7 @@ the matching LamiaFabrica repository is initialized and validated.
 | --- | --- | --- |
 | `LAMIA_PUBLIC_ROOT` | `C:\McMaker Projects\Projects\Lamia` | Public Lamia language, runtime, compiler, SDK, adapters, examples, docs, and tests. |
 | `LAMIA_PRIVATE_ROOT` | `C:\McMaker Projects\Projects\Lamia-Private` | Private Lamia product bridges, closed-source integration code, private manifests, and internal orchestration. |
+| `PFQL_ROOT` | `C:\McMaker Projects\Projects\PFQL` | Public PsiForce Query Language grammar, parser, CLI, SDK, docs, and tooling root. |
 | `SUPER_COLLIDER_ROOT` | `C:\McMaker Projects\Projects\Super-Collider` | LamiaFabrica-maintained SuperCollider fork and future C++26 uplift lane. |
 | `PSIFORCEDB_PRIVATE_ROOT` | `C:\McMaker Projects\Projects\PsiForceDB_1-0-0` | Closed-source PsiForceDB engine, server, PFQL, and private database mechanics. |
 | `MEDUSASERV_PUBLIC_ROOT` | `C:\McMaker Projects\Projects\MedusaServ Professional Web Server` | Open-source MedusaServ server/runtime surface and public web execution layer. |
@@ -38,6 +39,7 @@ the matching LamiaFabrica repository is initialized and validated.
 ## Resolution Rules
 
 - Consumers must include Lamia headers from `LAMIA_PUBLIC_ROOT` or an installed Lamia SDK produced from that root.
+- PFQL language consumers must use `PFQL_ROOT` instead of project-local command/parser copies.
 - New remotes should be initialized under LamiaFabrica unless a project is deliberately kept under a different owner for a documented reason.
 - Private PsiForceDB integration must stay behind `LAMIA_PRIVATE_ROOT` or `PSIFORCEDB_PRIVATE_ROOT` boundaries.
 - SuperCollider work must use the LamiaFabrica fork at `SUPER_COLLIDER_ROOT`; upstream remains attribution and merge-source only.

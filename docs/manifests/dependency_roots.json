@@ -18,6 +18,13 @@
       "role": "Private Lamia product bridges, closed-source integration code, private manifests, and internal orchestration."
     },
     {
+      "key": "PFQL_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\PFQL",
+      "visibility": "public",
+      "remote": "git@github.com:LamiaFabrica/PFQL.git",
+      "role": "Public PsiForce Query Language grammar, parser, CLI, SDK, docs, and tooling root."
+    },
+    {
       "key": "SUPER_COLLIDER_ROOT",
       "path": "C:\\McMaker Projects\\Projects\\Super-Collider",
       "visibility": "public-fork",
@@ -105,6 +112,11 @@
       "pattern": "include_external/liblamia_*",
       "replacement_root": "LAMIA_PUBLIC_ROOT",
       "rule": "Use public Lamia SDK headers from the canonical root."
+    },
+    {
+      "pattern": "project-local PFQL command/parser copies",
+      "replacement_root": "PFQL_ROOT",
+      "rule": "Use the canonical PFQL grammar, parser, CLI, SDK, and docs root."
     },
     {
       "pattern": "deps/supercollider",

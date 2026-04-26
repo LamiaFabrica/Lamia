@@ -1,0 +1,115 @@
+{
+  "schema": "lamiafabrica.dependency_roots.v1",
+  "generated_on": "2026-04-26",
+  "workspace_root": "C:\\McMaker Projects\\Projects",
+  "active_roots": [
+    {
+      "key": "LAMIA_PUBLIC_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\Lamia",
+      "visibility": "public",
+      "remote": "git@github.com:LamiaFabrica/Lamia.git",
+      "role": "Public Lamia language, runtime, compiler, SDK, adapters, examples, docs, and tests."
+    },
+    {
+      "key": "LAMIA_PRIVATE_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\Lamia-Private",
+      "visibility": "private",
+      "remote": "git@github.com:LamiaFabrica/Lamia-Private.git",
+      "role": "Private Lamia product bridges, closed-source integration code, private manifests, and internal orchestration."
+    },
+    {
+      "key": "SUPER_COLLIDER_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\Super-Collider",
+      "visibility": "public-fork",
+      "remote": "https://github.com/LamiaFabrica/Super-Collider.git",
+      "upstream": "https://github.com/supercollider/supercollider.git",
+      "role": "LamiaFabrica-maintained SuperCollider fork and future C++26 uplift lane."
+    },
+    {
+      "key": "PSIFORCEDB_PRIVATE_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\PsiForceDB_1-0-0",
+      "visibility": "private",
+      "target_owner": "LamiaFabrica",
+      "target_remote_status": "pending-private-repository-initialisation",
+      "role": "Closed-source PsiForceDB engine, server, PFQL, and private database mechanics."
+    },
+    {
+      "key": "MEDUSASERV_PUBLIC_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\MedusaServ Professional Web Server",
+      "visibility": "public",
+      "target_owner": "LamiaFabrica",
+      "target_remote_status": "pending-public-repository-initialisation",
+      "role": "Open-source MedusaServ server/runtime surface and public web execution layer."
+    },
+    {
+      "key": "BERTIEBOT_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\BertieBot",
+      "visibility": "private-operations",
+      "role": "Project governance, policy automation, build orchestration, and AI coordination surfaces."
+    },
+    {
+      "key": "PURPLE_PAGES_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\Purple-Pages",
+      "visibility": "mixed-policy",
+      "role": "Developer-first policy, workflow, and knowledge surfaces."
+    },
+    {
+      "key": "LFSSL_PUBLIC_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\LFSSL - Lamia Fabrica SSL",
+      "visibility": "public-library",
+      "role": "Reusable SSL and security library root."
+    },
+    {
+      "key": "FCCP_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\FCCP",
+      "visibility": "ecosystem-library",
+      "role": "LamiaFabrica file and communication protocol root."
+    },
+    {
+      "key": "GRAVITY_CDN_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\GravityCDN",
+      "visibility": "ecosystem-library",
+      "role": "CDN/cache distribution root."
+    },
+    {
+      "key": "LAMIACOMMS_ROOT",
+      "path": "C:\\McMaker Projects\\Projects\\LamiaComms Collaberation Hub",
+      "visibility": "ecosystem-application",
+      "role": "Collaboration hub consumer and integration root."
+    }
+  ],
+  "retired_or_intake_only_roots": [
+    {
+      "path": "C:\\McMaker Projects\\Projects\\lamia_clean_final",
+      "status": "legacy-intake",
+      "rule": "Read only for source recovery, never as a new dependency root."
+    },
+    {
+      "path": "C:\\McMaker Projects\\Projects\\PsiForceDB_1.0.0",
+      "status": "superseded-lineage",
+      "rule": "Do not add new references; migrate useful deltas into PSIFORCEDB_PRIVATE_ROOT after review."
+    },
+    {
+      "path": "C:\\McMaker Projects\\Projects\\PsiForceDB_1-0-0-20260416",
+      "status": "archive-snapshot",
+      "rule": "Audit only; do not wire into active builds."
+    },
+    {
+      "path": "C:\\McMaker Projects\\Projects\\Archive - Pre Secret Development 1",
+      "status": "archive-snapshot",
+      "rule": "Audit only; do not wire into active builds."
+    }
+  ],
+  "blocked_reference_patterns": [
+    {
+      "pattern": "include_external/liblamia_*",
+      "replacement_root": "LAMIA_PUBLIC_ROOT",
+      "rule": "Use public Lamia SDK headers from the canonical root."
+    },
+    {
+      "pattern": "deps/supercollider",
+      "replacement_root": "SUPER_COLLIDER_ROOT",
+      "rule": "Use the LamiaFabrica SuperCollider fork or a pinned submodule that points at it."
+    }
+  ]
+}

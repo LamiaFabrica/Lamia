@@ -30,6 +30,8 @@ Lamia exists to serve developer-first and engineer-first flows while keeping the
 ## Current Consolidation Documents
 
 - `docs/policies/LAMIA_REPO_CONSOLIDATION_POLICY.md`
+- `docs/manifests/CANONICAL_DEPENDENCY_ROOTS.md`
+- `docs/manifests/dependency_roots.json`
 - `docs/manifests/LAMIA_ECOSYSTEM_REFERENCE_MAP.md`
 - `docs/manifests/LAMIA_SOURCE_CARRY_FORWARD_MANIFEST.md`
 - `docs/primers/CONSTRUCT_PRIMERS.md`

@@ -10,6 +10,8 @@ This policy keeps Lamia as the clean LamiaFabrica language source of truth while
 
 `C:\McMaker Projects\Projects\lamia_clean_final` is treated as the legacy source inventory until the consolidation is complete. It is not the final repo identity because it points at the older Medusa Initiative remote.
 
+Canonical dependency roots are defined in `docs/manifests/CANONICAL_DEPENDENCY_ROOTS.md` and `docs/manifests/dependency_roots.json`. New code must use those roots instead of ad-hoc copies from older project folders.
+
 ## Carry Forward
 
 - Lamia compiler, runtime, transpiler, bridge, generator, benchmark, and framework source.
@@ -37,6 +39,7 @@ This policy keeps Lamia as the clean LamiaFabrica language source of truth while
 ## Cleanup Rules
 
 - New Lamia work must be placed in the rebuilt `Lamia` repo first, then consumed by sibling projects.
+- Dependency references must resolve through the canonical root map, not through duplicated archives, copied `include_external` headers, or nested library drops.
 - Generated artefacts must be produced from source, not committed as source.
 - Public docs can describe integration points and inspiration, but must not reveal private PsiForceDB mechanisms.
 - Any forked or borrowed library must be recorded under the LamiaFabrica fork ownership policy before it becomes a maintained dependency.

@@ -30,3 +30,5 @@ Use this structure when promoting scattered Lamia modules into one maintained lo
 - `LOCAL_BUILD_ROOT`: generated developer build artefacts ignored by git.
 
 Each consumer should point at these roots rather than carrying duplicated source or stale compiled binaries.
+
+The machine-readable root map is `docs/manifests/dependency_roots.json`. BertieBot, Purple Pages, CMake presets, packaging scripts, and consumer projects should treat that map as the authority before resolving a LamiaFabrica dependency.

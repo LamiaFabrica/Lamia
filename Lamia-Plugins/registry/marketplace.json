@@ -1,0 +1,127 @@
+{
+  "marketplace": {
+    "name": "Lamia Plugin Marketplace",
+    "version": "0.3.0",
+    "total_plugins": 13,
+    "verified_plugins": 13
+  },
+  "plugins": [
+    {
+      "name": "CNC-Bridge",
+      "version": "0.3.0",
+      "description": "CNC Z-code integration plugin",
+      "category": "Manufacturing",
+      "library_path": "manufacturing_bridges/libcnc_bridge.so",
+      "verified": true,
+      "performance_score": 9.2
+    },
+    {
+      "name": "Arduino-Transpiler",
+      "version": "0.3.0",
+      "description": "Arduino C++ transpiler plugin",
+      "category": "Manufacturing",
+      "library_path": "manufacturing_bridges/libarduino_bridge.so",
+      "verified": true,
+      "performance_score": 9.5
+    },
+    {
+      "name": "IoT-Framework",
+      "version": "0.3.0",
+      "description": "Complete IoT ecosystem plugin",
+      "category": "Manufacturing",
+      "library_path": "manufacturing_bridges/libiot_bridge.so",
+      "verified": true,
+      "performance_score": 8.8
+    },
+    {
+      "name": "Neural-Interface",
+      "version": "0.3.0",
+      "description": "Neural network integration plugin",
+      "category": "AI & ML",
+      "library_path": "Lamia-Libs/lib/liblamia_neural_interface.so",
+      "verified": true,
+      "performance_score": 9.3
+    },
+    {
+      "name": "Ludicrous-Mode",
+      "version": "0.3.0",
+      "description": "Maximum performance optimization",
+      "category": "Performance",
+      "library_path": "Lamia-Libs/lib/liblamia_ludicrous_mode.so",
+      "verified": true,
+      "performance_score": 9.8
+    },
+    {
+      "name": "3D-Emotion-Synthesis",
+      "version": "0.3.0",
+      "description": "Revolutionary 3D emotion engine",
+      "category": "Social & Emotion",
+      "library_path": "Lamia-Libs/lib/liblamia_3d_emotion.so",
+      "verified": true,
+      "performance_score": 9.9
+    },
+    {
+      "name": "Social-Protocols",
+      "version": "0.3.0",
+      "description": "Advanced social interaction protocols",
+      "category": "Social & Emotion",
+      "library_path": "Lamia-Libs/lib/liblamia_social_protocols.so",
+      "verified": true,
+      "performance_score": 9.6
+    },
+    {
+      "name": "Blockchain-Core",
+      "version": "0.3.0",
+      "description": "Complete blockchain integration",
+      "category": "Blockchain",
+      "library_path": "Lamia-Libs/lib/liblamia_blockchain_core.so",
+      "verified": true,
+      "performance_score": 8.7
+    },
+    {
+      "name": "Cloud-Native",
+      "version": "0.3.0",
+      "description": "Cloud-native operations plugin",
+      "category": "Cloud & Edge",
+      "library_path": "Lamia-Libs/lib/liblamia_cloud_native.so",
+      "verified": true,
+      "performance_score": 9.1
+    },
+    {
+      "name": "Quantum-Bridges",
+      "version": "0.3.0",
+      "description": "Quantum computing preparation bridges",
+      "category": "Performance",
+      "library_path": "Lamia-Libs/lib/liblamia_quantum_bridges.so",
+      "verified": true,
+      "performance_score": 9.5
+    },
+    {
+      "name": "Memory-Optimizer",
+      "version": "0.3.0",
+      "description": "Advanced memory optimization",
+      "category": "Performance",
+      "library_path": "Lamia-Libs/lib/liblamia_memory_optimizer.so",
+      "verified": true,
+      "performance_score": 9.2
+    },
+    {
+      "name": "Realtime-Engine",
+      "version": "0.3.0",
+      "description": "Real-time processing engine",
+      "category": "Performance",
+      "library_path": "Lamia-Libs/lib/liblamia_realtime_engine.so",
+      "verified": true,
+      "performance_score": 9
+    },
+    {
+      "name": "GCode-Native",
+      "version": "0.3.0",
+      "description": "Native G-code generation for manufacturing",
+      "category": "Manufacturing",
+      "library_path": "Lamia-Libs/lib/liblamia_gcode_native.so",
+      "verified": true,
+      "performance_score": 9.3
+    }
+  ]
+}

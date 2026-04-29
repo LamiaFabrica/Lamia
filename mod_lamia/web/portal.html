@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portal Authentication</title>
+    <script>
+    // Check authentication and redirect accordingly
+    function checkAuth() {
+        // Check for session cookie
+        var cookies = document.cookie.split(';');
+        var hasSession = false;
+        
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.indexOf('medusa_session=') === 0) {
+                hasSession = true;
+                break;
+            }
+        }
+        
+        if (hasSession) {
+            // User is logged in - load portal content
+            window.location.href = 'https://portal.poweredbymedusa.com/portal/dashboard.html';
+        } else {
+            // User not logged in - redirect to login
+            window.location.href = 'https://portal.poweredbymedusa.com/portal/login.lamia';
+        }
+    }
+    
+    // Run check immediately
+    checkAuth();
+    </script>
+</head>
+<body>
+    <h1>Checking authentication...</h1>
+    <p>Please wait while we verify your login status.</p>
+</body>
+</html>

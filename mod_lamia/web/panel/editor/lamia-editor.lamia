@@ -1,0 +1,715 @@
+/**
+ * LAMIA WEB EDITOR v0.3.0a
+ * ========================
+ * Browser-based editor for .lamia files integrated with Purple Pages
+ * No third-party dependencies - pure native implementation
+ * © 2025 The Medusa Project | Roylepython | D Hargreaves
+ */
+
+@web_editor LamiaFileEditor {
+    @name "Lamia Web Editor"
+    @version "0.3.0a"
+    @style "cpanel_integrated"
+    @no_third_party_dependencies true
+    @established_libraries_only true
+    
+    // ========================================
+    // EDITOR INTERFACE
+    // ========================================
+    
+    @editor_template {
+        @lamia_html {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Lamia Editor - Purple Pages</title>
+                <style>
+                    /* Purple Pages Editor Styling */
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        margin: 0;
+                        padding: 0;
+                        color: white;
+                        height: 100vh;
+                        overflow: hidden;
+                    }
+                    
+                    .editor-container {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100vh;
+                    }
+                    
+                    .editor-header {
+                        background: rgba(255, 255, 255, 0.1);
+                        backdrop-filter: blur(10px);
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                        padding: 1rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    
+                    .editor-title {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                    }
+                    
+                    .file-info {
+                        font-size: 0.9rem;
+                        opacity: 0.8;
+                    }
+                    
+                    .editor-actions {
+                        display: flex;
+                        gap: 0.5rem;
+                    }
+                    
+                    .editor-btn {
+                        background: rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        border-radius: 6px;
+                        padding: 0.5rem 1rem;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        font-size: 0.9rem;
+                    }
+                    
+                    .editor-btn:hover {
+                        background: rgba(255, 255, 255, 0.3);
+                        transform: translateY(-2px);
+                    }
+                    
+                    .editor-btn.primary {
+                        background: rgba(139, 92, 246, 0.3);
+                        border-color: rgba(139, 92, 246, 0.5);
+                    }
+                    
+                    .editor-btn.success {
+                        background: rgba(16, 185, 129, 0.3);
+                        border-color: rgba(16, 185, 129, 0.5);
+                    }
+                    
+                    .editor-main {
+                        display: flex;
+                        flex: 1;
+                        overflow: hidden;
+                    }
+                    
+                    .editor-sidebar {
+                        width: 250px;
+                        background: rgba(255, 255, 255, 0.1);
+                        backdrop-filter: blur(10px);
+                        border-right: 1px solid rgba(255, 255, 255, 0.2);
+                        padding: 1rem;
+                        overflow-y: auto;
+                    }
+                    
+                    .sidebar-section {
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    .sidebar-title {
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        margin-bottom: 0.5rem;
+                        opacity: 0.9;
+                    }
+                    
+                    .file-tree {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                    }
+                    
+                    .file-tree li {
+                        padding: 0.25rem 0;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .file-tree li:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                        padding-left: 0.5rem;
+                    }
+                    
+                    .file-tree li.active {
+                        background: rgba(139, 92, 246, 0.3);
+                        padding-left: 0.5rem;
+                    }
+                    
+                    .editor-content {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    
+                    .editor-tabs {
+                        background: rgba(255, 255, 255, 0.05);
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                        padding: 0.5rem 1rem;
+                        display: flex;
+                        gap: 0.5rem;
+                    }
+                    
+                    .editor-tab {
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 6px 6px 0 0;
+                        padding: 0.5rem 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        position: relative;
+                    }
+                    
+                    .editor-tab.active {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                    
+                    .editor-tab .close-btn {
+                        margin-left: 0.5rem;
+                        opacity: 0.6;
+                        cursor: pointer;
+                    }
+                    
+                    .editor-tab .close-btn:hover {
+                        opacity: 1;
+                    }
+                    
+                    .code-editor {
+                        flex: 1;
+                        background: rgba(0, 0, 0, 0.3);
+                        margin: 0;
+                        padding: 1rem;
+                        border: none;
+                        outline: none;
+                        color: white;
+                        font-family: 'Courier New', 'Monaco', monospace;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        resize: none;
+                        white-space: pre;
+                        overflow-wrap: normal;
+                        overflow-x: auto;
+                    }
+                    
+                    .code-editor::placeholder {
+                        color: rgba(255, 255, 255, 0.5);
+                    }
+                    
+                    .editor-status {
+                        background: rgba(255, 255, 255, 0.1);
+                        border-top: 1px solid rgba(255, 255, 255, 0.2);
+                        padding: 0.5rem 1rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 0.8rem;
+                    }
+                    
+                    .status-left {
+                        display: flex;
+                        gap: 1rem;
+                    }
+                    
+                    .status-right {
+                        display: flex;
+                        gap: 1rem;
+                    }
+                    
+                    .syntax-highlight {
+                        position: relative;
+                    }
+                    
+                    /* Basic Lamia syntax highlighting */
+                    .lamia-keyword {
+                        color: #c792ea;
+                        font-weight: 600;
+                    }
+                    
+                    .lamia-string {
+                        color: #c3e88d;
+                    }
+                    
+                    .lamia-comment {
+                        color: #546e7a;
+                        font-style: italic;
+                    }
+                    
+                    .lamia-function {
+                        color: #82aaff;
+                    }
+                    
+                    .lamia-setting {
+                        color: #f78c6c;
+                    }
+                    
+                    .error-indicator {
+                        background: rgba(239, 68, 68, 0.2);
+                        border-left: 3px solid #ef4444;
+                        padding: 0.5rem;
+                        margin: 0.5rem 0;
+                        border-radius: 0 4px 4px 0;
+                    }
+                    
+                    .success-indicator {
+                        background: rgba(16, 185, 129, 0.2);
+                        border-left: 3px solid #10b981;
+                        padding: 0.5rem;
+                        margin: 0.5rem 0;
+                        border-radius: 0 4px 4px 0;
+                    }
+                    
+                    /* Responsive design */
+                    @media (max-width: 768px) {
+                        .editor-sidebar {
+                            display: none;
+                        }
+                        
+                        .editor-actions {
+                            flex-wrap: wrap;
+                        }
+                        
+                        .editor-btn {
+                            padding: 0.4rem 0.8rem;
+                            font-size: 0.8rem;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="editor-container">
+                    <!-- Header -->
+                    <header class="editor-header">
+                        <div class="editor-title">
+                            <span>🟣</span>
+                            <span>Lamia Editor</span>
+                            <span class="file-info" id="fileInfo">No file selected</span>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="editor-btn" onclick="openFile()">📁 Open</button>
+                            <button class="editor-btn primary" onclick="saveFile()">💾 Save</button>
+                            <button class="editor-btn" onclick="validateSyntax()">✓ Validate</button>
+                            <button class="editor-btn" onclick="previewConfig()">👁️ Preview</button>
+                            <button class="editor-btn success" onclick="applyConfig()">🚀 Apply</button>
+                            <button class="editor-btn" onclick="backToPurplePages()">← Purple Pages</button>
+                        </div>
+                    </header>
+                    
+                    <!-- Main Editor Area -->
+                    <div class="editor-main">
+                        <!-- Sidebar -->
+                        <aside class="editor-sidebar">
+                            <div class="sidebar-section">
+                                <div class="sidebar-title">📂 Configuration Files</div>
+                                <ul class="file-tree" id="fileTree">
+                                    <li onclick="loadFile('./cnf/medusaserv.lamia')">medusaserv.lamia</li>
+                                    <li onclick="loadFile('./cnf/nginx-gold-standard.lamia')">nginx-gold-standard.lamia</li>
+                                    <li onclick="loadFile('./cnf/apache-gold-standard.lamia')">apache-gold-standard.lamia</li>
+                                    <li onclick="loadFile('./cnf/routing-godmode-public.lamia')">routing-godmode-public.lamia</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="sidebar-section">
+                                <div class="sidebar-title">🔌 Plugin Files</div>
+                                <ul class="file-tree" id="pluginTree">
+                                    <li onclick="loadFile('./plg/icewall/native-security-plugin.lamia')">IceWall Security</li>
+                                    <li onclick="loadFile('./plg/webserver/hot-reload-plugin.lamia')">Hot Reload</li>
+                                    <li onclick="loadFile('./plg/phpmyadmin/visual-orm-plugin.lamia')">phpMyAdmin ORM</li>
+                                    <li onclick="loadFile('./plg/jupyter/jupyter-lamia-integration.lamia')">Jupyter Integration</li>
+                                    <li onclick="loadFile('./plg/taskmanager/comprehensive-task-system.lamia')">Task Manager</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="sidebar-section">
+                                <div class="sidebar-title">📚 Templates</div>
+                                <ul class="file-tree" id="templateTree">
+                                    <li onclick="loadTemplate('plugin')">Plugin Template</li>
+                                    <li onclick="loadTemplate('configuration')">Configuration Template</li>
+                                    <li onclick="loadTemplate('api')">API Endpoint Template</li>
+                                    <li onclick="loadTemplate('documentation')">Documentation Template</li>
+                                </ul>
+                            </div>
+                        </aside>
+                        
+                        <!-- Content Area -->
+                        <div class="editor-content">
+                            <!-- Tabs -->
+                            <div class="editor-tabs" id="editorTabs">
+                                <div class="editor-tab active" data-file="new">
+                                    New File
+                                    <span class="close-btn" onclick="closeTab('new')">×</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Editor -->
+                            <textarea 
+                                class="code-editor" 
+                                id="codeEditor" 
+                                placeholder="// Start editing your Lamia configuration file...
+// 
+// Example:
+// @configuration MyConfig {
+//     @setting example {
+//         @value 'Hello World'
+//     }
+// }">
+                            </textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Bar -->
+                    <div class="editor-status">
+                        <div class="status-left">
+                            <span id="syntaxStatus">Syntax: Valid</span>
+                            <span id="lineColumn">Line 1, Column 1</span>
+                            <span id="fileSize">0 bytes</span>
+                        </div>
+                        <div class="status-right">
+                            <span id="saveStatus">Unsaved</span>
+                            <span>Lamia v0.3.0a</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    // Lamia Web Editor JavaScript (No third-party dependencies)
+                    class LamiaEditor {
+                        constructor() {
+                            this.currentFile = null;
+                            this.openTabs = new Map();
+                            this.activeTab = 'new';
+                            this.isDirty = false;
+                            this.apiBase = '/panel/api/editor';
+                            this.init();
+                        }
+                        
+                        init() {
+                            this.setupEventListeners();
+                            this.loadFileFromURL();
+                            this.setupAutoSave();
+                            console.log('Lamia Editor v0.3.0a initialized');
+                        }
+                        
+                        setupEventListeners() {
+                            const editor = document.getElementById('codeEditor');
+                            
+                            // Track cursor position and file size
+                            editor.addEventListener('input', () => {
+                                this.updateStatus();
+                                this.markDirty();
+                                this.basicSyntaxHighlight();
+                            });
+                            
+                            editor.addEventListener('click', () => {
+                                this.updateCursorPosition();
+                            });
+                            
+                            editor.addEventListener('keyup', () => {
+                                this.updateCursorPosition();
+                            });
+                            
+                            // Keyboard shortcuts
+                            document.addEventListener('keydown', (e) => {
+                                if (e.ctrlKey || e.metaKey) {
+                                    switch (e.key) {
+                                        case 's':
+                                            e.preventDefault();
+                                            this.saveFile();
+                                            break;
+                                        case 'o':
+                                            e.preventDefault();
+                                            this.openFile();
+                                            break;
+                                        case 'n':
+                                            e.preventDefault();
+                                            this.newFile();
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                        
+                        loadFileFromURL() {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const filePath = urlParams.get('file');
+                            
+                            if (filePath) {
+                                this.loadFile(filePath);
+                                document.getElementById('fileInfo').textContent = filePath;
+                            }
+                        }
+                        
+                        async loadFile(filePath) {
+                            try {
+                                const response = await fetch(`${this.apiBase}/load?file=${encodeURIComponent(filePath)}`);
+                                const data = await response.json();
+                                
+                                if (data.status === 'success') {
+                                    this.currentFile = filePath;
+                                    document.getElementById('codeEditor').value = data.content;
+                                    document.getElementById('fileInfo').textContent = filePath;
+                                    this.updateStatus();
+                                    this.markClean();
+                                    this.addTab(filePath, data.content);
+                                    this.basicSyntaxHighlight();
+                                } else {
+                                    this.showError('Failed to load file: ' + data.error.message);
+                                }
+                            } catch (error) {
+                                this.showError('Error loading file: ' + error.message);
+                            }
+                        }
+                        
+                        async saveFile() {
+                            if (!this.currentFile) {
+                                this.saveAsFile();
+                                return;
+                            }
+                            
+                            const content = document.getElementById('codeEditor').value;
+                            
+                            try {
+                                const response = await fetch(`${this.apiBase}/save`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        file: this.currentFile,
+                                        content: content
+                                    })
+                                });
+                                
+                                const data = await response.json();
+                                
+                                if (data.status === 'success') {
+                                    this.markClean();
+                                    this.showSuccess('File saved successfully');
+                                } else {
+                                    this.showError('Failed to save file: ' + data.error.message);
+                                }
+                            } catch (error) {
+                                this.showError('Error saving file: ' + error.message);
+                            }
+                        }
+                        
+                        async validateSyntax() {
+                            const content = document.getElementById('codeEditor').value;
+                            
+                            try {
+                                const response = await fetch(`${this.apiBase}/validate`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        content: content
+                                    })
+                                });
+                                
+                                const data = await response.json();
+                                
+                                if (data.status === 'success') {
+                                    if (data.valid) {
+                                        document.getElementById('syntaxStatus').textContent = 'Syntax: Valid';
+                                        this.showSuccess('Syntax validation passed');
+                                    } else {
+                                        document.getElementById('syntaxStatus').textContent = 'Syntax: Invalid';
+                                        this.showError('Syntax errors: ' + data.errors.join(', '));
+                                    }
+                                } else {
+                                    this.showError('Validation failed: ' + data.error.message);
+                                }
+                            } catch (error) {
+                                this.showError('Error validating syntax: ' + error.message);
+                            }
+                        }
+                        
+                        updateStatus() {
+                            const editor = document.getElementById('codeEditor');
+                            const content = editor.value;
+                            const fileSize = new Blob([content]).size;
+                            
+                            document.getElementById('fileSize').textContent = this.formatFileSize(fileSize);
+                            document.getElementById('saveStatus').textContent = this.isDirty ? 'Unsaved' : 'Saved';
+                        }
+                        
+                        updateCursorPosition() {
+                            const editor = document.getElementById('codeEditor');
+                            const cursorPosition = editor.selectionStart;
+                            const content = editor.value;
+                            const lines = content.substring(0, cursorPosition).split('\\n');
+                            const line = lines.length;
+                            const column = lines[lines.length - 1].length + 1;
+                            
+                            document.getElementById('lineColumn').textContent = `Line ${line}, Column ${column}`;
+                        }
+                        
+                        basicSyntaxHighlight() {
+                            // Basic syntax highlighting for Lamia (simplified version)
+                            const editor = document.getElementById('codeEditor');
+                            const content = editor.value;
+                            
+                            // This is a simplified approach - in a full implementation,
+                            // you'd want more sophisticated highlighting
+                            const hasKeywords = /@(configuration|plugin|setting|function|on_load)/.test(content);
+                            const hasStrings = /"[^"]*"/.test(content);
+                            const hasComments = /\\/\\//.test(content);
+                            
+                            if (hasKeywords || hasStrings || hasComments) {
+                                document.getElementById('syntaxStatus').textContent = 'Syntax: Highlighted';
+                            }
+                        }
+                        
+                        markDirty() {
+                            this.isDirty = true;
+                            document.getElementById('saveStatus').textContent = 'Unsaved';
+                        }
+                        
+                        markClean() {
+                            this.isDirty = false;
+                            document.getElementById('saveStatus').textContent = 'Saved';
+                        }
+                        
+                        formatFileSize(bytes) {
+                            if (bytes === 0) return '0 bytes';
+                            const k = 1024;
+                            const sizes = ['bytes', 'KB', 'MB', 'GB'];
+                            const i = Math.floor(Math.log(bytes) / Math.log(k));
+                            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                        }
+                        
+                        showError(message) {
+                            // Simple error display - in a full implementation,
+                            // you'd want a proper notification system
+                            console.error(message);
+                            alert('Error: ' + message);
+                        }
+                        
+                        showSuccess(message) {
+                            console.log(message);
+                            // Could add a success notification here
+                        }
+                        
+                        addTab(filePath, content) {
+                            const fileName = filePath.split('/').pop();
+                            this.openTabs.set(filePath, content);
+                            
+                            // Update tabs UI (simplified)
+                            const tabsContainer = document.getElementById('editorTabs');
+                            const existingTab = tabsContainer.querySelector(`[data-file="${filePath}"]`);
+                            
+                            if (!existingTab) {
+                                const tab = document.createElement('div');
+                                tab.className = 'editor-tab';
+                                tab.setAttribute('data-file', filePath);
+                                tab.innerHTML = `${fileName} <span class="close-btn" onclick="closeTab('${filePath}')">×</span>`;
+                                tab.onclick = () => this.switchTab(filePath);
+                                tabsContainer.appendChild(tab);
+                            }
+                            
+                            this.switchTab(filePath);
+                        }
+                        
+                        switchTab(filePath) {
+                            // Remove active class from all tabs
+                            document.querySelectorAll('.editor-tab').forEach(tab => {
+                                tab.classList.remove('active');
+                            });
+                            
+                            // Add active class to current tab
+                            const currentTab = document.querySelector(`[data-file="${filePath}"]`);
+                            if (currentTab) {
+                                currentTab.classList.add('active');
+                            }
+                            
+                            // Load content
+                            if (this.openTabs.has(filePath)) {
+                                document.getElementById('codeEditor').value = this.openTabs.get(filePath);
+                                this.currentFile = filePath;
+                                document.getElementById('fileInfo').textContent = filePath;
+                                this.updateStatus();
+                            }
+                        }
+                        
+                        setupAutoSave() {
+                            // Auto-save every 30 seconds if dirty
+                            setInterval(() => {
+                                if (this.isDirty && this.currentFile) {
+                                    this.saveFile();
+                                }
+                            }, 30000);
+                        }
+                    }
+                    
+                    // Global functions for UI
+                    function openFile() {
+                        window.lamiaEditor.openFile();
+                    }
+                    
+                    function saveFile() {
+                        window.lamiaEditor.saveFile();
+                    }
+                    
+                    function validateSyntax() {
+                        window.lamiaEditor.validateSyntax();
+                    }
+                    
+                    function previewConfig() {
+                        console.log('Preview configuration...');
+                        // Implementation would show config preview
+                    }
+                    
+                    function applyConfig() {
+                        console.log('Apply configuration...');
+                        // Implementation would apply the configuration
+                    }
+                    
+                    function backToPurplePages() {
+                        window.location.href = '/panel/purple-pages/';
+                    }
+                    
+                    function loadFile(filePath) {
+                        window.lamiaEditor.loadFile(filePath);
+                    }
+                    
+                    function loadTemplate(templateType) {
+                        console.log('Loading template:', templateType);
+                        // Implementation would load predefined templates
+                    }
+                    
+                    function closeTab(filePath) {
+                        console.log('Closing tab:', filePath);
+                        // Implementation would close the tab
+                    }
+                    
+                    // Initialize editor when DOM is loaded
+                    document.addEventListener('DOMContentLoaded', () => {
+                        window.lamiaEditor = new LamiaEditor();
+                    });
+                </script>
+            </body>
+            </html>
+        }
+    }
+}
+
+// Plugin metadata
+@plugin_metadata {
+    @generated_at "2025-08-16T22:05:00Z"
+    @version "0.3.0a"
+    @editor_type "web_based"
+    @purple_pages_integrated true
+    @no_third_party_dependencies true
+    @provides ["lamia_editor", "syntax_highlighting", "file_management", "browser_integration"]
+    @ground_up_methodology true
+    @application_generated_interface_only true
+}

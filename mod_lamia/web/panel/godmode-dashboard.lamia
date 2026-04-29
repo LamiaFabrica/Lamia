@@ -1,0 +1,558 @@
+/**
+ * MEDUSASERV GODMODE DASHBOARD v0.3.0a
+ * ====================================
+ * Ultimate administrative control panel with native IceWall integration
+ * Experience the Sheer Power of the Lamia Native - a web server for all!
+ * © 2025 The Medusa Project | Roylepython | D Hargreaves
+ */
+
+@application GodModeDashboard {
+    @port 69
+    @theme "godmode-dark"
+    @realtime_updates true
+    @icewall_native_integration true
+    @fake_db_orm true
+    @visual_editing true
+    @security_level "maximum"
+    
+    // ========================================
+    // GODMODE DASHBOARD - ULTIMATE CONTROL
+    // ========================================
+    
+    @page "/godmode" {
+        @title "MedusaServ GODMODE Dashboard"
+        @layout "godmode"
+        @require_authentication true
+        @security_clearance "administrator"
+        
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>MedusaServ GODMODE Dashboard v0.3.0a</title>
+                <link rel="stylesheet" href="/assets/css/godmode-theme.css">
+                <link rel="stylesheet" href="/assets/css/icewall-integration.css">
+                <link rel="stylesheet" href="/assets/css/visual-orm-editor.css">
+                <script src="/assets/js/godmode-dashboard.js"></script>
+                <script src="/assets/js/icewall-native.js"></script>
+                <script src="/assets/js/visual-orm.js"></script>
+                <script src="/assets/js/lamia-runtime.js"></script>
+            </head>
+            <body class="godmode-theme">
+                
+                <!-- GODMODE Header -->
+                <header class="godmode-header">
+                    <div class="system-status-bar">
+                        <div class="system-indicators">
+                            <div class="indicator icewall-status">
+                                <span class="status-icon">🛡️</span>
+                                <span>IceWall</span>
+                                <span class="status-value" id="icewallStatus">ACTIVE</span>
+                            </div>
+                            <div class="indicator server-status">
+                                <span class="status-icon">🌐</span>
+                                <span>Server</span>
+                                <span class="status-value" id="serverStatus">ONLINE</span>
+                            </div>
+                            <div class="indicator threat-level">
+                                <span class="status-icon">⚠️</span>
+                                <span>Threat Level</span>
+                                <span class="status-value" id="threatLevel">LOW</span>
+                            </div>
+                            <div class="indicator db-status">
+                                <span class="status-icon">💾</span>
+                                <span>Database</span>
+                                <span class="status-value" id="dbStatus">CONNECTED</span>
+                            </div>
+                        </div>
+                        <div class="godmode-title">
+                            <h1>
+                                <span class="power-icon">⚡</span>
+                                GODMODE DASHBOARD
+                                <span class="version">v0.3.0a</span>
+                            </h1>
+                            <div class="admin-info">
+                                Administrator: <span id="currentAdmin">ROOT</span> | 
+                                Access Level: <span class="clearance-max">MAXIMUM</span>
+                            </div>
+                        </div>
+                        <div class="emergency-controls">
+                            <button class="emergency-btn shutdown" onclick="emergencyShutdown()">
+                                🚨 EMERGENCY SHUTDOWN
+                            </button>
+                            <button class="emergency-btn lockdown" onclick="initiateLockdown()">
+                                🔒 LOCKDOWN MODE
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- GODMODE Navigation -->
+                <nav class="godmode-nav">
+                    <ul class="nav-categories">
+                        <li class="nav-category active" data-category="overview">
+                            <a href="#overview">
+                                <span class="nav-icon">📊</span>
+                                <span>System Overview</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="icewall">
+                            <a href="#icewall">
+                                <span class="nav-icon">🛡️</span>
+                                <span>IceWall Security</span>
+                                <span class="live-counter" id="blockedThreats">247</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="database">
+                            <a href="#database">
+                                <span class="nav-icon">🗄️</span>
+                                <span>Database ORM</span>
+                                <span class="live-counter" id="dbRecords">15,847</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="servers">
+                            <a href="#servers">
+                                <span class="nav-icon">🌐</span>
+                                <span>Server Control</span>
+                                <span class="live-counter" id="activeConnections">1,249</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="monitoring">
+                            <a href="#monitoring">
+                                <span class="nav-icon">📈</span>
+                                <span>Real-time Monitoring</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="config">
+                            <a href="#config">
+                                <span class="nav-icon">⚙️</span>
+                                <span>Configuration</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="users">
+                            <a href="#users">
+                                <span class="nav-icon">👥</span>
+                                <span>User Management</span>
+                            </a>
+                        </li>
+                        <li class="nav-category" data-category="logs">
+                            <a href="#logs">
+                                <span class="nav-icon">📝</span>
+                                <span>Purple Pages</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- GODMODE Main Content -->
+                <main class="godmode-content">
+                    
+                    <!-- System Overview Section -->
+                    <section id="overview" class="content-section active">
+                        <div class="section-header">
+                            <h2>System Overview - Complete Control</h2>
+                            <div class="section-actions">
+                                <button class="action-btn primary" onclick="refreshOverview()">🔄 Refresh</button>
+                                <button class="action-btn secondary" onclick="exportSystemReport()">📊 Export Report</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Critical Metrics Grid -->
+                        <div class="metrics-grid">
+                            <div class="metric-card critical">
+                                <div class="metric-header">
+                                    <h3>🚨 Security Threats</h3>
+                                    <span class="metric-trend up">↗️ +15%</span>
+                                </div>
+                                <div class="metric-value">
+                                    <span class="value" id="securityThreats">247</span>
+                                    <span class="unit">blocked today</span>
+                                </div>
+                                <div class="metric-chart" id="threatsChart"></div>
+                            </div>
+                            
+                            <div class="metric-card warning">
+                                <div class="metric-header">
+                                    <h3>⚡ Server Load</h3>
+                                    <span class="metric-trend down">↘️ -8%</span>
+                                </div>
+                                <div class="metric-value">
+                                    <span class="value" id="serverLoad">73.2</span>
+                                    <span class="unit">% CPU</span>
+                                </div>
+                                <div class="metric-chart" id="loadChart"></div>
+                            </div>
+                            
+                            <div class="metric-card success">
+                                <div class="metric-header">
+                                    <h3>🌐 Active Connections</h3>
+                                    <span class="metric-trend up">↗️ +23%</span>
+                                </div>
+                                <div class="metric-value">
+                                    <span class="value" id="connections">1,249</span>
+                                    <span class="unit">concurrent</span>
+                                </div>
+                                <div class="metric-chart" id="connectionsChart"></div>
+                            </div>
+                            
+                            <div class="metric-card info">
+                                <div class="metric-header">
+                                    <h3>💾 Database Operations</h3>
+                                    <span class="metric-trend stable">➡️ stable</span>
+                                </div>
+                                <div class="metric-value">
+                                    <span class="value" id="dbOps">892</span>
+                                    <span class="unit">ops/sec</span>
+                                </div>
+                                <div class="metric-chart" id="dbChart"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Real-time System Map -->
+                        <div class="system-map">
+                            <h3>Real-time System Architecture</h3>
+                            <div class="architecture-diagram">
+                                <div class="server-node nginx" id="nginxNode">
+                                    <div class="node-icon">🚀</div>
+                                    <div class="node-label">NGINX</div>
+                                    <div class="node-status online">ONLINE</div>
+                                    <div class="node-metrics">
+                                        <span>Requests: <span id="nginxRequests">15.2K/min</span></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="server-node apache" id="apacheNode">
+                                    <div class="node-icon">🔧</div>
+                                    <div class="node-label">Apache</div>
+                                    <div class="node-status online">ONLINE</div>
+                                    <div class="node-metrics">
+                                        <span>PHP: <span id="apachePhp">847 processes</span></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="server-node tomcat" id="tomcatNode">
+                                    <div class="node-icon">☕</div>
+                                    <div class="node-label">Tomcat</div>
+                                    <div class="node-status online">ONLINE</div>
+                                    <div class="node-metrics">
+                                        <span>Java: <span id="tomcatJava">23 apps</span></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="server-node icewall" id="icewallNode">
+                                    <div class="node-icon">🛡️</div>
+                                    <div class="node-label">IceWall</div>
+                                    <div class="node-status active">PROTECTING</div>
+                                    <div class="node-metrics">
+                                        <span>Blocked: <span id="icewallBlocked">247 threats</span></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="server-node database" id="databaseNode">
+                                    <div class="node-icon">💾</div>
+                                    <div class="node-label">Database</div>
+                                    <div class="node-status online">CONNECTED</div>
+                                    <div class="node-metrics">
+                                        <span>Records: <span id="dbRecordsCount">15.8M</span></span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Connection Lines -->
+                                <svg class="connection-lines">
+                                    <line x1="150" y1="50" x2="450" y2="50" class="connection active"/>
+                                    <line x1="150" y1="150" x2="450" y2="150" class="connection active"/>
+                                    <line x1="150" y1="250" x2="450" y2="250" class="connection active"/>
+                                    <line x1="300" y1="100" x2="300" y2="300" class="connection active"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- IceWall Security Section -->
+                    <section id="icewall" class="content-section">
+                        <div class="section-header">
+                            <h2>🛡️ IceWall Security Engine - Native Integration</h2>
+                            <div class="section-actions">
+                                <button class="action-btn critical" onclick="emergencyBlock()">🚨 Emergency Block</button>
+                                <button class="action-btn warning" onclick="updateSecurityRules()">⚙️ Update Rules</button>
+                                <button class="action-btn primary" onclick="scanThreats()">🔍 Full Scan</button>
+                            </div>
+                        </div>
+                        
+                        <!-- IceWall Control Panel -->
+                        <div class="icewall-controls">
+                            <div class="control-group">
+                                <h3>Threat Detection</h3>
+                                <div class="security-level-slider">
+                                    <label>Detection Level:</label>
+                                    <input type="range" id="detectionLevel" min="1" max="5" value="4" 
+                                           onchange="updateDetectionLevel(this.value)">
+                                    <span class="level-labels">
+                                        <span>Low</span><span>Medium</span><span>High</span><span>Maximum</span><span>GODMODE</span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <h3>Auto-Response</h3>
+                                <div class="toggle-switches">
+                                    <label class="switch">
+                                        <input type="checkbox" id="autoBlock" checked onchange="toggleAutoBlock(this.checked)">
+                                        <span class="slider">Auto-Block Threats</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="realTimeScanning" checked onchange="toggleRealTimeScanning(this.checked)">
+                                        <span class="slider">Real-time Scanning</span>
+                                    </label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="behaviorAnalysis" checked onchange="toggleBehaviorAnalysis(this.checked)">
+                                        <span class="slider">Behavior Analysis</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live Threat Monitor -->
+                        <div class="threat-monitor">
+                            <h3>Live Threat Monitor</h3>
+                            <div class="threat-feed" id="threatFeed">
+                                <!-- Real-time threat entries will appear here -->
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Database ORM Section -->
+                    <section id="database" class="content-section">
+                        <div class="section-header">
+                            <h2>🗄️ Visual Database ORM - Fake-DB Management</h2>
+                            <div class="section-actions">
+                                <button class="action-btn primary" onclick="createNewTable()">➕ New Table</button>
+                                <button class="action-btn secondary" onclick="importData()">📥 Import</button>
+                                <button class="action-btn secondary" onclick="exportData()">📤 Export</button>
+                                <button class="action-btn warning" onclick="optimizeDatabase()">⚡ Optimize</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Database Navigation -->
+                        <div class="database-nav">
+                            <div class="table-list">
+                                <h3>Tables</h3>
+                                <ul id="tableList">
+                                    <li class="table-item active" onclick="loadTable('cnf.fake-db')">
+                                        <span class="table-icon">⚙️</span>
+                                        <span>cnf.fake-db</span>
+                                        <span class="record-count">87 records</span>
+                                    </li>
+                                    <li class="table-item" onclick="loadTable('vhosts.fake-db')">
+                                        <span class="table-icon">🌐</span>
+                                        <span>vhosts.fake-db</span>
+                                        <span class="record-count">12 records</span>
+                                    </li>
+                                    <li class="table-item" onclick="loadTable('users.fake-db')">
+                                        <span class="table-icon">👥</span>
+                                        <span>users.fake-db</span>
+                                        <span class="record-count">156 records</span>
+                                    </li>
+                                    <li class="table-item" onclick="loadTable('logs.fake-db')">
+                                        <span class="table-icon">📝</span>
+                                        <span>logs.fake-db</span>
+                                        <span class="record-count">9,847 records</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Visual Query Builder -->
+                            <div class="query-builder">
+                                <h3>Visual Query Builder</h3>
+                                <div class="query-parts">
+                                    <div class="query-part">
+                                        <label>SELECT:</label>
+                                        <select multiple id="selectFields">
+                                            <option value="*" selected>All Fields (*)</option>
+                                            <option value="section">section</option>
+                                            <option value="setting_key">setting_key</option>
+                                            <option value="setting_value">setting_value</option>
+                                        </select>
+                                    </div>
+                                    <div class="query-part">
+                                        <label>WHERE:</label>
+                                        <input type="text" id="whereClause" placeholder="section = 'Basic Server Settings'">
+                                    </div>
+                                    <div class="query-part">
+                                        <label>ORDER BY:</label>
+                                        <select id="orderBy">
+                                            <option value="">None</option>
+                                            <option value="section">section</option>
+                                            <option value="setting_key">setting_key</option>
+                                        </select>
+                                    </div>
+                                    <button class="execute-btn" onclick="executeVisualQuery()">▶️ Execute Query</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Grid Editor -->
+                        <div class="data-editor">
+                            <div class="editor-toolbar">
+                                <button onclick="addRecord()">➕ Add Record</button>
+                                <button onclick="deleteSelected()">🗑️ Delete Selected</button>
+                                <button onclick="saveChanges()">💾 Save Changes</button>
+                                <button onclick="undoChanges()">↶ Undo</button>
+                                <div class="search-box">
+                                    <input type="text" id="searchBox" placeholder="Search..." onkeyup="searchTable(this.value)">
+                                </div>
+                            </div>
+                            
+                            <div class="data-grid" id="dataGrid">
+                                <!-- Dynamic data grid will be loaded here -->
+                            </div>
+                        </div>
+                    </section>
+                    
+                </main>
+                
+                <!-- GODMODE Status Bar -->
+                <footer class="godmode-status">
+                    <div class="status-content">
+                        <div class="real-time-stats">
+                            <span class="stat">
+                                <span class="stat-label">Uptime:</span>
+                                <span class="stat-value" id="systemUptime">72h 34m 12s</span>
+                            </span>
+                            <span class="stat">
+                                <span class="stat-label">Memory:</span>
+                                <span class="stat-value" id="memoryUsage">73.2% (5.8GB)</span>
+                            </span>
+                            <span class="stat">
+                                <span class="stat-label">CPU:</span>
+                                <span class="stat-value" id="cpuUsage">45.7%</span>
+                            </span>
+                            <span class="stat">
+                                <span class="stat-label">Network:</span>
+                                <span class="stat-value" id="networkUsage">↑ 15.2 MB/s ↓ 892 KB/s</span>
+                            </span>
+                        </div>
+                        <div class="godmode-message">
+                            <span class="power-symbol">⚡</span>
+                            <span id="godmodeStatus">GODMODE ACTIVE - UNLIMITED POWER</span>
+                        </div>
+                        <div class="emergency-indicator">
+                            <span class="emergency-light" id="emergencyLight"></span>
+                            <span>SYSTEM SECURE</span>
+                        </div>
+                    </div>
+                </footer>
+                
+                <script>
+                    // Initialize GODMODE Dashboard
+                    document.addEventListener('DOMContentLoaded', function() {
+                        initializeGodMode();
+                        connectIceWallNative();
+                        loadDatabaseORM();
+                        startRealTimeMonitoring();
+                        initializeVisualEditor();
+                    });
+                </script>
+                
+            </body>
+            </html>
+        }
+    }
+    
+    // ========================================
+    // NATIVE ICEWALL INTEGRATION APIS
+    // ========================================
+    
+    @api "/api/icewall/status" {
+        @method "GET"
+        @response_type "application/json"
+        @native_integration true
+        
+        @handler {
+            return getNativeIceWallStatus()
+        }
+    }
+    
+    @api "/api/icewall/threats/live" {
+        @method "GET"
+        @response_type "text/event-stream"
+        @realtime true
+        
+        @handler {
+            return streamLiveThreats()
+        }
+    }
+    
+    @api "/api/icewall/block" {
+        @method "POST"
+        @response_type "application/json"
+        @security_required true
+        
+        @handler {
+            return executeIceWallBlock(request.body)
+        }
+    }
+    
+    // ========================================
+    // VISUAL ORM DATABASE APIS
+    // ========================================
+    
+    @api "/api/orm/tables" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return listFakeDBTables("./cnf/")
+        }
+    }
+    
+    @api "/api/orm/query" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return executeORMQuery(request.body.table, request.body.query)
+        }
+    }
+    
+    @api "/api/orm/update" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return updateORMRecord(request.body.table, request.body.data)
+        }
+    }
+    
+    @api "/api/system/metrics" {
+        @method "GET"
+        @response_type "application/json"
+        @realtime true
+        
+        @handler {
+            return {
+                "cpu_usage": getCPUUsage(),
+                "memory_usage": getMemoryUsage(),
+                "network_stats": getNetworkStats(),
+                "disk_usage": getDiskUsage(),
+                "active_connections": getActiveConnections(),
+                "threat_count": getActiveThreatCount(),
+                "uptime": getSystemUptime()
+            }
+        }
+    }
+}
+
+// Runtime metadata for GODMODE
+@runtime_metadata {
+    @generated_at "2025-08-16T19:30:00Z"
+    @godmode_version "0.3.0a"
+    @theme "godmode-dark"
+    @icewall_native true
+    @visual_orm true
+    @security_level "maximum"
+    @lamia_native_power true
+    @unlimited_access true
+}

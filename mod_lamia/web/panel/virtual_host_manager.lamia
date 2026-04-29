@@ -1,0 +1,539 @@
+/**
+ * VIRTUAL HOST MANAGER v0.3.0c
+ * =============================
+ * Lightning-fast Virtual Host Management System
+ * © 2025 The Medusa Project | Revolutionary CRUD Operations
+ */
+
+@application VirtualHostManager {
+    @version "0.3.0c"
+    @theme "geeky-purple"
+    @realtime_updates true
+    @lightning_fast true
+    @database_backend "native"
+    
+    // ========================================
+    // VIRTUAL HOST DATA STRUCTURE
+    // ========================================
+    
+    @entity VirtualHost {
+        @id auto_increment
+        @title string required
+        @folder string required  
+        @description string
+        @created timestamp auto
+        @modified timestamp auto
+        @status enum["active", "inactive", "maintenance"] default="active"
+        @ssl_enabled boolean default=false
+        @port integer default=80
+    }
+    
+    // ========================================
+    // DEFAULT SEED DATA
+    // ========================================
+    
+    @seed {
+        VirtualHost {
+            @title "Default Website"
+            @folder "/web/site"
+            @description "The doorway to your perfect first website"
+            @status "active"
+            @ssl_enabled false
+            @port 80
+        }
+    }
+    
+    // ========================================
+    // API ENDPOINTS - LIGHTNING FAST CRUD
+    // ========================================
+    
+    @api "/api/virtualhosts" {
+        @method "GET"
+        @response_type "application/json"
+        @cache_strategy "aggressive"
+        @lightning_optimization true
+        
+        @handler {
+            // Lightning-fast retrieval with native caching
+            return getAllVirtualHosts()
+        }
+    }
+    
+    @api "/api/virtualhosts/:id" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return getVirtualHostById(params.id)
+        }
+    }
+    
+    @api "/api/virtualhosts" {
+        @method "POST"
+        @request_type "application/json"
+        @response_type "application/json"
+        @validation true
+        
+        @handler {
+            // Validate required fields
+            if (!request.title || !request.folder) {
+                return {
+                    "status": "error",
+                    "message": "Title and Folder are required fields"
+                }
+            }
+            
+            // Create new virtual host
+            return createVirtualHost({
+                "title": request.title,
+                "folder": request.folder,
+                "description": request.description || "",
+                "status": request.status || "active",
+                "ssl_enabled": request.ssl_enabled || false,
+                "port": request.port || 80
+            })
+        }
+    }
+    
+    @api "/api/virtualhosts/:id" {
+        @method "PUT"
+        @request_type "application/json"
+        @response_type "application/json"
+        
+        @handler {
+            return updateVirtualHost(params.id, {
+                "title": request.title,
+                "folder": request.folder,
+                "description": request.description,
+                "status": request.status,
+                "ssl_enabled": request.ssl_enabled,
+                "port": request.port,
+                "modified": getCurrentTimestamp()
+            })
+        }
+    }
+    
+    @api "/api/virtualhosts/:id" {
+        @method "DELETE"
+        @response_type "application/json"
+        
+        @handler {
+            return deleteVirtualHost(params.id)
+        }
+    }
+    
+    // ========================================
+    // GRID VIEW PAGE
+    // ========================================
+    
+    @page "/virtualhosts" {
+        @title "Virtual Host Manager"
+        @layout "grid"
+        
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Virtual Host Manager v0.3.0c</title>
+                <style>
+                    :root {
+                        --purple-primary: #8B5CF6;
+                        --purple-dark: #6D28D9;
+                        --purple-light: #A78BFA;
+                        --bg-dark: #1F2937;
+                        --bg-darker: #111827;
+                        --text-light: #F3F4F6;
+                        --success: #10B981;
+                        --warning: #F59E0B;
+                        --danger: #EF4444;
+                    }
+                    
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    
+                    body {
+                        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+                        background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+                        color: var(--text-light);
+                        min-height: 100vh;
+                    }
+                    
+                    .container {
+                        max-width: 1400px;
+                        margin: 0 auto;
+                        padding: 2rem;
+                    }
+                    
+                    .header {
+                        background: rgba(139, 92, 246, 0.1);
+                        border: 1px solid var(--purple-primary);
+                        border-radius: 12px;
+                        padding: 2rem;
+                        margin-bottom: 2rem;
+                        backdrop-filter: blur(10px);
+                    }
+                    
+                    .header h1 {
+                        font-size: 2.5rem;
+                        background: linear-gradient(90deg, var(--purple-light), var(--purple-primary));
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    .header p {
+                        color: var(--purple-light);
+                        font-size: 1.1rem;
+                    }
+                    
+                    .toolbar {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 2rem;
+                        padding: 1rem;
+                        background: rgba(255, 255, 255, 0.05);
+                        border-radius: 8px;
+                    }
+                    
+                    .btn {
+                        padding: 0.75rem 1.5rem;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        font-weight: 600;
+                    }
+                    
+                    .btn-primary {
+                        background: var(--purple-primary);
+                        color: white;
+                    }
+                    
+                    .btn-primary:hover {
+                        background: var(--purple-dark);
+                        transform: translateY(-2px);
+                        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+                    }
+                    
+                    .btn-success {
+                        background: var(--success);
+                        color: white;
+                    }
+                    
+                    .btn-warning {
+                        background: var(--warning);
+                        color: white;
+                    }
+                    
+                    .btn-danger {
+                        background: var(--danger);
+                        color: white;
+                    }
+                    
+                    .grid-container {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                        gap: 1.5rem;
+                        animation: fadeIn 0.5s ease;
+                    }
+                    
+                    .host-card {
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(139, 92, 246, 0.3);
+                        border-radius: 12px;
+                        padding: 1.5rem;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    
+                    .host-card::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
+                        background: linear-gradient(90deg, var(--purple-primary), var(--purple-light));
+                    }
+                    
+                    .host-card:hover {
+                        transform: translateY(-5px);
+                        border-color: var(--purple-primary);
+                        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+                    }
+                    
+                    .host-card h3 {
+                        color: var(--purple-light);
+                        margin-bottom: 0.5rem;
+                        font-size: 1.4rem;
+                    }
+                    
+                    .host-card .folder {
+                        color: #9CA3AF;
+                        font-family: 'Courier New', monospace;
+                        margin-bottom: 1rem;
+                        padding: 0.5rem;
+                        background: rgba(0, 0, 0, 0.3);
+                        border-radius: 4px;
+                    }
+                    
+                    .host-card .description {
+                        color: var(--text-light);
+                        line-height: 1.6;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .host-card .meta {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 1rem;
+                        font-size: 0.9rem;
+                        color: #9CA3AF;
+                    }
+                    
+                    .status-badge {
+                        padding: 0.25rem 0.75rem;
+                        border-radius: 20px;
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                    }
+                    
+                    .status-active {
+                        background: rgba(16, 185, 129, 0.2);
+                        color: #10B981;
+                        border: 1px solid #10B981;
+                    }
+                    
+                    .status-inactive {
+                        background: rgba(239, 68, 68, 0.2);
+                        color: #EF4444;
+                        border: 1px solid #EF4444;
+                    }
+                    
+                    .status-maintenance {
+                        background: rgba(245, 158, 11, 0.2);
+                        color: #F59E0B;
+                        border: 1px solid #F59E0B;
+                    }
+                    
+                    .card-actions {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-top: 1rem;
+                    }
+                    
+                    .card-actions button {
+                        flex: 1;
+                        padding: 0.5rem;
+                        border: 1px solid transparent;
+                        background: rgba(139, 92, 246, 0.1);
+                        color: var(--purple-light);
+                        border-radius: 6px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .card-actions button:hover {
+                        background: rgba(139, 92, 246, 0.2);
+                        border-color: var(--purple-primary);
+                    }
+                    
+                    @keyframes fadeIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                    
+                    /* Lightning-fast transitions */
+                    * {
+                        transition-duration: 0.15s !important;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>🌐 Virtual Host Manager</h1>
+                        <p>Lightning-fast management of your virtual hosts</p>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <div>
+                            <button class="btn btn-primary" onclick="createNewHost()">
+                                ➕ Create New Host
+                            </button>
+                            <button class="btn btn-success" onclick="refreshHosts()">
+                                🔄 Refresh
+                            </button>
+                        </div>
+                        <div>
+                            <span id="hostCount">Loading hosts...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-container" id="hostsGrid">
+                        <!-- Virtual hosts will be loaded here -->
+                    </div>
+                </div>
+                
+                <script>
+                    // Lightning-fast Virtual Host Manager
+                    let virtualHosts = [];
+                    
+                    async function loadVirtualHosts() {
+                        try {
+                            // For demo, using static data
+                            virtualHosts = [
+                                {
+                                    id: 1,
+                                    title: "Default Website",
+                                    folder: "/web/site",
+                                    description: "The doorway to your perfect first website",
+                                    status: "active",
+                                    ssl_enabled: false,
+                                    port: 80,
+                                    created: new Date().toISOString()
+                                }
+                            ];
+                            
+                            renderHosts();
+                        } catch (error) {
+                            console.error('Error loading hosts:', error);
+                        }
+                    }
+                    
+                    function renderHosts() {
+                        const grid = document.getElementById('hostsGrid');
+                        const count = document.getElementById('hostCount');
+                        
+                        count.textContent = `${virtualHosts.length} host(s)`;
+                        
+                        grid.innerHTML = virtualHosts.map(host => `
+                            <div class="host-card" data-id="${host.id}">
+                                <h3>${host.title}</h3>
+                                <div class="folder">📁 ${host.folder}</div>
+                                <div class="description">${host.description}</div>
+                                <div class="meta">
+                                    <span class="status-badge status-${host.status}">
+                                        ${host.status.toUpperCase()}
+                                    </span>
+                                    <span>Port: ${host.port}</span>
+                                </div>
+                                <div class="card-actions">
+                                    <button onclick="editHost(${host.id})">✏️ Edit</button>
+                                    <button onclick="updateHost(${host.id})">🔄 Update</button>
+                                    <button onclick="deleteHost(${host.id})">🗑️ Delete</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    function createNewHost() {
+                        const title = prompt("Enter host title:");
+                        const folder = prompt("Enter folder path:");
+                        const description = prompt("Enter description:");
+                        
+                        if (title && folder) {
+                            const newHost = {
+                                id: virtualHosts.length + 1,
+                                title,
+                                folder,
+                                description: description || "",
+                                status: "active",
+                                ssl_enabled: false,
+                                port: 80,
+                                created: new Date().toISOString()
+                            };
+                            
+                            virtualHosts.push(newHost);
+                            renderHosts();
+                        }
+                    }
+                    
+                    function editHost(id) {
+                        const host = virtualHosts.find(h => h.id === id);
+                        if (host) {
+                            const newTitle = prompt("Edit title:", host.title);
+                            if (newTitle) {
+                                host.title = newTitle;
+                                renderHosts();
+                            }
+                        }
+                    }
+                    
+                    function updateHost(id) {
+                        const host = virtualHosts.find(h => h.id === id);
+                        if (host) {
+                            host.modified = new Date().toISOString();
+                            alert(`Host "${host.title}" updated!`);
+                            renderHosts();
+                        }
+                    }
+                    
+                    function deleteHost(id) {
+                        if (confirm("Are you sure you want to delete this host?")) {
+                            virtualHosts = virtualHosts.filter(h => h.id !== id);
+                            renderHosts();
+                        }
+                    }
+                    
+                    function refreshHosts() {
+                        loadVirtualHosts();
+                    }
+                    
+                    // Initialize on load
+                    document.addEventListener('DOMContentLoaded', loadVirtualHosts);
+                </script>
+            </body>
+            </html>
+        }
+    }
+    
+    // ========================================
+    // NATIVE FUNCTIONS FOR LIGHTNING SPEED
+    // ========================================
+    
+    @function getAllVirtualHosts() {
+        // Native implementation with caching
+        return getCachedHosts() || fetchHostsFromDatabase()
+    }
+    
+    @function getVirtualHostById(id) {
+        return findHostById(id)
+    }
+    
+    @function createVirtualHost(data) {
+        return insertHost(data)
+    }
+    
+    @function updateVirtualHost(id, data) {
+        return modifyHost(id, data)
+    }
+    
+    @function deleteVirtualHost(id) {
+        return removeHost(id)
+    }
+}
+
+// Runtime metadata
+@runtime_metadata {
+    @generated_at "2025-08-21T03:00:00Z"
+    @version "0.3.0c"
+    @performance "lightning-fast"
+    @crud_operations true
+    @grid_layout true
+}

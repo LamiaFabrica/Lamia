@@ -1,0 +1,140 @@
+/**
+ * MEDUSASERV DOMAINS DIRECTORY v0.3.0c - ERGONOMIC LAMIA WITH ALL FEATURES
+ * ========================================================================
+ * Revolutionary ergonomic Lamia syntax with 3D emotions, GIF3D, and developer-first design
+ * ZERO HTML boilerplate - Pure 2025 Lamia syntax showcase
+ * © 2025 The Medusa Project
+ */
+
+@application DomainsDirectory {
+    @version "0.3.0c"
+    @theme "modern-purple"
+    
+    @page "/domains" {
+        @title "Domains Directory - Revolutionary Lamia"
+        @layout "comprehensive"
+        
+        @styles {
+            @theme modern-glass-advanced :: gradient="purple-blue-cosmic" :: glass-blur-intense
+            @container fluid :: max-width="900px" :: padding="2rem" :: margin="auto"
+            @typography system-advanced :: color="white" :: shadow-deep :: animations="fade-bounce"
+            @grid responsive :: columns="auto-fit" :: min-width="280px" :: gap="2rem"
+            @cards glass-morphism :: hover="lift-rotate" :: transitions="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+            @emotions 3d-spatial :: intensity="high" :: decay="smooth"
+        }
+        
+        @render {
+            @container main :: class="domains-directory-container" :: center :: glass-container {
+                @image logo://assets/Medusa_Art/MedusaServ.png :: alt="MedusaServ Logo" :: size="100px" :: center :: rounded :: glow
+                
+                @text h1 "🌐 Domains Directory" :: size="2.8rem" :: shadow :: gradient-text :: margin-bottom="1rem"
+                
+                @text "Click any domain to visit your site during DNS propagation" :: size="1.2rem" :: opacity="0.95" :: margin-bottom="2rem"
+                
+                @container info-tip :: class="info-glass" :: padding="1.5rem" :: margin="2rem 0" :: border="2px solid #60a5fa" :: rounded {
+                    @text strong "💡 Pro Tip: " :: break
+                    @text "Use temporary URLs while waiting for DNS propagation" :: break
+                    @text "Format: http://172.236.28.155/?user=yourname" :: font="monospace" :: color="cyan"
+                }
+                
+                @emotion joy :: intensity="0.8" :: duration="10s" :: 3d-coords="[0.8, 0.6, 0.7]"
+                @emotion excitement :: intensity="0.9" :: duration="15s" :: 3d-coords="[0.7, 0.9, 0.6]"
+                
+                @grid domains :: columns="auto-fit" :: min-width="280px" :: gap="2rem" :: margin="2rem 0" {
+                    
+                    @domain-card ssl-enabled :: priority="1" {
+                        @emotion love :: intensity="0.7" :: coordinates="[0.9, 0.5, 0.8]"
+                        @link https://portal.poweredbymedusa.com :: target="_blank" :: style="domain-card-ssl"
+                        @speed-indicator :: status="testing" :: emoji="⚡"
+                        @icon "🚪" :: size="2rem" :: glow
+                        @title "Portal Domain" :: color="#f0f9ff"
+                        @url "portal.poweredbymedusa.com" :: font="monospace" :: break-word
+                        @status "🔄 DNS Propagating" :: badge="processing"
+                        @ssl-badge "🔒 SSL/TLS" :: gradient="green-emerald" :: glow
+                        @speed-test :: domain="https://portal.poweredbymedusa.com" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card ssl-enabled :: priority="1" {
+                        @emotion pride :: intensity="0.8" :: coordinates="[0.7, 0.4, 0.9]"
+                        @link https://admin.poweredbymedusa.com :: target="_blank" :: style="domain-card-ssl"  
+                        @speed-indicator :: status="testing" :: emoji="⚡"
+                        @icon "⚙️" :: size="2rem" :: spin-hover
+                        @title "Admin Domain" :: color="#f0f9ff"
+                        @url "admin.poweredbymedusa.com" :: font="monospace" :: break-word
+                        @status "🔄 DNS Propagating" :: badge="processing"
+                        @ssl-badge "🔒 SSL/TLS" :: gradient="green-emerald" :: glow
+                        @speed-test :: domain="https://admin.poweredbymedusa.com" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card ssl-enabled :: priority="1" {
+                        @emotion contentment :: intensity="0.9" :: coordinates="[0.6, -0.2, 0.4]"
+                        @link https://www.poweredbymedusa.com :: target="_blank" :: style="domain-card-ssl"
+                        @speed-indicator :: status="fast" :: emoji="🚀"
+                        @icon "🌐" :: size="2rem" :: pulse
+                        @title "Main Website" :: color="#f0f9ff"  
+                        @url "www.poweredbymedusa.com" :: font="monospace" :: break-word
+                        @status "✅ Live" :: badge="success"
+                        @ssl-badge "🔒 SSL/TLS" :: gradient="green-emerald" :: glow
+                        @speed-test :: domain="https://www.poweredbymedusa.com" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card primary :: priority="0" {
+                        @emotion curiosity :: intensity="0.6" :: coordinates="[0.4, 0.7, 0.3]"
+                        @link http://172.236.28.155/ :: target="_blank" :: style="domain-card-primary"
+                        @speed-indicator :: status="testing" :: emoji="⏳"
+                        @icon "🏠" :: size="2rem" :: bounce-hover
+                        @title "Main Server" :: color="#3b82f6"
+                        @url "172.236.28.155" :: font="monospace" :: break-word
+                        @status "✅ Always Available" :: badge="success"
+                        @speed-test :: domain="http://172.236.28.155" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card temporary {
+                        @emotion hope :: intensity="0.7" :: coordinates="[0.6, 0.5, 0.7]"
+                        @link http://172.236.28.155/?user=poweredbymedusa :: target="_blank" :: style="domain-card-temp"
+                        @speed-indicator :: status="testing" :: emoji="⏳"
+                        @icon "🔮" :: size="2rem" :: magical-glow
+                        @title "PoweredByMedusa" :: color="#a78bfa"
+                        @url "172.236.28.155/?user=poweredbymedusa" :: font="monospace" :: break-word
+                        @status "✅ Active" :: badge="active"
+                        @speed-test :: domain="http://172.236.28.155" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card temporary {
+                        @emotion curiosity :: intensity="0.5" :: coordinates="[0.4, 0.7, 0.3]"
+                        @link http://172.236.28.155/?user=demo :: target="_blank" :: style="domain-card-temp"
+                        @speed-indicator :: status="testing" :: emoji="⏳"
+                        @icon "🎯" :: size="2rem" :: target-focus
+                        @title "Demo Site" :: color="#a78bfa"
+                        @url "172.236.28.155/?user=demo" :: font="monospace" :: break-word
+                        @status "✅ Active" :: badge="active"
+                        @speed-test :: domain="http://172.236.28.155" :: button="⚡ Speed Test"
+                    }
+                    
+                    @domain-card temporary {
+                        @emotion excitement :: intensity="0.6" :: coordinates="[0.7, 0.9, 0.6]"
+                        @link http://172.236.28.155/?user=testing :: target="_blank" :: style="domain-card-temp"
+                        @speed-indicator :: status="testing" :: emoji="⏳"
+                        @icon "🧪" :: size="2rem" :: bubble-effect
+                        @title "Testing Environment" :: color="#a78bfa"
+                        @url "172.236.28.155/?user=testing" :: font="monospace" :: break-word
+                        @status "✅ Active" :: badge="active" 
+                        @speed-test :: domain="http://172.236.28.155" :: button="⚡ Speed Test"
+                    }
+                }
+                
+                @gif3d revolutionary-loading :: autoplay="true" :: loop="true" :: size="400x300" :: style="cosmic-theme"
+                
+                @buttons :: layout="flex" :: gap="1.5rem" :: center :: margin-top="3rem" {
+                    @link panel://panel :: style="btn-glass-cosmic" :: text="← Back to Home" :: emoji="🏠"
+                    @link api://domains/refresh :: style="btn-glass-action" :: text="🔄 Refresh Domains" :: emoji="⚡"
+                }
+                
+                @container footer :: margin-top="3rem" :: opacity="0.8" {
+                    @text "🚀 Revolutionary Lamia Processing" :: size="0.9rem" :: break
+                    @text "✅ 3D Emotions Active • ✅ GIF3D Engine • ✅ Zero HTML" :: size="0.8rem" :: gradient-text
+                }
+            }
+        }
+    }
+}

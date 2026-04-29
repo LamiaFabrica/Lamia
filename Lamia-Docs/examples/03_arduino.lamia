@@ -1,0 +1,40 @@
+// Arduino Integration Example
+// Transpile to Arduino sketch
+
+manifest temperature_monitor() -> crystal @embedded {
+    create ARDUINO_SKETCH {
+        board: UNO,
+        
+        sensors: [
+            TEMP_SENSOR {
+                pin: A0,
+                type: DHT22,
+                interval: 1000
+            }
+        ],
+        
+        actuators: [
+            LED {
+                pin: 13,
+                type: INDICATOR
+            },
+            
+            BUZZER {
+                pin: 9,
+                type: PIEZO
+            }
+        ],
+        
+        logic: {
+            if (temperature > 30) {
+                LED.on();
+                BUZZER.beep(1000);
+            } else {
+                LED.off();
+            }
+        },
+        
+        communication: SERIAL_9600,
+        transpile: AUTOMATIC
+    }
+}

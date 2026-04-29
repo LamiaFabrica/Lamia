@@ -1,0 +1,442 @@
+@include copyright {
+    @type "enterprise_copyright"
+    @version "0.3.0c"
+}
+
+<!-- Enterprise Copyright -->
+<div class="enterprise-copyright">
+    <div class="copyright-content">
+        <div class="copyright-main">
+            <div class="medusa-brand">
+                <div class="brand-logo gif3d-orbital-motion">🔮</div>
+                <div class="brand-info">
+                    <strong>MedusaServ Enterprise v0.3.0c</strong>
+                    <small>Yorkshire Champion Standards</small>
+                </div>
+            </div>
+            
+            <div class="copyright-text">
+                <p>© 2025 The Medusa Project | Revolutionary Web Development Platform</p>
+                <p>Powered by <strong>Lamia Framework</strong> • <strong>3D Emotions Engine</strong> • <strong>GIF3D Revolutionary</strong></p>
+            </div>
+        </div>
+
+        <div class="copyright-details">
+            <div class="detail-section">
+                <h5>Technology Stack</h5>
+                <ul>
+                    <li><i class="fas fa-gem"></i> Lamia Native Language</li>
+                    <li><i class="fas fa-cube"></i> 3D Emotions Spatial Engine</li>
+                    <li><i class="fas fa-magic"></i> GIF3D Revolutionary Animation</li>
+                    <li><i class="fas fa-shield-alt"></i> ICEWALL Military Security</li>
+                    <li><i class="fas fa-rocket"></i> Yorkshire Champion Standards</li>
+                </ul>
+            </div>
+
+            <div class="detail-section">
+                <h5>Legal & Compliance</h5>
+                <div class="legal-links">
+                    <a href="#privacy" class="legal-link">Privacy Policy</a>
+                    <a href="#terms" class="legal-link">Terms of Service</a>
+                    <a href="#compliance" class="legal-link">GDPR Compliance</a>
+                    <a href="#security" class="legal-link">Security Policy</a>
+                </div>
+                <div class="compliance-badges">
+                    <span class="compliance-badge">
+                        <i class="fas fa-shield-check"></i>
+                        SOC 2 Compliant
+                    </span>
+                    <span class="compliance-badge">
+                        <i class="fas fa-lock"></i>
+                        GDPR Ready
+                    </span>
+                    <span class="compliance-badge">
+                        <i class="fas fa-certificate"></i>
+                        ISO 27001
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h5>System Information</h5>
+                <div class="system-details">
+                    <div class="system-item">
+                        <span class="system-label">Version:</span>
+                        <span class="system-value">v0.3.0c</span>
+                    </div>
+                    <div class="system-item">
+                        <span class="system-label">Build:</span>
+                        <span class="system-value" id="buildNumber">2025.08.22.001</span>
+                    </div>
+                    <div class="system-item">
+                        <span class="system-label">License:</span>
+                        <span class="system-value">Enterprise Professional</span>
+                    </div>
+                    <div class="system-item">
+                        <span class="system-label">Support:</span>
+                        <span class="system-value">Yorkshire Champion</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h5>Connect & Support</h5>
+                <div class="connect-links">
+                    <a href="#github" class="connect-link gif3d-hover-zoom" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#discord" class="connect-link gif3d-hover-zoom" title="Discord">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                    <a href="#twitter" class="connect-link gif3d-hover-zoom" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#linkedin" class="connect-link gif3d-hover-zoom" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#youtube" class="connect-link gif3d-hover-zoom" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="support-info">
+                    <p><strong>Enterprise Support:</strong> 24/7 availability</p>
+                    <p><strong>Response Time:</strong> < 15 minutes</p>
+                    <p><strong>Contact:</strong> support@medusaproject.com</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-footer">
+            <div class="attribution">
+                <p>
+                    <strong>Revolutionary Technology</strong> by roylepython | 
+                    <strong>Engineered</strong> for Excellence | 
+                    <strong>Built</strong> for Scale
+                </p>
+            </div>
+            
+            <div class="copyright-stats">
+                <span class="stat-item">
+                    <i class="fas fa-code"></i>
+                    <strong>1,831</strong> Libraries
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <strong>10k+</strong> Developers
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-server"></i>
+                    <strong>100%</strong> Uptime
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-trophy"></i>
+                    <strong>Champion</strong> Grade
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@style {
+    .enterprise-copyright {
+        background: linear-gradient(135deg, rgba(139, 63, 139, 0.1) 0%, rgba(255, 105, 180, 0.05) 100%);
+        border-top: 2px solid var(--primary-purple);
+        padding: 3rem 0 2rem;
+        margin-top: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .enterprise-copyright::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(139,63,139,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+        opacity: 0.3;
+        z-index: -1;
+    }
+
+    .copyright-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .copyright-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .medusa-brand {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .brand-logo {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, var(--primary-purple), var(--gif3d-pink));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        animation: logoGlow 4s ease-in-out infinite;
+    }
+
+    .brand-info strong {
+        display: block;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .brand-info small {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .copyright-text {
+        text-align: right;
+        color: var(--text-secondary);
+    }
+
+    .copyright-text p {
+        margin-bottom: 0.5rem;
+    }
+
+    .copyright-text strong {
+        color: var(--primary-purple);
+    }
+
+    .copyright-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-section {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 15px;
+        padding: 1.5rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .detail-section h5 {
+        color: var(--primary-purple);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 0.5rem;
+    }
+
+    .detail-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .detail-section li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .detail-section li i {
+        color: var(--primary-purple);
+        width: 16px;
+    }
+
+    .legal-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .legal-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .legal-link:hover {
+        background: var(--glass-bg);
+        color: var(--primary-purple);
+        transform: translateX(5px);
+    }
+
+    .compliance-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .compliance-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(139, 63, 139, 0.1);
+        border: 1px solid rgba(139, 63, 139, 0.3);
+        border-radius: 20px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        color: var(--primary-purple);
+    }
+
+    .system-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .system-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+    }
+
+    .system-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .system-value {
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .connect-links {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        justify-content: center;
+    }
+
+    .connect-link {
+        width: 40px;
+        height: 40px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+
+    .connect-link:hover {
+        background: var(--primary-purple);
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: var(--shadow-depth);
+    }
+
+    .support-info {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+    }
+
+    .support-info p {
+        margin-bottom: 0.25rem;
+    }
+
+    .support-info strong {
+        color: var(--text-primary);
+    }
+
+    .copyright-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 2rem;
+        border-top: 1px solid var(--glass-border);
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .attribution {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .attribution strong {
+        color: var(--primary-purple);
+    }
+
+    .copyright-stats {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .stat-item i {
+        color: var(--primary-purple);
+    }
+
+    .stat-item strong {
+        color: var(--text-primary);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .copyright-main {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .copyright-text {
+            text-align: center;
+        }
+
+        .copyright-details {
+            grid-template-columns: 1fr;
+        }
+
+        .copyright-footer {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .copyright-stats {
+            justify-content: center;
+        }
+
+        .system-details {
+            grid-template-columns: 1fr;
+        }
+    }
+}

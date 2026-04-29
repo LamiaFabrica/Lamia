@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Official PsiForceDB & MedusaServ Licensing Portal - Get your license for the revolutionary database server and web server. Discord & Patreon supporters get ad-free access and source code.">
+    <meta name="keywords" content="PsiForceDB, MedusaServ, Lamia Framework, database license, web server license, Patreon, Discord, open source">
+    <meta name="author" content="D Hargreaves (Roylepython)">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://licensing.psiforcedb.com/">
+    <meta property="og:title" content="PsiForceDB & MedusaServ Licensing Portal">
+    <meta property="og:description" content="Get your license for PsiForceDB Database Server and MedusaServ Web Server. Support us on Patreon and join our Discord for exclusive access!">
+    <meta property="og:image" content="https://licensing.psiforcedb.com/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://licensing.psiforcedb.com/">
+    <meta property="twitter:title" content="PsiForceDB & MedusaServ Licensing">
+    <meta property="twitter:description" content="Revolutionary database server and web server. Get licensed today!">
+    <meta property="twitter:image" content="https://licensing.psiforcedb.com/assets/twitter-image.png">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "PsiForceDB",
+      "applicationCategory": "DatabaseApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "1.00",
+        "priceCurrency": "USD"
+      },
+      "operatingSystem": "Windows, Linux",
+      "description": "Revolutionary quantum-ready database server with AI integration"
+    }
+    </script>
+
+    <title>PsiForceDB & MedusaServ Licensing Portal - Official License Server</title>
+
+    <style>
+        :root {
+            --primary: #6441a5;
+            --discord: #5865F2;
+            --patreon: #FF424D;
+            --success: #00D084;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .license-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .license-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .license-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .license-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--discord), var(--patreon));
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .tier-supporter {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+        }
+
+        .tier-champion {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+
+        .tier-enterprise {
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: white;
+        }
+
+        .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .price small {
+            font-size: 0.4em;
+            color: #999;
+        }
+
+        .features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn-discord {
+            background: var(--discord);
+            color: white;
+        }
+
+        .btn-patreon {
+            background: var(--patreon);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .step {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .testimonials {
+            margin: 40px 0;
+        }
+
+        .testimonial {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+
+        .accessibility-note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .license-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦕 PsiForceDB & MedusaServ</h1>
+            <p class="tagline">Revolutionary Database & Web Server - Official Licensing Portal</p>
+            <p>Support us on <strong>Discord</strong> and <strong>Patreon</strong> to get your license!</p>
+        </header>
+
+        <div class="accessibility-note">
+            <strong>💜 Built with AI Assistance</strong><br>
+            This project uses AI tools as a reasonable adjustment for disabled development. We were rejected by Kickstarter and WHT for AI use, but we believe in accessibility and innovation. By supporting us on Patreon, you're helping make development accessible for everyone!
+        </div>
+
+        <div class="info-section">
+            <h2>Why License PsiForceDB & MedusaServ?</h2>
+            <p style="margin: 20px 0;">By becoming a Patreon supporter and joining our Discord community, you get:</p>
+            <ul class="features">
+                <li><strong>Ad-Free Experience</strong> - No advertisements in the server software</li>
+                <li><strong>Source Code Access</strong> - Full access to GitHub repositories (Champion tier+)</li>
+                <li><strong>Priority Support</strong> - Direct help from the developer</li>
+                <li><strong>Beta Access</strong> - Try new features first</li>
+                <li><strong>Community Recognition</strong> - Special Discord roles</li>
+                <li><strong>Support Accessibility</strong> - Help us continue development</li>
+            </ul>
+        </div>
+
+        <h2 style="text-align: center; color: white; margin: 40px 0; font-size: 2.5em;">Choose Your Tier</h2>
+
+        <div class="license-grid">
+            <!-- Supporter Tier -->
+            <div class="license-card">
+                <span class="tier-badge tier-supporter">⭐ SUPPORTER</span>
+                <h3>Basic Support</h3>
+                <div class="price">$1<small>/month</small></div>
+                <ul class="features">
+                    <li>PsiForceDB Server License</li>
+                    <li>MedusaServ Web Server License</li>
+                    <li>Ad-Free Server Experience</li>
+                    <li>Discord Supporter Role</li>
+                    <li>Up to 3 Device Activations</li>
+                    <li>Community Support</li>
+                </ul>
+                <a href="https://www.patreon.com/join/YOUR_CAMPAIGN/checkout?rid=SUPPORTER_TIER_ID" class="cta-button btn-patreon">
+                    Become a Supporter
+                </a>
+                <a href="https://discord.gg/YOUR_INVITE" class="cta-button btn-discord">
+                    Join Discord
+                </a>
+            </div>
+
+            <!-- Champion Tier -->
+            <div class="license-card">
+                <span class="tier-badge tier-champion">🏆 CHAMPION</span>
+                <h3>Full Access</h3>
+                <div class="price">$10<small>/month</small></div>
+                <ul class="features">
+                    <li><strong>Everything in Supporter, plus:</strong></li>
+                    <li>Full Source Code Access</li>
+                    <li>Lamia Framework License</li>
+                    <li>BertieBot AI Assistant Access</li>
+                    <li>Priority Support (24h response)</li>
+                    <li>GitHub Repository Access</li>
+                    <li>Beta Feature Access</li>
+                    <li>Champion Discord Role</li>
+                </ul>
+                <a href="https://www.patreon.com/join/YOUR_CAMPAIGN/checkout?rid=CHAMPION_TIER_ID" class="cta-button btn-patreon">
+                    Become a Champion
+                </a>
+                <a href="https://discord.gg/YOUR_INVITE" class="cta-button btn-discord">
+                    Join Discord
+                </a>
+            </div>
+
+            <!-- Enterprise Tier -->
+            <div class="license-card">
+                <span class="tier-badge tier-enterprise">🏢 ENTERPRISE</span>
+                <h3>Business License</h3>
+                <div class="price">Custom</div>
+                <ul class="features">
+                    <li><strong>Everything in Champion, plus:</strong></li>
+                    <li>Unlimited Device Activations</li>
+                    <li>Custom Branding Options</li>
+                    <li>Dedicated Support Channel</li>
+                    <li>SLA Guarantees</li>
+                    <li>On-Premises Deployment</li>
+                    <li>Custom Feature Development</li>
+                    <li>Enterprise Discord Role</li>
+                </ul>
+                <a href="mailto:licensing@psiforcedb.com?subject=Enterprise%20License%20Inquiry" class="cta-button btn-primary">
+                    Contact Sales
+                </a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>How It Works</h2>
+            <div class="how-it-works">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Join Discord</h3>
+                    <p>Join our Discord server to become part of the community</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Support on Patreon</h3>
+                    <p>Choose your tier and support development</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Link Accounts</h3>
+                    <p>Link your Discord and Patreon accounts in our bot</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Get Your License</h3>
+                    <p>Receive your license key instantly via DM</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>What You Get</h2>
+
+            <h3>🗄️ PsiForceDB - Revolutionary Database Server</h3>
+            <ul class="features">
+                <li>Quantum-ready architecture</li>
+                <li>PFQL query language</li>
+                <li>AI integration via BertieBot</li>
+                <li>Advanced security (Icewall 2025)</li>
+                <li>Cross-platform (Windows, Linux)</li>
+                <li>Built-in backup and recovery</li>
+            </ul>
+
+            <h3 style="margin-top: 30px;">🌐 MedusaServ - Professional Web Server</h3>
+            <ul class="features">
+                <li>High-performance HTTP server</li>
+                <li>Virtual host management</li>
+                <li>SSL/TLS support</li>
+                <li>WebSocket support</li>
+                <li>Integrated with PsiForceDB</li>
+                <li>Module system</li>
+            </ul>
+
+            <h3 style="margin-top: 30px;">🔧 Lamia Framework (Champion+)</h3>
+            <ul class="features">
+                <li>Revolutionary C++ framework</li>
+                <li>Full source code access</li>
+                <li>Custom compiler included</li>
+                <li>Documentation generator</li>
+                <li>GUI builder</li>
+            </ul>
+        </div>
+
+        <div class="info-section testimonials">
+            <h2>Why Support Us?</h2>
+            <div class="testimonial">
+                <p><strong>Supporting Accessibility in Tech</strong></p>
+                <p>This project is developed with AI assistance as a reasonable adjustment for disabled development. Traditional funding platforms rejected us for using AI, but we believe technology should be accessible to all developers, regardless of ability.</p>
+            </div>
+            <div class="testimonial">
+                <p><strong>Yorkshire Champion Standards</strong></p>
+                <p>Built from the ground up with no shortcuts. Every line of code is crafted with pride and dedication to quality.</p>
+            </div>
+            <div class="testimonial">
+                <p><strong>Community-Driven Development</strong></p>
+                <p>Your support directly funds development. We listen to our community and build features that matter to real users.</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <h3>Do I need both Discord and Patreon?</h3>
+            <p>Yes! We require both Discord membership and Patreon support (above basic tier) to qualify for a license. This ensures you're part of our community and supporting development.</p>
+
+            <h3>Can I cancel anytime?</h3>
+            <p>Yes! Your license remains valid until the end of your billing cycle. Renewal happens automatically each month while you remain a Patreon supporter.</p>
+
+            <h3>What about source code access?</h3>
+            <p>Champion tier ($10+/month) and above receive full source code access via GitHub. You'll be added as a collaborator to our private repositories.</p>
+
+            <h3>How many devices can I use?</h3>
+            <p>Supporter tier: 3 devices. Champion tier: 3 devices. Enterprise tier: Unlimited. You can deactivate devices anytime to swap them out.</p>
+
+            <h3>What if I stop supporting?</h3>
+            <p>Your license will expire at the end of your billing cycle. You can re-subscribe anytime to reactivate your license with the same license key.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 D Hargreaves (Roylepython) | All Rights Reserved</p>
+            <p>PsiForceDB • MedusaServ • Lamia Framework</p>
+            <p style="margin-top: 20px;">
+                <a href="https://discord.gg/YOUR_INVITE" style="color: white; margin: 0 10px;">Discord</a> |
+                <a href="https://www.patreon.com/YOUR_CAMPAIGN" style="color: white; margin: 0 10px;">Patreon</a> |
+                <a href="https://github.com/YOUR_ORG" style="color: white; margin: 0 10px;">GitHub</a> |
+                <a href="mailto:licensing@psiforcedb.com" style="color: white; margin: 0 10px;">Contact</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Schema.org structured data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "PsiForceDB",
+      "url": "https://licensing.psiforcedb.com",
+      "logo": "https://licensing.psiforcedb.com/assets/logo.png",
+      "sameAs": [
+        "https://discord.gg/YOUR_INVITE",
+        "https://www.patreon.com/YOUR_CAMPAIGN",
+        "https://github.com/YOUR_ORG"
+      ]
+    }
+    </script>
+</body>
+</html>

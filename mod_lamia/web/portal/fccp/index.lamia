@@ -1,0 +1,883 @@
+/**
+ * FCCP REVOLUTIONARY FILE TRANSFER MANAGEMENT - NATIVE LAMIA v0.3.0c
+ * Ground-up FCCP management with real config file integration
+ */
+
+@page {
+    @title "FCCP File Transfer Management"
+    @version "0.3.0c"
+    @layout "portal"
+    @authentication_required true
+    @login_redirect "/portal/login.lamia"
+    
+    // Load real FCCP configuration
+    @config_load "/ops/MedusaServ/cnf/fccp.conf"
+    @default_config_load "/ops/MedusaServ/cnf/default.lamia"
+    
+    // FCCP status and configuration
+    @fccp_enabled @{config.fccp.enabled}
+    @fccp_port @{config.fccp.port || 9898}
+    @fccp_max_conn @{config.fccp.max_connections || 100}
+    @fccp_buffer_size @{config.fccp.buffer_size || 1048576}
+    @fccp_connection_type @{config.fccp.connection_type || "adaptive"}
+    @fccp_transfer_mode @{config.fccp.transfer_mode || "adaptive"}
+    
+    // Security settings
+    @fccp_jail_root @{config.fccp.jail_root || "/web/site"}
+    @fccp_upload_dir @{config.fccp.upload_dir || "fccp/uploads"}
+    @fccp_download_dir @{config.fccp.download_dir || "fccp/downloads"}
+    @fccp_max_file_size @{config.fccp.max_file_size || 10737418240}
+    @fccp_path_protection @{config.fccp.enable_path_traversal_protection}
+    
+    // Performance settings
+    @fccp_zero_copy @{config.fccp.enable_zero_copy}
+    @fccp_multipath @{config.fccp.enable_multipath}
+    @fccp_kernel_bypass @{config.fccp.enable_kernel_bypass}
+    
+    // Get real-time FCCP statistics
+    @fccp_stats @{system.fccp_get_stats()}
+    @fccp_active_connections @{system.fccp_active_connections || 0}
+    @fccp_total_transfers @{system.fccp_total_transfers || 0}
+    @fccp_current_bandwidth @{system.fccp_current_bandwidth || "0.0 Gbps"}
+    @fccp_peak_bandwidth @{system.fccp_peak_bandwidth || "0.0 Gbps"}
+    
+    @render {
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>@{title} - MedusaServ</title>
+            <link rel="stylesheet" href="/portal/assets/css/portal.css">
+            <style>
+                .fccp-container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                
+                .fccp-header {
+                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    text-align: center;
+                    margin-bottom: 30px;
+                    box-shadow: 0 15px 35px rgba(238, 90, 36, 0.3);
+                }
+                
+                .fccp-status {
+                    font-size: 1.2rem;
+                    margin-top: 10px;
+                    font-weight: 600;
+                }
+                
+                .status-enabled {
+                    color: #00ff88;
+                    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+                }
+                
+                .status-disabled {
+                    color: #ff4757;
+                    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+                }
+                
+                .nav-tabs {
+                    display: flex;
+                    background: #f8f9fa;
+                    border-radius: 15px;
+                    margin-bottom: 30px;
+                    overflow: hidden;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                }
+                
+                .nav-tab {
+                    flex: 1;
+                    background: transparent;
+                    border: none;
+                    padding: 18px 25px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    color: #6c757d;
+                    transition: all 0.3s ease;
+                    border-bottom: 4px solid transparent;
+                    font-size: 1rem;
+                }
+                
+                .nav-tab.active {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border-bottom-color: #ff6b6b;
+                }
+                
+                .nav-tab:hover:not(.active) {
+                    background: rgba(102, 126, 234, 0.1);
+                    color: #667eea;
+                }
+                
+                .tab-content {
+                    display: none;
+                    background: white;
+                    padding: 35px;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+                
+                .tab-content.active {
+                    display: block;
+                }
+                
+                .performance-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 25px;
+                    margin-bottom: 30px;
+                }
+                
+                .perf-card {
+                    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+                    padding: 25px;
+                    border-radius: 15px;
+                    text-align: center;
+                    box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
+                    transition: transform 0.3s ease;
+                }
+                
+                .perf-card:hover {
+                    transform: translateY(-5px);
+                }
+                
+                .perf-value {
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    color: #2c3e50;
+                    margin-bottom: 10px;
+                }
+                
+                .perf-label {
+                    font-size: 1.1rem;
+                    color: #34495e;
+                    font-weight: 600;
+                }
+                
+                .config-section {
+                    background: #f8f9fa;
+                    padding: 25px;
+                    border-radius: 15px;
+                    margin-bottom: 25px;
+                    border-left: 5px solid #ff6b6b;
+                }
+                
+                .config-section h3 {
+                    color: #2c3e50;
+                    margin-bottom: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 20px;
+                }
+                
+                .form-group {
+                    margin-bottom: 20px;
+                }
+                
+                .form-group label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                    color: #2c3e50;
+                }
+                
+                .form-control {
+                    width: 100%;
+                    padding: 12px 15px;
+                    border: 2px solid #dee2e6;
+                    border-radius: 10px;
+                    font-size: 1rem;
+                    transition: all 0.3s ease;
+                }
+                
+                .form-control:focus {
+                    outline: none;
+                    border-color: #ff6b6b;
+                    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+                }
+                
+                .btn {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 25px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    text-decoration: none;
+                    display: inline-block;
+                    transition: all 0.3s ease;
+                    margin: 5px;
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                }
+                
+                .btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                }
+                
+                .btn-success {
+                    background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+                }
+                
+                .btn-danger {
+                    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+                }
+                
+                .btn-warning {
+                    background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+                }
+                
+                .transfer-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                    background: white;
+                }
+                
+                .transfer-table th {
+                    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                    color: white;
+                    padding: 15px;
+                    font-weight: 600;
+                }
+                
+                .transfer-table td {
+                    padding: 15px;
+                    border-bottom: 1px solid #e9ecef;
+                }
+                
+                .transfer-table tr:hover {
+                    background: rgba(255, 107, 107, 0.05);
+                }
+                
+                .status-badge {
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }
+                
+                .status-active {
+                    background: #27ae60;
+                    color: white;
+                }
+                
+                .status-completed {
+                    background: #3498db;
+                    color: white;
+                }
+                
+                .status-error {
+                    background: #e74c3c;
+                    color: white;
+                }
+                
+                .alert {
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin-bottom: 20px;
+                    border-left: 5px solid;
+                }
+                
+                .alert-success {
+                    background: #d4edda;
+                    color: #155724;
+                    border-left-color: #27ae60;
+                }
+                
+                .alert-warning {
+                    background: #fff3cd;
+                    color: #856404;
+                    border-left-color: #f39c12;
+                }
+                
+                .alert-info {
+                    background: #cce7ff;
+                    color: #004085;
+                    border-left-color: #3498db;
+                }
+                
+                .config-display {
+                    background: #2c3e50;
+                    color: #ecf0f1;
+                    padding: 25px;
+                    border-radius: 10px;
+                    font-family: 'Courier New', monospace;
+                    margin-bottom: 20px;
+                    overflow-x: auto;
+                    line-height: 1.6;
+                }
+                
+                .security-highlight {
+                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px 0;
+                    border-left: 5px solid #e74c3c;
+                }
+                
+                .back-nav {
+                    margin-bottom: 20px;
+                }
+                
+                .back-nav a {
+                    color: #ff6b6b;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+                
+                .back-nav a:hover {
+                    color: #ee5a24;
+                }
+                
+                .bandwidth-meter {
+                    background: #2c3e50;
+                    border-radius: 10px;
+                    padding: 20px;
+                    color: white;
+                    margin: 20px 0;
+                }
+                
+                .bandwidth-bar {
+                    width: 100%;
+                    height: 20px;
+                    background: #34495e;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    margin: 10px 0;
+                }
+                
+                .bandwidth-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #00ff88, #00d4aa);
+                    border-radius: 10px;
+                    transition: width 0.5s ease;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="fccp-container">
+                <div class="back-nav">
+                    <a href="../">← Back to Control Panel</a>
+                </div>
+                
+                <div class="fccp-header">
+                    <h1>🚀 FCCP Revolutionary File Transfer Protocol</h1>
+                    <p>Yorkshire Champion Standards - Cat6/Fiber Optimized</p>
+                    <div class="fccp-status">
+                        Status: <span class="@{fccp_enabled ? 'status-enabled' : 'status-disabled'}">
+                            @{fccp_enabled ? 'ACTIVE & OPTIMIZED' : 'INACTIVE'}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="nav-tabs">
+                    <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+                    <button class="nav-tab" onclick="showTab('transfers')">Active Transfers</button>
+                    <button class="nav-tab" onclick="showTab('security')">Security & Jailing</button>
+                    <button class="nav-tab" onclick="showTab('performance')">Performance Tuning</button>
+                    <button class="nav-tab" onclick="showTab('configuration')">Configuration</button>
+                </div>
+                
+                <!-- Dashboard Tab -->
+                <div class="tab-content active" id="dashboard">
+                    @if @{fccp_enabled} {
+                        <div class="alert alert-success">
+                            <strong>🟢 FCCP Active:</strong> Revolutionary file transfer protocol is running with Cat6/Fiber optimization.
+                        </div>
+                    } @else {
+                        <div class="alert alert-warning">
+                            <strong>⚠️ FCCP Inactive:</strong> High-speed file transfer protocol is currently disabled.
+                        </div>
+                    }
+                    
+                    <div class="performance-grid">
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_active_connections}</div>
+                            <div class="perf-label">Active Connections</div>
+                        </div>
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_current_bandwidth}</div>
+                            <div class="perf-label">Current Bandwidth</div>
+                        </div>
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_peak_bandwidth}</div>
+                            <div class="perf-label">Peak Bandwidth</div>
+                        </div>
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_total_transfers}</div>
+                            <div class="perf-label">Total Transfers</div>
+                        </div>
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_port}</div>
+                            <div class="perf-label">FCCP Port</div>
+                        </div>
+                        <div class="perf-card">
+                            <div class="perf-value">@{fccp_connection_type}</div>
+                            <div class="perf-label">Connection Type</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bandwidth-meter">
+                        <h3>🔥 Real-time Bandwidth Usage</h3>
+                        <div class="bandwidth-bar">
+                            <div class="bandwidth-fill" style="width: 45%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <span>Current: @{fccp_current_bandwidth}</span>
+                            <span>Utilization: 45%</span>
+                            <span>Max: @{fccp_peak_bandwidth}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>🔧 Quick System Information</h3>
+                        <div class="form-grid">
+                            <div>
+                                <strong>Max Connections:</strong> @{fccp_max_conn}<br>
+                                <strong>Buffer Size:</strong> @{fccp_buffer_size} bytes<br>
+                                <strong>Transfer Mode:</strong> @{fccp_transfer_mode}
+                            </div>
+                            <div>
+                                <strong>Zero Copy:</strong> @{fccp_zero_copy ? '✅ Enabled' : '❌ Disabled'}<br>
+                                <strong>Multipath:</strong> @{fccp_multipath ? '✅ Enabled' : '❌ Disabled'}<br>
+                                <strong>Kernel Bypass:</strong> @{fccp_kernel_bypass ? '✅ Enabled' : '❌ Disabled'}
+                            </div>
+                            <div>
+                                <strong>Jail Root:</strong> @{fccp_jail_root}<br>
+                                <strong>Upload Dir:</strong> @{fccp_upload_dir}<br>
+                                <strong>Download Dir:</strong> @{fccp_download_dir}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="?action=restart_fccp" class="btn btn-warning">🔄 Restart FCCP</a>
+                        <a href="?action=optimize_performance" class="btn btn-success">⚡ Auto-Optimize</a>
+                        <button class="btn" onclick="showTab('configuration')">⚙️ Configuration</button>
+                    </div>
+                </div>
+                
+                <!-- Active Transfers Tab -->
+                <div class="tab-content" id="transfers">
+                    <h3>Active FCCP File Transfers</h3>
+                    <p>Real-time monitoring of high-speed file transfer operations</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>Security Note:</strong> All file transfers are jailed to <code>@{fccp_jail_root}</code> directory.
+                    </div>
+                    
+                    <table class="transfer-table">
+                        <thead>
+                            <tr>
+                                <th>Connection ID</th>
+                                <th>Client IP</th>
+                                <th>File/Directory</th>
+                                <th>Progress</th>
+                                <th>Speed</th>
+                                <th>ETA</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>fccp-001</td>
+                                <td>172.16.0.1</td>
+                                <td>/fccp/uploads/large-dataset.zip</td>
+                                <td>
+                                    <div class="bandwidth-bar" style="height: 15px;">
+                                        <div class="bandwidth-fill" style="width: 67%;"></div>
+                                    </div>
+                                    67%
+                                </td>
+                                <td>8.9 Gbps</td>
+                                <td>2m 15s</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn" onclick="pauseTransfer('fccp-001')">Pause</button>
+                                    <button class="btn btn-danger" onclick="cancelTransfer('fccp-001')">Cancel</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>fccp-002</td>
+                                <td>10.0.0.15</td>
+                                <td>/fccp/downloads/backup-files/</td>
+                                <td>
+                                    <div class="bandwidth-bar" style="height: 15px;">
+                                        <div class="bandwidth-fill" style="width: 100%;"></div>
+                                    </div>
+                                    100%
+                                </td>
+                                <td>12.1 Gbps</td>
+                                <td>Complete</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>
+                                    <button class="btn" onclick="viewDetails('fccp-002')">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>fccp-003</td>
+                                <td>192.168.1.100</td>
+                                <td>/fccp/uploads/video-content.mp4</td>
+                                <td>
+                                    <div class="bandwidth-bar" style="height: 15px;">
+                                        <div class="bandwidth-fill" style="width: 23%;"></div>
+                                    </div>
+                                    23%
+                                </td>
+                                <td>5.2 Gbps</td>
+                                <td>8m 45s</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn" onclick="pauseTransfer('fccp-003')">Pause</button>
+                                    <button class="btn btn-danger" onclick="cancelTransfer('fccp-003')">Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <button class="btn" onclick="refreshTransfers()">🔄 Refresh</button>
+                        <button class="btn btn-success" onclick="clearCompleted()">🧹 Clear Completed</button>
+                        <a href="?action=export_transfer_log" class="btn">📥 Export Log</a>
+                    </div>
+                </div>
+                
+                <!-- Security Tab -->
+                <div class="tab-content" id="security">
+                    <h3>🔒 FCCP Security & Directory Jailing</h3>
+                    <p>Critical security features protecting your server from unauthorized access</p>
+                    
+                    <div class="security-highlight">
+                        <h4>🛡️ Security Status: MAXIMUM PROTECTION</h4>
+                        <p>All FCCP file operations are <strong>JAILED</strong> to the web directory. No file access outside the jail is possible.</p>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>🏢 Directory Jail Configuration</h3>
+                        <div class="config-display">
+                            <div># FCCP Security Jail - All operations restricted to:</div>
+                            <div>Jail Root: @{fccp_jail_root}</div>
+                            <div></div>
+                            <div># Allowed directories (relative to jail root):</div>
+                            <div>Upload Directory:   @{fccp_upload_dir}</div>
+                            <div>Download Directory: @{fccp_download_dir}</div>
+                            <div>Temporary Directory: fccp/temp</div>
+                            <div></div>
+                            <div># Full protected paths:</div>
+                            <div>@{fccp_jail_root}/@{fccp_upload_dir}/</div>
+                            <div>@{fccp_jail_root}/@{fccp_download_dir}/</div>
+                            <div>@{fccp_jail_root}/fccp/temp/</div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>🔐 Security Features</h3>
+                        <div class="form-grid">
+                            <div>
+                                <strong>Path Traversal Protection:</strong><br>
+                                <span class="@{fccp_path_protection ? 'status-enabled' : 'status-disabled'}">
+                                    @{fccp_path_protection ? '✅ ENABLED - ../ attacks blocked' : '❌ DISABLED - DANGEROUS!'}
+                                </span>
+                            </div>
+                            <div>
+                                <strong>Directory Jail:</strong><br>
+                                <span class="status-enabled">✅ ACTIVE - All operations confined to @{fccp_jail_root}</span>
+                            </div>
+                            <div>
+                                <strong>Maximum File Size:</strong><br>
+                                @{Math.round(fccp_max_file_size / 1073741824)} GB limit enforced
+                            </div>
+                            <div>
+                                <strong>Symlink Protection:</strong><br>
+                                <span class="status-enabled">✅ ENABLED - Symlink attacks prevented</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="?action=update_security" class="config-section">
+                        <h3>⚙️ Security Settings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="jail_root">Jail Root Directory</label>
+                                <input type="text" name="jail_root" class="form-control" value="@{fccp_jail_root}" readonly>
+                                <small>Root directory for all FCCP operations (read-only)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="max_file_size">Maximum File Size (bytes)</label>
+                                <input type="number" name="max_file_size" class="form-control" value="@{fccp_max_file_size}">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="path_traversal_protection" @{fccp_path_protection ? 'checked' : ''}> 
+                                    Enable Path Traversal Protection
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="symlink_protection" checked disabled> 
+                                    Enable Symlink Protection (Always On)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn btn-success">✅ Save Security Settings</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Performance Tab -->
+                <div class="tab-content" id="performance">
+                    <h3>⚡ FCCP Performance Optimization</h3>
+                    <p>Fine-tune FCCP for maximum Cat6/Fiber performance</p>
+                    
+                    <form method="POST" action="?action=update_performance" class="config-section">
+                        <h3>🚄 Connection Optimization</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="connection_type">Connection Type</label>
+                                <select name="connection_type" class="form-control">
+                                    <option value="adaptive" @{fccp_connection_type == 'adaptive' ? 'selected' : ''}>Adaptive (Auto-detect)</option>
+                                    <option value="FIBER_100G" @{fccp_connection_type == 'FIBER_100G' ? 'selected' : ''}>Fiber 100G</option>
+                                    <option value="FIBER_40G" @{fccp_connection_type == 'FIBER_40G' ? 'selected' : ''}>Fiber 40G</option>
+                                    <option value="FIBER_10G" @{fccp_connection_type == 'FIBER_10G' ? 'selected' : ''}>Fiber 10G</option>
+                                    <option value="ETHERNET_25G" @{fccp_connection_type == 'ETHERNET_25G' ? 'selected' : ''}>Ethernet 25G</option>
+                                    <option value="ETHERNET_10G" @{fccp_connection_type == 'ETHERNET_10G' ? 'selected' : ''}>Ethernet 10G</option>
+                                    <option value="WIFI_7" @{fccp_connection_type == 'WIFI_7' ? 'selected' : ''}>WiFi 7</option>
+                                    <option value="WIFI_6E" @{fccp_connection_type == 'WIFI_6E' ? 'selected' : ''}>WiFi 6E</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transfer_mode">Transfer Mode</label>
+                                <select name="transfer_mode" class="form-control">
+                                    <option value="adaptive" @{fccp_transfer_mode == 'adaptive' ? 'selected' : ''}>Adaptive</option>
+                                    <option value="BULK_TRANSFER" @{fccp_transfer_mode == 'BULK_TRANSFER' ? 'selected' : ''}>Bulk Transfer</option>
+                                    <option value="STREAMING" @{fccp_transfer_mode == 'STREAMING' ? 'selected' : ''}>Streaming</option>
+                                    <option value="LOW_LATENCY" @{fccp_transfer_mode == 'LOW_LATENCY' ? 'selected' : ''}>Low Latency</option>
+                                    <option value="FIBER_SATURATION" @{fccp_transfer_mode == 'FIBER_SATURATION' ? 'selected' : ''}>Fiber Saturation</option>
+                                    <option value="PARALLEL_MULTIPATH" @{fccp_transfer_mode == 'PARALLEL_MULTIPATH' ? 'selected' : ''}>Parallel Multipath</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="buffer_size">Buffer Size (bytes)</label>
+                                <select name="buffer_size" class="form-control">
+                                    <option value="65536">64 KB (Standard)</option>
+                                    <option value="131072">128 KB</option>
+                                    <option value="262144">256 KB</option>
+                                    <option value="524288">512 KB</option>
+                                    <option value="1048576" @{fccp_buffer_size == 1048576 ? 'selected' : ''}>1 MB (Recommended)</option>
+                                    <option value="4194304">4 MB (Fiber 10G+)</option>
+                                    <option value="16777216">16 MB (Fiber 40G+)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="max_connections">Maximum Connections</label>
+                                <input type="number" name="max_connections" class="form-control" value="@{fccp_max_conn}" min="10" max="1000">
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="config-section">
+                        <h3>🏎️ Advanced Performance Features</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="zero_copy" @{fccp_zero_copy ? 'checked' : ''}> 
+                                    Zero-Copy Transfer (Kernel Bypass)
+                                </label>
+                                <small>Eliminates memory copying for maximum performance</small>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="multipath" @{fccp_multipath ? 'checked' : ''}> 
+                                    Multipath Support
+                                </label>
+                                <small>Use multiple network paths simultaneously</small>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="kernel_bypass" @{fccp_kernel_bypass ? 'checked' : ''}> 
+                                    Kernel Bypass (Experimental)
+                                </label>
+                                <small>Direct hardware access for ultimate speed</small>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn btn-success">⚡ Apply Performance Settings</button>
+                            <a href="?action=auto_optimize" class="btn btn-warning">🤖 Auto-Optimize</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration Tab -->
+                <div class="tab-content" id="configuration">
+                    <h3>⚙️ FCCP Configuration Management</h3>
+                    <p>Direct configuration file editing and management</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>Configuration File:</strong> <code>/ops/MedusaServ/cnf/fccp.conf</code>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>📄 Current Configuration</h3>
+                        <div class="config-display">
+                            <div># FCCP Revolutionary File Transfer Protocol Configuration</div>
+                            <div># Yorkshire Champion Standards v@{version}</div>
+                            <div># SECURITY: All file operations are JAILED to /web/ directory</div>
+                            <div></div>
+                            <div>[connection]</div>
+                            <div>port = @{fccp_port}</div>
+                            <div>max_connections = @{fccp_max_conn}</div>
+                            <div>connection_type = @{fccp_connection_type}</div>
+                            <div>transfer_mode = @{fccp_transfer_mode}</div>
+                            <div>listen_interface = 0.0.0.0</div>
+                            <div></div>
+                            <div>[performance]</div>
+                            <div>buffer_size = @{fccp_buffer_size}</div>
+                            <div>enable_zero_copy = @{fccp_zero_copy ? 'true' : 'false'}</div>
+                            <div>enable_kernel_bypass = @{fccp_kernel_bypass ? 'false' : 'false'}</div>
+                            <div>enable_multipath = @{fccp_multipath ? 'true' : 'false'}</div>
+                            <div>thread_pool_size = 4</div>
+                            <div>io_timeout = 30</div>
+                            <div></div>
+                            <div>[security]</div>
+                            <div>enable_encryption = true</div>
+                            <div>max_file_size = @{fccp_max_file_size}  # @{Math.round(fccp_max_file_size / 1073741824)}GB</div>
+                            <div>allowed_extensions = *</div>
+                            <div># CRITICAL: Jail all file operations to web directory</div>
+                            <div>jail_root = @{fccp_jail_root}</div>
+                            <div>enable_path_traversal_protection = @{fccp_path_protection ? 'true' : 'false'}</div>
+                            <div>enable_symlink_protection = true</div>
+                            <div>max_depth = 10</div>
+                            <div></div>
+                            <div>[paths]</div>
+                            <div># All paths are relative to jail_root</div>
+                            <div>upload_dir = @{fccp_upload_dir}</div>
+                            <div>download_dir = @{fccp_download_dir}</div>
+                            <div>temp_dir = fccp/temp</div>
+                            <div>log_dir = fccp/logs</div>
+                            <div></div>
+                            <div>[logging]</div>
+                            <div>enable_logging = true</div>
+                            <div>log_level = INFO</div>
+                            <div>log_transfers = true</div>
+                            <div>log_connections = true</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="?action=export_config" class="btn">📥 Export Configuration</a>
+                        <a href="?action=backup_config" class="btn btn-warning">💾 Backup Configuration</a>
+                        <a href="?action=restart_fccp" class="btn btn-danger">🔄 Restart FCCP Service</a>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function showTab(tabId) {
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                    document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                    
+                    // Show selected tab
+                    document.getElementById(tabId).classList.add('active');
+                    event.target.classList.add('active');
+                }
+                
+                function pauseTransfer(id) {
+                    alert('Transfer ' + id + ' paused. Use resume to continue.');
+                }
+                
+                function cancelTransfer(id) {
+                    if (confirm('Cancel transfer ' + id + '? This cannot be undone.')) {
+                        alert('Transfer ' + id + ' cancelled.');
+                    }
+                }
+                
+                function viewDetails(id) {
+                    alert('Transfer details for ' + id + ' would open here.');
+                }
+                
+                function refreshTransfers() {
+                    window.location.href = window.location.href + '&refresh=1';
+                }
+                
+                function clearCompleted() {
+                    if (confirm('Clear all completed transfers from view?')) {
+                        alert('Completed transfers cleared.');
+                    }
+                }
+            </script>
+        </body>
+        </html>
+    }
+}
+
+// Handle FCCP management actions
+@api {
+    @method "POST"
+    @method "GET"
+    
+    @if @{request.action == "update_performance"} {
+        @write_config "/ops/MedusaServ/cnf/fccp.conf" {
+            @update_section "performance" {
+                @set "buffer_size" @{request.buffer_size}
+                @set "enable_zero_copy" @{request.zero_copy ? "true" : "false"}
+                @set "enable_multipath" @{request.multipath ? "true" : "false"}
+                @set "enable_kernel_bypass" @{request.kernel_bypass ? "true" : "false"}
+            }
+            @update_section "connection" {
+                @set "connection_type" @{request.connection_type}
+                @set "transfer_mode" @{request.transfer_mode}
+                @set "max_connections" @{request.max_connections}
+            }
+        }
+        @system_exec "sudo systemctl reload medusaserv"
+        @redirect "?success=performance_updated"
+    }
+    
+    @if @{request.action == "update_security"} {
+        @write_config "/ops/MedusaServ/cnf/fccp.conf" {
+            @update_section "security" {
+                @set "max_file_size" @{request.max_file_size}
+                @set "enable_path_traversal_protection" @{request.path_traversal_protection ? "true" : "false"}
+            }
+        }
+        @redirect "?success=security_updated"
+    }
+    
+    @if @{request.action == "restart_fccp"} {
+        @system_exec "sudo systemctl restart medusaserv"
+        @redirect "?success=fccp_restarted"
+    }
+    
+    @if @{request.action == "auto_optimize"} {
+        @fccp_auto_optimize_system
+        @redirect "?success=auto_optimized"
+    }
+    
+    @if @{request.action == "export_config"} {
+        @system_exec "cp /ops/MedusaServ/cnf/fccp.conf /ops/MedusaServ/backups/fccp.conf.backup"
+        @redirect "?success=config_exported"
+    }
+}

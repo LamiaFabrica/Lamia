@@ -1,0 +1,210 @@
+@include header {
+    @type "ultimate_enterprise_header"
+    @version "0.3.0c-REVOLUTION"
+    @features ["real_time_notifications", "ai_search", "voice_commands", "security_status", "performance_monitor"]
+    @integrations ["3d_emotions", "gif3d_revolutionary", "icewall_fortress"]
+}
+
+<!-- Security Meta Tags -->
+<meta name="csrf-token" content="@csrf_token">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self';">
+
+<!-- Revolutionary Enterprise Header -->
+<header class="enterprise-header">
+    <!-- Brand Section -->
+    <div class="header-brand">
+        <div class="medusa-logo gif3d-orbital-motion">🔮</div>
+        <div class="brand-info">
+            <div class="brand-text">MedusaServ Ultimate</div>
+            <div class="brand-subtitle">Yorkshire Champion Standards</div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Section -->
+    <div class="enterprise-search" role="search" aria-label="Main search area">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon-left" aria-hidden="true"></i>
+                <input type="text" placeholder="Search services, metrics, logs, configurations..." 
+                       id="globalSearch" autocomplete="off" 
+                       aria-label="Global search input" 
+                       aria-describedby="searchHelp">
+                <div class="search-actions">
+                    <button class="search-filter-btn" data-action="openSearchFilters" 
+                            aria-label="Open search filters" tabindex="0">
+                        <i class="fas fa-filter" aria-hidden="true"></i>
+                    </button>
+                    <button class="search-voice-btn" data-action="startVoiceSearch" 
+                            aria-label="Start voice search" tabindex="0">
+                        <i class="fas fa-microphone" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
+            <div class="search-quick-access" role="group" aria-label="Quick search categories">
+                <button class="quick-search-item" data-category="services" 
+                        aria-label="Quick search for services" tabindex="0">Services</button>
+                <button class="quick-search-item" data-category="logs" 
+                        aria-label="Quick search for logs" tabindex="0">Logs</button>
+                <button class="quick-search-item" data-category="users" 
+                        aria-label="Quick search for users" tabindex="0">Users</button>
+                <button class="quick-search-item" data-category="security" 
+                        aria-label="Quick search for security" tabindex="0">Security</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Actions & User Section -->
+    <div class="header-actions">
+        <!-- System Status Indicator -->
+        <div class="system-status-indicator">
+            <div class="status-light online" title="All Systems Operational"></div>
+            <span class="status-text">FORTRESS</span>
+        </div>
+        
+        <!-- Notification Center -->
+        <div class="notification-center">
+            <button class="action-btn gif3d-hover-zoom" onclick="toggleNotifications()" title="Notification Center">
+                <i class="fas fa-bell notification-bell"></i>
+                <span class="notification-count" id="notificationCount">7</span>
+                <div class="notification-pulse"></div>
+            </button>
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notification-header">
+                    <h4>System Notifications</h4>
+                    <button class="mark-all-read" onclick="markAllRead()">Mark All Read</button>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <div class="notification-item unread">
+                        <div class="notification-icon success"><i class="fas fa-shield-alt"></i></div>
+                        <div class="notification-content">
+                            <div class="notification-text">ICEWALL Security scan completed - No threats detected</div>
+                            <div class="notification-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="notification-content">
+                            <div class="notification-text">High CPU usage detected on server-02</div>
+                            <div class="notification-time">5 minutes ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions Menu -->
+        <button class="action-btn gif3d-hover-zoom" onclick="toggleQuickActions()" title="Quick Actions">
+            <i class="fas fa-bolt"></i>
+        </button>
+        
+        <!-- Settings -->
+        <button class="action-btn gif3d-hover-zoom" onclick="openSettings()" title="System Settings">
+            <i class="fas fa-cogs"></i>
+        </button>
+        
+        <!-- User Profile & Actions -->
+        <div class="user-section">
+            <div class="user-avatar-container">
+                <div class="user-avatar" onclick="toggleUserMenu()">
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='35' r='20' fill='%23fff'></circle><path d='M20 80 C20 60, 35 50, 50 50 S80 60, 80 80' fill='%23fff'></path></svg>" alt="Admin Avatar" class="avatar-image">
+                    <div class="avatar-status online"></div>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Administrator</div>
+                    <div class="user-role">System Admin</div>
+                </div>
+                <button class="user-menu-toggle" onclick="toggleUserMenu()">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            
+            <!-- User Dropdown Menu -->
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-avatar-large">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='35' r='20' fill='%23fff'></circle><path d='M20 80 C20 60, 35 50, 50 50 S80 60, 80 80' fill='%23fff'></path></svg>" alt="Admin Avatar">
+                        <div class="avatar-status online"></div>
+                    </div>
+                    <div class="user-details">
+                        <strong>Administrator</strong>
+                        <small>medusa@localhost</small>
+                        <div class="user-badges">
+                            <span class="badge admin">Admin</span>
+                            <span class="badge champion">Yorkshire Champion</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-dropdown-section">
+                    <a href="#profile" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="#account" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Account Settings</span>
+                    </a>
+                    <a href="#security" class="dropdown-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security Settings</span>
+                    </a>
+                    <a href="#activity" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Activity Log</span>
+                    </a>
+                </div>
+                
+                <div class="user-dropdown-section">
+                    <a href="purple-pages.html" class="dropdown-item purple-pages-link">
+                        <i class="fas fa-book"></i>
+                        <span>📚 Purple Pages</span>
+                    </a>
+                    <a href="#help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help & Support</span>
+                    </a>
+                </div>
+                
+                <div class="user-dropdown-footer">
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Update Warning Banner -->
+<div class="update-warning-banner" id="updateWarning" style="display: none;">
+    <div class="update-warning-content">
+        <div class="update-icon">
+            <i class="fas fa-download"></i>
+        </div>
+        <div class="update-info">
+            <div class="update-title">System Updates Available</div>
+            <div class="update-description">MedusaServ v0.3.1 is available with security enhancements and new features</div>
+        </div>
+        <div class="update-actions">
+            <button class="update-btn primary" onclick="startUpdate()">
+                <i class="fas fa-download"></i>
+                Update Now
+            </button>
+            <button class="update-btn secondary" onclick="scheduleUpdate()">
+                <i class="fas fa-clock"></i>
+                Schedule
+            </button>
+            <button class="update-btn dismiss" onclick="dismissUpdate()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Include External Styles -->
+<link rel="stylesheet" href="./inc/header-styles.css">
+
+<!-- Include External JavaScript -->
+<script src="./inc/header-scripts.js"></script>

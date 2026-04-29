@@ -1,0 +1,646 @@
+/**
+ * PURPLE PAGES API ENDPOINTS v0.3.0a
+ * ===================================
+ * Native API implementation for Purple Pages cPanel-style dashboard
+ * No third-party dependencies - established libraries only
+ * © 2025 The Medusa Project | Roylepython | D Hargreaves
+ */
+
+@api_endpoints PurplePagesAPI {
+    @name "Purple Pages API v0.3.0a"
+    @base_path "/panel/api/purple-pages"
+    @authentication "godmode_localhost_only"
+    @established_libraries_only true
+    
+    // ========================================
+    // SYSTEM STATUS ENDPOINTS
+    // ========================================
+    
+    @endpoint system_status {
+        @route "GET /system/status"
+        @description "Get comprehensive system status for Purple Pages dashboard"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            
+            // Get system metrics using established libraries
+            const system_data = pp_funcs.get_system_metrics({
+                include_performance: true,
+                include_security: true,
+                include_audit_stats: true
+            })
+            
+            return {
+                status: "success",
+                data: {
+                    server_status: system_data.server_running ? "Running" : "Stopped",
+                    uptime: formatUptime(system_data.uptime_seconds),
+                    active_connections: system_data.active_connections,
+                    cpu_usage: round(system_data.cpu_usage_percent, 1),
+                    memory_usage: round(system_data.memory_usage_percent, 1),
+                    disk_usage: round(system_data.disk_usage_percent, 1),
+                    audit_entries: system_data.total_audit_entries,
+                    security_level: system_data.security_status,
+                    plugins_active: system_data.active_plugins,
+                    version: "v0.3.0a",
+                    last_updated: getCurrentTimestamp()
+                }
+            }
+        }
+    }
+    
+    @endpoint system_metrics_realtime {
+        @route "GET /system/metrics/realtime"
+        @description "Get real-time system metrics"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            
+            const metrics = pp_funcs.get_realtime_metrics()
+            
+            return {
+                status: "success",
+                data: {
+                    timestamp: getCurrentTimestamp(),
+                    cpu: {
+                        usage_percent: metrics.cpu_usage,
+                        cores: metrics.cpu_cores,
+                        load_average: metrics.load_average
+                    },
+                    memory: {
+                        total_gb: metrics.memory_total_gb,
+                        used_gb: metrics.memory_used_gb,
+                        free_gb: metrics.memory_free_gb,
+                        usage_percent: metrics.memory_usage_percent
+                    },
+                    network: {
+                        bytes_in: metrics.network_bytes_in,
+                        bytes_out: metrics.network_bytes_out,
+                        packets_in: metrics.network_packets_in,
+                        packets_out: metrics.network_packets_out
+                    },
+                    requests: {
+                        per_second: metrics.requests_per_second,
+                        total_today: metrics.requests_total_today,
+                        average_response_time: metrics.avg_response_time
+                    }
+                }
+            }
+        }
+    }
+    
+    // ========================================
+    // AUDIT TRAIL ENDPOINTS
+    // ========================================
+    
+    @endpoint audit_recent {
+        @route "GET /audit/recent"
+        @description "Get recent audit trail entries"
+        @access_level "godmode"
+        @query_params ["limit", "category", "since"]
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const limit = parseInt(getQueryParam("limit", 10))
+            const category = getQueryParam("category", "all")
+            const since = getQueryParam("since", null)
+            
+            const search_params = {
+                limit: limit,
+                category: category,
+                order_by: "timestamp DESC",
+                since_timestamp: since
+            }
+            
+            const audit_results = pp_funcs.search_audit_trail(search_params)
+            
+            const formatted_entries = audit_results.entries.map(entry => ({
+                id: entry.id,
+                timestamp: entry.timestamp,
+                category: entry.category,
+                action: entry.action,
+                description: entry.description,
+                user_id: entry.user_id,
+                ip_address: entry.ip_address,
+                severity: entry.severity,
+                details: entry.details
+            }))
+            
+            return {
+                status: "success",
+                data: formatted_entries,
+                total_count: audit_results.total_count
+            }
+        }
+    }
+    
+    @endpoint audit_search {
+        @route "GET /audit/search"
+        @description "Search audit trail with filters"
+        @access_level "godmode"
+        @query_params ["q", "category", "severity", "from", "to", "limit", "offset"]
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            
+            const search_params = {
+                query: getQueryParam("q", ""),
+                category: getQueryParam("category", "all"),
+                severity: getQueryParam("severity", "all"),
+                from_date: getQueryParam("from", null),
+                to_date: getQueryParam("to", null),
+                limit: parseInt(getQueryParam("limit", 50)),
+                offset: parseInt(getQueryParam("offset", 0))
+            }
+            
+            const search_results = pp_funcs.search_audit_trail(search_params)
+            
+            return {
+                status: "success",
+                data: search_results.entries,
+                pagination: {
+                    total: search_results.total_count,
+                    limit: search_params.limit,
+                    offset: search_params.offset,
+                    has_more: search_results.has_more
+                }
+            }
+        }
+    }
+    
+    @endpoint audit_create {
+        @route "POST /audit/create"
+        @description "Create new audit trail entry"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const request_body = getRequestBody()
+            
+            // Validate required fields
+            const required_fields = ["action", "category", "description"]
+            for (const field of required_fields) {
+                if (!request_body[field]) {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "VALIDATION_ERROR",
+                            message: `Missing required field: ${field}`
+                        }
+                    }
+                }
+            }
+            
+            const audit_entry = {
+                action: request_body.action,
+                category: request_body.category,
+                description: request_body.description,
+                severity: request_body.severity || "info",
+                user_id: request_body.user_id || "system",
+                ip_address: getClientIP(),
+                details: request_body.details || {},
+                generated_by_application: true,
+                timestamp: getCurrentTimestamp()
+            }
+            
+            const create_result = pp_funcs.create_audit_entry(audit_entry)
+            
+            if (create_result.success) {
+                return {
+                    status: "success",
+                    data: {
+                        id: create_result.entry_id,
+                        timestamp: audit_entry.timestamp
+                    }
+                }
+            } else {
+                return {
+                    status: "error",
+                    error: {
+                        code: "CREATION_FAILED",
+                        message: create_result.error
+                    }
+                }
+            }
+        }
+    }
+    
+    // ========================================
+    // SECURITY ENDPOINTS
+    // ========================================
+    
+    @endpoint security_alerts {
+        @route "GET /security/alerts"
+        @description "Get security alerts and threats"
+        @access_level "godmode"
+        @query_params ["severity", "limit", "status"]
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const severity_filter = getQueryParam("severity", "all")
+            const limit = parseInt(getQueryParam("limit", 20))
+            const status_filter = getQueryParam("status", "active")
+            
+            const security_data = pp_funcs.get_security_alerts({
+                severity: severity_filter,
+                limit: limit,
+                status: status_filter,
+                include_resolved: false
+            })
+            
+            const formatted_alerts = security_data.alerts.map(alert => ({
+                id: alert.id,
+                title: alert.title,
+                description: alert.description,
+                severity: alert.severity,
+                timestamp: alert.timestamp,
+                status: alert.status,
+                source_ip: alert.source_ip,
+                threat_type: alert.threat_type,
+                action_taken: alert.action_taken
+            }))
+            
+            return {
+                status: "success",
+                data: formatted_alerts,
+                summary: {
+                    total_alerts: security_data.total_count,
+                    critical: security_data.counts.critical,
+                    high: security_data.counts.high,
+                    medium: security_data.counts.medium,
+                    low: security_data.counts.low
+                }
+            }
+        }
+    }
+    
+    @endpoint security_status {
+        @route "GET /security/status"
+        @description "Get IceWall security system status"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const security_status = pp_funcs.get_security_status()
+            
+            return {
+                status: "success",
+                data: {
+                    icewall_status: security_status.icewall_active ? "active" : "inactive",
+                    threat_level: security_status.current_threat_level,
+                    blocked_ips: security_status.blocked_ips_count,
+                    active_rules: security_status.active_rules_count,
+                    ddos_protection: security_status.ddos_protection_enabled ? "enabled" : "disabled",
+                    real_time_monitoring: security_status.real_time_monitoring ? "active" : "inactive",
+                    last_threat_detected: security_status.last_threat_timestamp,
+                    protection_uptime: security_status.protection_uptime_seconds
+                }
+            }
+        }
+    }
+    
+    // ========================================
+    // DOCUMENTATION ENDPOINTS
+    // ========================================
+    
+    @endpoint documentation_stats {
+        @route "GET /documentation/stats"
+        @description "Get documentation system statistics"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const doc_stats = pp_funcs.get_documentation_stats()
+            
+            return {
+                status: "success",
+                data: {
+                    total_documents: doc_stats.total_documents,
+                    recent_updates: doc_stats.recent_updates_count,
+                    api_endpoints: doc_stats.api_endpoints_count,
+                    coverage: doc_stats.documentation_coverage_percent,
+                    last_updated: doc_stats.last_update_timestamp,
+                    categories: {
+                        system: doc_stats.categories.system,
+                        api: doc_stats.categories.api,
+                        security: doc_stats.categories.security,
+                        plugins: doc_stats.categories.plugins,
+                        troubleshooting: doc_stats.categories.troubleshooting
+                    }
+                }
+            }
+        }
+    }
+    
+    @endpoint documentation_search {
+        @route "GET /documentation/search"
+        @description "Search documentation content"
+        @access_level "godmode"
+        @query_params ["q", "category", "limit"]
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const query = getQueryParam("q", "")
+            const category = getQueryParam("category", "all")
+            const limit = parseInt(getQueryParam("limit", 20))
+            
+            const search_results = pp_funcs.search_documentation({
+                query: query,
+                category: category,
+                limit: limit,
+                include_content_preview: true
+            })
+            
+            return {
+                status: "success",
+                data: search_results.documents,
+                total_results: search_results.total_count
+            }
+        }
+    }
+    
+    // ========================================
+    // REPORTING ENDPOINTS
+    // ========================================
+    
+    @endpoint generate_report {
+        @route "POST /reports/generate"
+        @description "Generate comprehensive system report"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const request_body = getRequestBody()
+            
+            const report_config = {
+                report_type: request_body.report_type || "comprehensive",
+                time_period: request_body.time_period || "24hours",
+                include_sections: request_body.include_sections || ["system", "security", "performance", "audit"],
+                format: request_body.format || "jsonb",
+                include_charts: request_body.include_charts || false
+            }
+            
+            const report_result = pp_funcs.generate_reports(report_config)
+            
+            if (report_result.success) {
+                return {
+                    status: "success",
+                    data: {
+                        report_id: report_result.report_id,
+                        download_url: `/panel/api/purple-pages/reports/download/${report_result.report_id}`,
+                        format: report_config.format,
+                        generated_at: getCurrentTimestamp(),
+                        file_size_bytes: report_result.file_size
+                    }
+                }
+            } else {
+                return {
+                    status: "error",
+                    error: {
+                        code: "REPORT_GENERATION_FAILED",
+                        message: report_result.error
+                    }
+                }
+            }
+        }
+    }
+    
+    @endpoint download_report {
+        @route "GET /reports/download/{report_id}"
+        @description "Download generated report"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const report_id = getPathParam("report_id")
+            
+            const report_data = pp_funcs.get_report_data(report_id)
+            
+            if (report_data.exists) {
+                setResponseHeader("Content-Type", report_data.mime_type)
+                setResponseHeader("Content-Disposition", `attachment; filename="${report_data.filename}"`)
+                
+                return {
+                    status: "file_download",
+                    file_path: report_data.file_path
+                }
+            } else {
+                return {
+                    status: "error",
+                    error: {
+                        code: "REPORT_NOT_FOUND",
+                        message: "Report not found or expired"
+                    }
+                }
+            }
+        }
+    }
+    
+    // ========================================
+    // ADMINISTRATION ENDPOINTS
+    // ========================================
+    
+    @endpoint admin_settings {
+        @route "GET /admin/settings"
+        @description "Get Purple Pages system settings"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const settings = pp_funcs.get_system_settings()
+            
+            return {
+                status: "success",
+                data: {
+                    audit_retention_days: settings.audit_retention_days,
+                    auto_cleanup_enabled: settings.auto_cleanup_enabled,
+                    real_time_updates: settings.real_time_updates,
+                    notification_settings: settings.notifications,
+                    backup_schedule: settings.backup_schedule,
+                    security_alert_thresholds: settings.security_thresholds,
+                    performance_monitoring: settings.performance_monitoring
+                }
+            }
+        }
+    }
+    
+    @endpoint admin_update_settings {
+        @route "PUT /admin/settings"
+        @description "Update Purple Pages system settings"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const request_body = getRequestBody()
+            
+            const update_result = pp_funcs.update_system_settings(request_body)
+            
+            if (update_result.success) {
+                // Log the settings update
+                pp_funcs.create_audit_entry({
+                    action: "SETTINGS_UPDATED",
+                    category: "administration",
+                    description: "Purple Pages system settings updated",
+                    severity: "info",
+                    user_id: "godmode",
+                    ip_address: getClientIP(),
+                    details: {
+                        updated_settings: Object.keys(request_body),
+                        timestamp: getCurrentTimestamp()
+                    },
+                    generated_by_application: true
+                })
+                
+                return {
+                    status: "success",
+                    message: "Settings updated successfully"
+                }
+            } else {
+                return {
+                    status: "error",
+                    error: {
+                        code: "SETTINGS_UPDATE_FAILED",
+                        message: update_result.error
+                    }
+                }
+            }
+        }
+    }
+    
+    @endpoint admin_backup {
+        @route "POST /admin/backup"
+        @description "Create Purple Pages system backup"
+        @access_level "godmode"
+        
+        @lamia_handler {
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            const request_body = getRequestBody()
+            
+            const backup_config = {
+                include_audit_data: request_body.include_audit_data !== false,
+                include_documentation: request_body.include_documentation !== false,
+                include_settings: request_body.include_settings !== false,
+                compression_enabled: request_body.compression !== false,
+                backup_name: request_body.backup_name || `purple_pages_backup_${getCurrentTimestamp()}`
+            }
+            
+            const backup_result = pp_funcs.create_system_backup(backup_config)
+            
+            if (backup_result.success) {
+                return {
+                    status: "success",
+                    data: {
+                        backup_id: backup_result.backup_id,
+                        backup_path: backup_result.backup_path,
+                        file_size_bytes: backup_result.file_size,
+                        created_at: getCurrentTimestamp()
+                    }
+                }
+            } else {
+                return {
+                    status: "error",
+                    error: {
+                        code: "BACKUP_FAILED",
+                        message: backup_result.error
+                    }
+                }
+            }
+        }
+    }
+    
+    // ========================================
+    // ERROR HANDLING
+    // ========================================
+    
+    @error_handler {
+        @lamia_code {
+            function handleAPIError(error_code, error_message, details = {}) {
+                const error_response = {
+                    status: "error",
+                    error: {
+                        code: error_code,
+                        message: error_message,
+                        timestamp: getCurrentTimestamp()
+                    }
+                }
+                
+                if (Object.keys(details).length > 0) {
+                    error_response.error.details = details
+                }
+                
+                // Log API errors to audit trail
+                const pp_funcs = getGlobalVar("purple_pages_functions")
+                pp_funcs.create_audit_entry({
+                    action: "API_ERROR",
+                    category: "system",
+                    description: `Purple Pages API error: ${error_code}`,
+                    severity: "warning",
+                    user_id: "system",
+                    ip_address: getClientIP(),
+                    details: {
+                        error_code: error_code,
+                        error_message: error_message,
+                        endpoint: getCurrentEndpoint(),
+                        details: details
+                    },
+                    generated_by_application: true,
+                    timestamp: getCurrentTimestamp()
+                })
+                
+                return error_response
+            }
+        }
+    }
+    
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+    
+    @on_load {
+        @lamia_code {
+            log("Purple Pages API v0.3.0a endpoints initialized")
+            log("Available endpoints:")
+            log("  GET /panel/api/purple-pages/system/status")
+            log("  GET /panel/api/purple-pages/audit/recent")
+            log("  GET /panel/api/purple-pages/security/alerts")
+            log("  GET /panel/api/purple-pages/documentation/stats")
+            log("  POST /panel/api/purple-pages/reports/generate")
+            log("  GET /panel/api/purple-pages/admin/settings")
+            
+            // Register API endpoints with routing system
+            registerAPIEndpoints("/panel/api/purple-pages", this)
+            
+            // Log API initialization
+            const pp_funcs = getGlobalVar("purple_pages_functions")
+            pp_funcs.create_audit_entry({
+                action: "API_INITIALIZED",
+                category: "system",
+                description: "Purple Pages API endpoints initialized",
+                severity: "info",
+                user_id: "system",
+                details: {
+                    version: "0.3.0a",
+                    endpoints_count: 15,
+                    established_libraries_used: true
+                },
+                generated_by_application: true,
+                timestamp: getCurrentTimestamp()
+            })
+        }
+    }
+}
+
+// Plugin metadata
+@plugin_metadata {
+    @generated_at "2025-08-16T21:50:00Z"
+    @version "0.3.0a"
+    @api_version "v1"
+    @endpoints_count 15
+    @established_libraries ["libmedusaserv_purple_pages.so"]
+    @provides ["api_endpoints", "audit_management", "security_monitoring", "documentation_access", "reporting"]
+    @ground_up_methodology true
+    @no_mock_data true
+    @application_generated_data_only true
+}

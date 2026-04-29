@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting to Login...</title>
+    <meta http-equiv="refresh" content="0; url=https://portal.poweredbymedusa.com/portal/login.lamia">
+    <script>
+        // Check for session cookie
+        if (document.cookie.indexOf('medusa_session=') === -1) {
+            // No session - redirect to login
+            window.location.href = 'https://portal.poweredbymedusa.com/portal/login.lamia';
+        } else {
+            // Has session - show portal (would load index.lamia content here)
+            document.write('Loading portal...');
+            // In production, this would load the actual portal content
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting to login...</p>
+</body>
+</html>

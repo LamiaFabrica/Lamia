@@ -1,0 +1,532 @@
+/**
+ * PORTAL THEME CSS - Aperture Science Design System
+ * ==================================================
+ * Portal-inspired configuration manager styling
+ * Experience the Sheer Power of the Lamia Native - a web server for all!
+ */
+
+:root {
+    --portal-orange: #FF6B00;
+    --portal-blue: #00A8FF;
+    --aperture-black: #1a1a1a;
+    --aperture-gray: #2d2d2d;
+    --aperture-light-gray: #4a4a4a;
+    --glados-yellow: #FFD700;
+    --success-green: #4CAF50;
+    --warning-orange: #FF9800;
+    --error-red: #F44336;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B0B0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.portal-theme {
+    background: linear-gradient(135deg, var(--aperture-black) 0%, var(--aperture-gray) 100%);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Aperture Science Header */
+.portal-header {
+    background: var(--aperture-black);
+    border-bottom: 3px solid var(--portal-orange);
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
+}
+
+.aperture-logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.aperture-icon {
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.rotating-aperture {
+    animation: rotate 10s linear infinite;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.portal-title {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.glados-voice {
+    display: block;
+    font-size: 14px;
+    color: var(--glados-yellow);
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.test-chamber-number {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 18px;
+    color: var(--portal-blue);
+    font-weight: bold;
+}
+
+/* Configuration Switcher Dropdown */
+.config-switcher {
+    background: var(--aperture-gray);
+    padding: 20px;
+    border-bottom: 1px solid var(--aperture-light-gray);
+}
+
+.portal-dropdown-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.portal-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.portal-dropdown {
+    position: relative;
+    min-width: 300px;
+}
+
+.portal-dropdown-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--aperture-black);
+    border: 2px solid var(--portal-orange);
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.portal-dropdown-btn:hover {
+    background: var(--portal-orange);
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+}
+
+.config-icon {
+    margin-right: 10px;
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.portal-dropdown-btn.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.portal-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--aperture-black);
+    border: 2px solid var(--portal-orange);
+    border-top: none;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.portal-dropdown-content.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-header {
+    padding: 10px 15px;
+    background: var(--portal-orange);
+    color: var(--aperture-black);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.config-category {
+    border-bottom: 1px solid var(--aperture-light-gray);
+}
+
+.category-title {
+    padding: 10px 15px;
+    background: var(--aperture-gray);
+    color: var(--portal-blue);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.config-item:hover {
+    background: var(--aperture-light-gray);
+    padding-left: 30px;
+}
+
+.config-item.active {
+    background: var(--portal-orange);
+    color: var(--aperture-black);
+}
+
+.status-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--aperture-light-gray);
+    margin-right: 10px;
+    animation: pulse 2s infinite;
+}
+
+.status-led.online {
+    background: var(--success-green);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.config-badge {
+    margin-left: auto;
+    padding: 2px 8px;
+    background: var(--portal-blue);
+    color: var(--aperture-black);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.new-config {
+    color: var(--portal-blue);
+    font-weight: bold;
+}
+
+.plus-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background: var(--portal-blue);
+    color: var(--aperture-black);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Portal Quick Actions */
+.portal-quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.portal-btn {
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    background: var(--aperture-light-gray);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+}
+
+.portal-btn.orange {
+    border-color: var(--portal-orange);
+}
+
+.portal-btn.orange:hover {
+    background: var(--portal-orange);
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+}
+
+.portal-btn.blue {
+    border-color: var(--portal-blue);
+}
+
+.portal-btn.blue:hover {
+    background: var(--portal-blue);
+    box-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+}
+
+.portal-btn.green {
+    border-color: var(--success-green);
+}
+
+.portal-btn.green:hover {
+    background: var(--success-green);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+
+/* Portal Tabs */
+.portal-tabs {
+    display: flex;
+    background: var(--aperture-gray);
+    border-bottom: 2px solid var(--portal-orange);
+}
+
+.portal-tab {
+    padding: 15px 25px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.portal-tab:hover {
+    background: var(--aperture-light-gray);
+    color: var(--text-primary);
+}
+
+.portal-tab.active {
+    background: var(--portal-orange);
+    color: var(--aperture-black);
+    font-weight: bold;
+}
+
+.tab-icon {
+    font-size: 18px;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    padding: 20px;
+    min-height: 500px;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Portal Editor */
+.portal-editor {
+    display: grid;
+    grid-template-columns: 300px 1fr 350px;
+    gap: 20px;
+    height: 600px;
+}
+
+.editor-toolbar {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: var(--aperture-gray);
+    border: 1px solid var(--aperture-light-gray);
+}
+
+.tool-btn {
+    padding: 8px 15px;
+    background: var(--aperture-black);
+    border: 1px solid var(--aperture-light-gray);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tool-btn:hover {
+    background: var(--portal-blue);
+    border-color: var(--portal-blue);
+}
+
+.tool-btn.save {
+    margin-left: auto;
+    background: var(--success-green);
+    border-color: var(--success-green);
+}
+
+.config-tree {
+    background: var(--aperture-black);
+    border: 1px solid var(--aperture-light-gray);
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.property-editor {
+    background: var(--aperture-black);
+    border: 1px solid var(--aperture-light-gray);
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* GLaDOS Status Bar */
+.glados-status {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--aperture-black);
+    border-top: 2px solid var(--glados-yellow);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.glados-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--glados-yellow);
+    font-style: italic;
+}
+
+.glados-icon {
+    font-size: 20px;
+}
+
+.status-indicators {
+    display: flex;
+    gap: 20px;
+}
+
+.indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+.led.green {
+    background: var(--success-green);
+    box-shadow: 0 0 5px var(--success-green);
+}
+
+.led.orange {
+    background: var(--warning-orange);
+    box-shadow: 0 0 5px var(--warning-orange);
+}
+
+.led.red {
+    background: var(--error-red);
+    box-shadow: 0 0 5px var(--error-red);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Portal Effects */
+.portal-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.portal {
+    position: absolute;
+    width: 100px;
+    height: 150px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.blue-portal {
+    background: radial-gradient(ellipse at center, var(--portal-blue) 0%, transparent 70%);
+    box-shadow: 0 0 50px var(--portal-blue);
+}
+
+.orange-portal {
+    background: radial-gradient(ellipse at center, var(--portal-orange) 0%, transparent 70%);
+    box-shadow: 0 0 50px var(--portal-orange);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--aperture-black);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--portal-orange);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--portal-blue);
+}

@@ -1,0 +1,421 @@
+@include sidemenu {
+    @type "enterprise_sidebar"
+    @version "0.3.0c"
+}
+
+<!-- Enterprise Sidebar -->
+<nav class="enterprise-sidebar" id="enterpriseSidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header">
+        <button class="sidebar-toggle" data-action="toggleSidebar" 
+                aria-label="Toggle sidebar navigation" tabindex="0">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <div class="sidebar-status" role="status" aria-live="polite">
+            <span class="status-indicator online" aria-hidden="true"></span>
+            <span class="status-text">System Online</span>
+        </div>
+    </div>
+
+    <div class="nav-section" role="group" aria-labelledby="dashboard-title">
+        <div class="nav-title" id="dashboard-title" role="heading" aria-level="2">Dashboard</div>
+        <a href="#dashboard" class="nav-item active gif3d-hover-zoom" 
+           role="menuitem" tabindex="0" aria-current="page">
+            <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+            <span>Overview</span>
+            <div class="nav-badge" aria-label="Live status">Live</div>
+        </a>
+        <a href="#monitoring" class="nav-item gif3d-hover-zoom" 
+           role="menuitem" tabindex="0">
+            <i class="fas fa-chart-line" aria-hidden="true"></i>
+            <span>Real-time Monitoring</span>
+        </a>
+        <a href="#analytics" class="nav-item gif3d-hover-zoom" 
+           role="menuitem" tabindex="0">
+            <i class="fas fa-analytics" aria-hidden="true"></i>
+            <span>Analytics Engine</span>
+        </a>
+        <a href="#performance" class="nav-item gif3d-hover-zoom" 
+           role="menuitem" tabindex="0">
+            <i class="fas fa-rocket" aria-hidden="true"></i>
+            <span>Performance</span>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Server Management</div>
+        <a href="#services" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-server"></i>
+            <span>Services Control</span>
+            <div class="nav-counter">24</div>
+        </a>
+        <a href="#processes" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-microchip"></i>
+            <span>Process Manager</span>
+            <div class="nav-counter">127</div>
+        </a>
+        <a href="#resources" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-memory"></i>
+            <span>Resource Monitor</span>
+        </a>
+        <a href="#logs" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-file-alt"></i>
+            <span>System Logs</span>
+        </a>
+        <a href="#cron" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-clock"></i>
+            <span>Cron Jobs</span>
+            <div class="nav-counter">8</div>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Customer Services</div>
+        <a href="#websites" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-globe"></i>
+            <span>Websites</span>
+            <div class="nav-counter">12</div>
+        </a>
+        <a href="#domains" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-link"></i>
+            <span>Domain Manager</span>
+            <div class="nav-counter">45</div>
+        </a>
+        <a href="#ssl" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-certificate"></i>
+            <span>SSL Certificates</span>
+        </a>
+        <a href="#email" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-envelope"></i>
+            <span>Email Accounts</span>
+            <div class="nav-counter">89</div>
+        </a>
+        <a href="#ftp" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-upload"></i>
+            <span>FTP Manager</span>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Security</div>
+        <a href="#icewall" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-shield-alt"></i>
+            <span>ICEWALL Fortress</span>
+            <div class="nav-status-dot online"></div>
+        </a>
+        <a href="#authentication" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-key"></i>
+            <span>Authentication</span>
+        </a>
+        <a href="#firewall" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-fire"></i>
+            <span>Firewall Rules</span>
+            <div class="nav-counter">45</div>
+        </a>
+        <a href="#intrusion" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-user-secret"></i>
+            <span>Intrusion Detection</span>
+        </a>
+        <a href="#backup" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-shield"></i>
+            <span>Backup Security</span>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Applications</div>
+        <a href="#lamia" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-gem"></i>
+            <span>Lamia Framework</span>
+            <div class="nav-badge">v0.3.0c</div>
+        </a>
+        <a href="#database" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-database"></i>
+            <span>Triforce Database</span>
+            <div class="nav-status-dot online"></div>
+        </a>
+        <a href="#apis" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-plug"></i>
+            <span>API Gateway</span>
+        </a>
+        <a href="#plugins" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>Plugin Manager</span>
+            <div class="nav-counter">15</div>
+        </a>
+        <a href="#marketplace" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-store"></i>
+            <span>App Marketplace</span>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Tools & Utilities</div>
+        <a href="#file-manager" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-folder"></i>
+            <span>File Manager</span>
+        </a>
+        <a href="#backup" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-archive"></i>
+            <span>Backup System</span>
+        </a>
+        <a href="#scheduler" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Task Scheduler</span>
+        </a>
+        <a href="#terminal" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-terminal"></i>
+            <span>Web Terminal</span>
+        </a>
+        <a href="#settings" class="nav-item gif3d-hover-zoom">
+            <i class="fas fa-wrench"></i>
+            <span>System Settings</span>
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="system-info">
+            <div class="info-item">
+                <small>Server Load</small>
+                <span id="sidebarLoad">1.24</span>
+            </div>
+            <div class="info-item">
+                <small>Memory</small>
+                <span id="sidebarMemory">8.2GB</span>
+            </div>
+        </div>
+        <div class="sidebar-actions">
+            <button class="sidebar-btn" onclick="restartServer()" title="Restart Server">
+                <i class="fas fa-redo"></i>
+            </button>
+            <button class="sidebar-btn" onclick="emergencyShutdown()" title="Emergency Shutdown">
+                <i class="fas fa-power-off"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+@style {
+    .enterprise-sidebar {
+        position: fixed;
+        left: 0;
+        top: 100px;
+        width: 280px;
+        height: calc(100vh - 100px);
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid var(--glass-border);
+        z-index: 999;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+    }
+
+    .enterprise-sidebar.collapsed {
+        transform: translateX(-240px);
+        width: 60px;
+    }
+
+    .sidebar-header {
+        padding: 1rem;
+        border-bottom: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .sidebar-toggle {
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .sidebar-toggle:hover {
+        background: var(--glass-bg);
+    }
+
+    .sidebar-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .status-indicator.online {
+        background: var(--success-green);
+        animation: statusPulse 2s ease-in-out infinite;
+    }
+
+    .nav-section {
+        flex: 1;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .nav-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .nav-title {
+        padding: 0 1rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 1rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        margin: 2px 0;
+        position: relative;
+    }
+
+    .nav-item:hover,
+    .nav-item:focus,
+    .nav-item.active {
+        background: var(--glass-bg);
+        border-left-color: var(--primary-purple);
+        color: var(--primary-purple);
+        outline: 2px solid var(--primary-purple);
+        outline-offset: -2px;
+    }
+
+    .nav-item:focus-visible {
+        outline: 3px solid var(--warning-orange);
+        outline-offset: 2px;
+    }
+
+    .nav-item i {
+        width: 20px;
+        margin-right: 12px;
+        font-size: 1rem;
+    }
+
+    .nav-item span {
+        flex: 1;
+        font-size: 0.9rem;
+    }
+
+    .nav-badge {
+        background: linear-gradient(45deg, var(--primary-purple), var(--gif3d-pink));
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+
+    .nav-counter {
+        background: var(--glass-bg);
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 8px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .nav-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-left: auto;
+    }
+
+    .nav-status-dot.online {
+        background: var(--success-green);
+        animation: statusPulse 2s ease-in-out infinite;
+    }
+
+    .sidebar-footer {
+        margin-top: auto;
+        padding: 1rem;
+        border-top: 1px solid var(--glass-border);
+    }
+
+    .system-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        text-align: center;
+        padding: 0.5rem;
+        background: var(--glass-bg);
+        border-radius: 8px;
+    }
+
+    .info-item small {
+        display: block;
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item span {
+        font-weight: 600;
+        color: var(--primary-purple);
+        font-size: 0.8rem;
+    }
+
+    .sidebar-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .sidebar-btn {
+        flex: 1;
+        padding: 0.75rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-btn:hover {
+        background: var(--primary-purple);
+        transform: translateY(-1px);
+    }
+
+    .sidebar-btn:last-child:hover {
+        background: var(--danger-red);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 1024px) {
+        .enterprise-sidebar {
+            transform: translateX(-100%);
+            top: 100px;
+            height: calc(100vh - 100px);
+        }
+
+        .enterprise-sidebar.open {
+            transform: translateX(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .enterprise-sidebar {
+            top: 120px;
+            height: calc(100vh - 120px);
+        }
+    }
+}

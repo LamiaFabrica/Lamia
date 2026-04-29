@@ -1,0 +1,419 @@
+/**
+ * MEDUSASERV CONTROL PANEL - HEADER COMPONENT v0.3.0c
+ * Revolutionary animated header with 3D effects
+ */
+
+@component "medusaserv_header" {
+    @version "0.3.0c"
+    @engine "medusaserv_core"
+    @3d_emotion_enabled true
+    
+    @render {
+        <header class="medusa-header">
+            <!-- Spinning Universe Background for Header -->
+            <div class="header-universe-bg">
+                <div class="spinning-header-universe">
+                    <div class="universe-layer header-layer-1"></div>
+                    <div class="universe-layer header-layer-2"></div>
+                    <div class="universe-layer header-layer-3"></div>
+                </div>
+            </div>
+            
+            <!-- MedusaServ Logo -->
+            <div class="medusa-logo-3d" data-aos="zoom-in" data-aos-duration="2000">
+                <div class="logo-3d-container">
+                    <div class="medusa-serpent-3d">
+                        @link "/" {
+                            @title "MedusaServ Home"
+                            @image "Medusa_Art/MedusaServ.png" {
+                                @alt "MedusaServ"
+                                @height 80
+                                @width auto
+                            }
+                        }
+                    </div>
+                    <div class="logo-text-3d">
+                        <span class="medusa-text">MEDUSA</span>
+                        <span class="serv-text">Serv</span>
+                        <div class="version-badge">v0.3.0c</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Real-time System Status with ApexCharts -->
+            <div class="header-status-bar medusa-panel">
+                <div class="status-item" data-aos="fade-in" data-aos-delay="100">
+                    <div class="status-icon">🖥️</div>
+                    <span class="status-label">Server</span>
+                    <span class="status-value gif3d-pulse" id="server-status">@{system_status.toUpperCase()}</span>
+                </div>
+                <div class="status-item" data-aos="fade-in" data-aos-delay="200">
+                    <div class="status-icon gif3d-bounce">🚀</div>
+                    <span class="status-label">FCCP</span>
+                    <span class="status-value gif3d-glow" id="fccp-status">@{fccp_status.toUpperCase()}</span>
+                </div>
+                <div class="status-item" data-aos="fade-in" data-aos-delay="300">
+                    <div class="status-icon gif3d-spin">🧊</div>
+                    <span class="status-label">IceWall</span>
+                    <span class="status-value gif3d-flash" id="icewall-status">@{icewall_status.toUpperCase()}</span>
+                </div>
+                <div class="status-item" data-aos="fade-in" data-aos-delay="400">
+                    <div class="status-icon gif3d-shake">🔒</div>
+                    <span class="status-label">SSL</span>
+                    <span class="status-value gif3d-fade" id="ssl-status">@{ssl_status.toUpperCase()}</span>
+                </div>
+            </div>
+        </header>
+        
+        <style>
+        /* GIF3D Header Revolutionary Styles */
+        .medusa-header-gif3d {
+            position: relative;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-bottom: 2px solid rgba(139, 63, 139, 0.5);
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .header-universe-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .spinning-header-universe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%);
+            animation: spinHeaderUniverse 30s linear infinite;
+        }
+        
+        .header-layer-1, .header-layer-2, .header-layer-3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(139, 63, 139, 0.2);
+        }
+        
+        .header-layer-1 {
+            animation: pulseHeaderLayer 4s ease-in-out infinite;
+            border-color: rgba(139, 63, 139, 0.4);
+        }
+        
+        .header-layer-2 {
+            animation: pulseHeaderLayer 6s ease-in-out infinite;
+            animation-delay: 1s;
+            border-color: rgba(255, 107, 0, 0.3);
+            transform: scale(0.7);
+        }
+        
+        .header-layer-3 {
+            animation: pulseHeaderLayer 8s ease-in-out infinite;
+            animation-delay: 2s;
+            border-color: rgba(33, 150, 243, 0.3);
+            transform: scale(0.5);
+        }
+        
+        /* 3D Medusa Logo */
+        .medusa-logo-3d {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .logo-3d-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .medusa-serpent-3d {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            transform-style: preserve-3d;
+            animation: rotate3D 8s linear infinite;
+        }
+        
+        .serpent-head {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #8b3f8b, #6a2c6a);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(139, 63, 139, 0.8);
+        }
+        
+        .eye {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            top: 15px;
+            animation: eyeGlow 2s ease-in-out infinite;
+        }
+        
+        .left-eye { left: 10px; }
+        .right-eye { right: 10px; }
+        
+        .serpent-hair {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .serpent {
+            position: absolute;
+            width: 3px;
+            height: 25px;
+            background: linear-gradient(to bottom, #8b3f8b, transparent);
+            border-radius: 2px;
+            transform-origin: bottom center;
+        }
+        
+        .serpent-1 {
+            top: 5px;
+            left: 20px;
+            animation: serpentWave1 3s ease-in-out infinite;
+        }
+        
+        .serpent-2 {
+            top: 10px;
+            right: 20px;
+            animation: serpentWave2 3.5s ease-in-out infinite;
+        }
+        
+        .serpent-3 {
+            top: 15px;
+            left: 35px;
+            animation: serpentWave3 4s ease-in-out infinite;
+        }
+        
+        .serpent-4 {
+            top: 8px;
+            left: 5px;
+            animation: serpentWave4 2.5s ease-in-out infinite;
+        }
+        
+        .serpent-5 {
+            top: 12px;
+            right: 5px;
+            animation: serpentWave5 3.8s ease-in-out infinite;
+        }
+        
+        .logo-text-3d {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+        
+        .medusa-text {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b3f8b, #ff6b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textFlow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(139, 63, 139, 0.5);
+        }
+        
+        .serv-text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2196f3;
+            animation: textGlow 3s ease-in-out infinite;
+        }
+        
+        .version-badge {
+            background: linear-gradient(45deg, #4caf50, #2196f3);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        
+        /* Status Bar with ApexCharts Integration */
+        .header-status-bar {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 25px;
+            z-index: 10;
+        }
+        
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .status-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-icon {
+            font-size: 18px;
+        }
+        
+        .status-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-value {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4caf50;
+        }
+        
+        /* GIF3D Animation Keyframes */
+        @keyframes spinHeaderUniverse {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        @keyframes pulseHeaderLayer {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+        
+        @keyframes rotate3D {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(15deg); }
+            50% { transform: rotateY(180deg) rotateX(0deg); }
+            75% { transform: rotateY(270deg) rotateX(-15deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+        
+        @keyframes eyeGlow {
+            0%, 100% { box-shadow: 0 0 5px #fff; }
+            50% { box-shadow: 0 0 15px #8b3f8b, 0 0 25px #8b3f8b; }
+        }
+        
+        @keyframes serpentWave1 {
+            0%, 100% { transform: rotate(-10deg) scaleY(1); }
+            50% { transform: rotate(10deg) scaleY(1.2); }
+        }
+        
+        @keyframes serpentWave2 {
+            0%, 100% { transform: rotate(15deg) scaleY(1); }
+            50% { transform: rotate(-5deg) scaleY(1.1); }
+        }
+        
+        @keyframes serpentWave3 {
+            0%, 100% { transform: rotate(-5deg) scaleY(1); }
+            50% { transform: rotate(20deg) scaleY(1.3); }
+        }
+        
+        @keyframes serpentWave4 {
+            0%, 100% { transform: rotate(20deg) scaleY(1); }
+            50% { transform: rotate(-15deg) scaleY(1.15); }
+        }
+        
+        @keyframes serpentWave5 {
+            0%, 100% { transform: rotate(-20deg) scaleY(1); }
+            50% { transform: rotate(8deg) scaleY(1.25); }
+        }
+        
+        @keyframes textFlow {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(5px); }
+        }
+        
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px #2196f3; }
+            50% { text-shadow: 0 0 20px #2196f3, 0 0 30px #2196f3; }
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* GIF3D Effect Classes */
+        .gif3d-pulse { animation: gif3dPulse 2s ease-in-out infinite; }
+        .gif3d-glow { animation: gif3dGlow 3s ease-in-out infinite; }
+        .gif3d-bounce { animation: gif3dBounce 2s ease-in-out infinite; }
+        .gif3d-spin { animation: gif3dSpin 4s linear infinite; }
+        .gif3d-rotate { animation: gif3dRotate 6s ease-in-out infinite; }
+        .gif3d-shake { animation: gif3dShake 0.5s ease-in-out infinite; }
+        .gif3d-flash { animation: gif3dFlash 1.5s ease-in-out infinite; }
+        .gif3d-fade { animation: gif3dFade 2.5s ease-in-out infinite; }
+        
+        @keyframes gif3dPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        @keyframes gif3dGlow {
+            0%, 100% { box-shadow: 0 0 5px currentColor; }
+            50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+        }
+        
+        @keyframes gif3dBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes gif3dSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes gif3dRotate {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+        }
+        
+        @keyframes gif3dShake {
+            0%, 100% { transform: translateX(0px); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+        
+        @keyframes gif3dFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes gif3dFade {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        </style>
+    }
+}

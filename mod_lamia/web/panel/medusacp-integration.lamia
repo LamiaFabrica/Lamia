@@ -1,0 +1,385 @@
+@include medusacp_integration {
+    @type "cpp_engine_integration"
+    @version "0.3.0c-ULTIMATE"
+    @features ["real_time_system_data", "service_management", "process_control", "security_monitoring"]
+    @security "yorkshire_champion_gold_standard"
+}
+
+<!-- MedusaServ C++ Engine Integration -->
+@function loadMedusaCPEngine() {
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_init"
+        @return "engine_status"
+    }
+    
+    @if engine_status == "success" {
+        @log "✅ MedusaServ C++ Engine loaded successfully"
+        @return true
+    } @else {
+        @log "❌ Failed to load MedusaServ C++ Engine"
+        @return false
+    }
+}
+
+@function getSystemInformation() {
+    @security_check {
+        @validate_session
+        @check_permissions "system_read"
+    }
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_api_request"
+        @params ["system_info", "", @csrf_token, @session_id]
+        @return "system_data"
+    }
+    
+    @return @json_decode(system_data)
+}
+
+@function getProcessList() {
+    @security_check {
+        @validate_session
+        @check_permissions "process_read"
+    }
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_api_request"
+        @params ["list_processes", "", @csrf_token, @session_id]
+        @return "process_data"
+    }
+    
+    @return @json_decode(process_data)
+}
+
+@function getServiceStatus(service_name) {
+    @security_check {
+        @validate_session
+        @check_permissions "service_read"
+        @sanitize_input service_name
+    }
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_api_request"
+        @params ["service_status", service_name, @csrf_token, @session_id]
+        @return "service_data"
+    }
+    
+    @return @json_decode(service_data)
+}
+
+@function controlService(service_name, action) {
+    @security_check {
+        @validate_session
+        @check_permissions "service_write"
+        @sanitize_input service_name
+        @validate_action action ["start", "stop", "restart", "enable", "disable"]
+    }
+    
+    @log "Service control request: " + service_name + " -> " + action
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_api_request"
+        @params ["control_service", service_name + ":" + action, @csrf_token, @session_id]
+        @return "control_result"
+    }
+    
+    @return @json_decode(control_result)
+}
+
+@function getPerformanceMetrics() {
+    @security_check {
+        @validate_session
+        @check_permissions "metrics_read"
+    }
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_api_request"
+        @params ["performance_metrics", "", "", @session_id]
+        @return "metrics_data"
+    }
+    
+    @return @json_decode(metrics_data)
+}
+
+@function generateCSRFToken() {
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_generate_csrf"
+        @params [@session_id]
+        @return "csrf_token"
+    }
+    
+    @return csrf_token
+}
+
+@function healthCheck() {
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_health"
+        @return "health_data"
+    }
+    
+    @return @json_decode(health_data)
+}
+
+<!-- Real-time Dashboard Data Functions -->
+@function getRealTimeSystemStats() {
+    @async {
+        @interval 1000 {
+            @var system_info = getSystemInformation()
+            @var performance = getPerformanceMetrics()
+            
+            @if system_info && performance {
+                @update_dashboard {
+                    @element "#cpu-load" @content system_info.cpu.load_1min
+                    @element "#memory-usage" @content system_info.memory.usage_percent + "%"
+                    @element "#disk-usage" @content system_info.disk.partitions[0].usage_percent + "%"
+                    @element "#uptime" @content system_info.system.uptime_human
+                    @element "#process-count" @content system_info.system.process_count
+                }
+                
+                @update_speedometer {
+                    @value (system_info.cpu.load_1min * 100 / 4) // Normalize to 0-100
+                }
+                
+                @update_charts {
+                    @cpu_chart @add_point system_info.cpu.load_1min
+                    @memory_chart @add_point system_info.memory.usage_percent
+                    @network_chart @add_points [
+                        system_info.network.interfaces[0].rx_bytes,
+                        system_info.network.interfaces[0].tx_bytes
+                    ]
+                }
+            }
+        }
+    }
+}
+
+@function getServiceDashboardData() {
+    @async {
+        @interval 5000 {
+            @var services = getServiceStatus("all")
+            
+            @if services {
+                @var active_count = 0
+                @var failed_count = 0
+                
+                @foreach service in services.services {
+                    @if service.is_active {
+                        active_count++
+                    } @else {
+                        failed_count++
+                    }
+                }
+                
+                @update_dashboard {
+                    @element "#active-services" @content active_count
+                    @element "#failed-services" @content failed_count
+                    @element "#service-status-indicator" @class (failed_count > 0 ? "warning" : "success")
+                }
+                
+                @update_service_list(services.services)
+            }
+        }
+    }
+}
+
+@function getProcessDashboardData() {
+    @async {
+        @interval 3000 {
+            @var processes = getProcessList()
+            
+            @if processes {
+                @var top_processes = @array_slice(processes.processes, 0, 10)
+                
+                @update_dashboard {
+                    @element "#total-processes" @content processes.total_count
+                    @element "#top-memory-process" @content top_processes[0].name + " (" + top_processes[0].memory_percent + "%)"
+                }
+                
+                @update_process_table(top_processes)
+            }
+        }
+    }
+}
+
+<!-- Security and Monitoring Functions -->
+@function monitorSecurityEvents() {
+    @async {
+        @interval 10000 {
+            @var fail2ban_status = getServiceStatus("fail2ban")
+            @var ufw_status = getServiceStatus("ufw")
+            @var ssh_status = getServiceStatus("ssh")
+            
+            @var security_score = 0
+            @if fail2ban_status.is_active { security_score += 30 }
+            @if ufw_status.is_active { security_score += 30 }
+            @if ssh_status.is_active { security_score += 40 }
+            
+            @update_dashboard {
+                @element "#security-score" @content security_score + "/100"
+                @element "#security-indicator" @class (security_score >= 80 ? "excellent" : security_score >= 60 ? "good" : "warning")
+            }
+            
+            @if security_score < 60 {
+                @show_notification {
+                    @type "warning"
+                    @title "Security Alert"
+                    @message "Some security services are not running. Current score: " + security_score + "/100"
+                }
+            }
+        }
+    }
+}
+
+<!-- Dashboard Initialization -->
+@function initializeDashboard() {
+    @log "🔮 Initializing MedusaServ Enterprise Dashboard..."
+    
+    @if !loadMedusaCPEngine() {
+        @show_error("Failed to load C++ engine. Dashboard will run in limited mode.")
+        @return false
+    }
+    
+    // Generate initial CSRF token
+    @set_global "csrf_token" generateCSRFToken()
+    
+    // Start real-time monitoring
+    getRealTimeSystemStats()
+    getServiceDashboardData()
+    getProcessDashboardData()
+    monitorSecurityEvents()
+    
+    // Initialize ApexCharts
+    @init_charts()
+    
+    // Initialize speedometer
+    @init_speedometer()
+    
+    @log "✨ Dashboard initialization complete!"
+    @return true
+}
+
+<!-- Chart and Widget Helper Functions -->
+@function init_charts() {
+    @javascript {
+        // CPU Load Chart
+        window.cpuChart = new ApexCharts(document.querySelector("#cpu-chart"), {
+            chart: { type: 'line', height: 200, animations: { enabled: true } },
+            series: [{ name: 'CPU Load', data: [] }],
+            xaxis: { type: 'datetime', labels: { show: false } },
+            yaxis: { min: 0, max: 4 },
+            stroke: { curve: 'smooth', width: 3 },
+            colors: ['#8b3f8b'],
+            theme: { mode: 'dark' }
+        });
+        window.cpuChart.render();
+        
+        // Memory Usage Chart
+        window.memoryChart = new ApexCharts(document.querySelector("#memory-chart"), {
+            chart: { type: 'area', height: 200, animations: { enabled: true } },
+            series: [{ name: 'Memory Usage %', data: [] }],
+            xaxis: { type: 'datetime', labels: { show: false } },
+            yaxis: { min: 0, max: 100 },
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 } },
+            colors: ['#ff69b4'],
+            theme: { mode: 'dark' }
+        });
+        window.memoryChart.render();
+        
+        // Network Usage 3D Pie Chart
+        window.networkChart = new ApexCharts(document.querySelector("#network-chart"), {
+            chart: { type: 'donut', height: 300 },
+            series: [50, 50],
+            labels: ['RX Bytes', 'TX Bytes'],
+            colors: ['#ffd700', '#8b3f8b'],
+            plotOptions: { pie: { donut: { size: '65%' } } },
+            theme: { mode: 'dark' }
+        });
+        window.networkChart.render();
+    }
+}
+
+@function init_speedometer() {
+    @javascript {
+        window.speedometer = new ApexCharts(document.querySelector("#speedometer"), {
+            chart: { type: 'radialBar', height: 300 },
+            series: [0],
+            colors: ['#ffd700'],
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    track: { background: '#333', strokeWidth: '97%' },
+                    dataLabels: {
+                        name: { show: true, fontSize: '16px', color: '#fff' },
+                        value: { show: true, fontSize: '30px', color: '#ffd700', formatter: function(val) { return val + '%'; } }
+                    }
+                }
+            },
+            labels: ['System Load'],
+            theme: { mode: 'dark' }
+        });
+        window.speedometer.render();
+    }
+}
+
+@function update_speedometer(value) {
+    @javascript {
+        if (window.speedometer) {
+            window.speedometer.updateSeries([Math.min(100, Math.max(0, value))]);
+        }
+    }
+}
+
+@function update_charts(cpu_data, memory_data, network_data) {
+    @javascript {
+        var now = new Date().getTime();
+        
+        if (window.cpuChart && cpu_data !== undefined) {
+            window.cpuChart.appendData([{ data: [{ x: now, y: cpu_data }] }]);
+        }
+        
+        if (window.memoryChart && memory_data !== undefined) {
+            window.memoryChart.appendData([{ data: [{ x: now, y: memory_data }] }]);
+        }
+        
+        if (window.networkChart && network_data && network_data.length >= 2) {
+            window.networkChart.updateSeries(network_data);
+        }
+    }
+}
+
+<!-- Cleanup Functions -->
+@function cleanupDashboard() {
+    @log "🧹 Cleaning up dashboard resources..."
+    
+    @cpp_call {
+        @library "../MedusaServ-cp"
+        @function "medusacp_cleanup"
+    }
+    
+    @javascript {
+        if (window.cpuChart) window.cpuChart.destroy();
+        if (window.memoryChart) window.memoryChart.destroy();
+        if (window.networkChart) window.networkChart.destroy();
+        if (window.speedometer) window.speedometer.destroy();
+    }
+    
+    @log "✅ Dashboard cleanup complete!"
+}
+
+<!-- Initialize on page load -->
+@onload {
+    initializeDashboard()
+}
+
+@onunload {
+    cleanupDashboard()
+}

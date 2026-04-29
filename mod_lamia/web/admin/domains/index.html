@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Manager - MedusaServ Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .domain-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .domain-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .domain-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+        
+        .domain-info h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .domain-meta {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-error {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        
+        .ai-chat {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+        
+        .chat-user {
+            background: #e0e7ff;
+            margin-left: 2rem;
+        }
+        
+        .chat-ai {
+            background: #f0fdf4;
+            margin-right: 2rem;
+        }
+        
+        .ping-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+        
+        .ping-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .ping-success {
+            background: #10b981;
+        }
+        
+        .ping-failed {
+            background: #ef4444;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            color: #166534;
+        }
+        
+        .alert-error {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .alert-info {
+            background: #f0f9ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌐 Domain Manager</h1>
+        <p>cPanel-style domain management with AI command integration and ping monitoring</p>
+    </div>
+
+    <div class="container">
+        <div id="alerts"></div>
+
+        <div class="dashboard-grid">
+            <!-- Add Domain Form -->
+            <div class="card">
+                <h3>🆕 Add New Domain</h3>
+                <form id="addDomainForm">
+                    <div class="form-group">
+                        <label for="domainName">Domain Name</label>
+                        <input type="text" id="domainName" class="form-control" 
+                               placeholder="example.com" required 
+                               pattern="^[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\.[a-zA-Z]{2,}$">
+                        <small>Enter fully qualified domain name</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="documentRoot">Document Root</label>
+                        <input type="text" id="documentRoot" class="form-control" 
+                               placeholder="web/sites/example.com" required>
+                        <small>Relative to /opt/medusaserv/</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="enableSSL">SSL Configuration</label>
+                        <select id="enableSSL" class="form-control">
+                            <option value="auto">Auto SSL (Let's Encrypt)</option>
+                            <option value="manual">Manual Certificate</option>
+                            <option value="disabled">SSL Disabled</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn">
+                        ✨ Add Domain
+                    </button>
+                    
+                    <button type="button" class="btn btn-success" onclick="pingDomain()">
+                        📡 Test Ping
+                    </button>
+                </form>
+            </div>
+
+            <!-- AI Command Integration -->
+            <div class="card">
+                <h3>🤖 AI Domain Assistant</h3>
+                <div class="form-group">
+                    <label for="aiCommand">AI Command</label>
+                    <input type="text" id="aiCommand" class="form-control" 
+                           placeholder="add domain example.com with SSL" 
+                           onkeypress="handleAICommand(event)">
+                    <small>Natural language domain commands</small>
+                </div>
+                
+                <button onclick="processAICommand()" class="btn">
+                    🧠 Process Command
+                </button>
+                
+                <div class="ai-chat" id="aiChat">
+                    <div class="chat-ai">
+                        <strong>🤖 AI Assistant:</strong> Ready to help with domain management. Try commands like:
+                        <ul style="margin-top: 0.5rem;">
+                            <li>"add domain example.com with auto SSL"</li>
+                            <li>"ping check all domains"</li>
+                            <li>"remove failed domains"</li>
+                            <li>"generate SSL for mydomain.com"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain List -->
+        <div class="card">
+            <h3>🗂️ Manage Domains</h3>
+            <div style="margin-bottom: 1rem;">
+                <button onclick="pingAllDomains()" class="btn">📡 Ping All Domains</button>
+                <button onclick="removeFailedDomains()" class="btn btn-danger">🗑️ Remove Failed Domains</button>
+                <button onclick="generateSSLAll()" class="btn btn-success">🔒 Generate SSL for All</button>
+                <button onclick="openSubdomainManager()" class="btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);">
+                    🌐 Manage Subdomains
+                </button>
+            </div>
+            <div class="domain-list" id="domainList">
+                <!-- Domains will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Subdomain Management Integration -->
+        <div class="card" id="subdomainSection" style="display: none;">
+            <h3>🌐 Subdomain Management</h3>
+            <p>Full wrap around care for subdomain management with encrypted .lmae configs</p>
+            <div style="margin: 1rem 0;">
+                <button onclick="createSubdomain()" class="btn">🆕 Create Subdomain</button>
+                <button onclick="loadSubdomains()" class="btn">📋 List Subdomains</button>
+                <button onclick="hideSubdomainManager()" class="btn btn-danger">❌ Close</button>
+            </div>
+            <div id="subdomainList">
+                <iframe src="/admin/subdomains/" width="100%" height="600" frameborder="0" 
+                        style="border-radius: 8px; border: 1px solid #e5e7eb;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let domains = [
+            {
+                domain: "poweredbymedusa.com",
+                document_root: "web/site",
+                ssl_enabled: true,
+                status: "active",
+                ping_status: "success",
+                created_date: "2025-01-15",
+                last_ping: "2025-01-22 07:15:23"
+            }
+        ];
+        
+        // AI Command Processing
+        function handleAICommand(event) {
+            if (event.key === 'Enter') {
+                processAICommand();
+            }
+        }
+        
+        function processAICommand() {
+            const command = document.getElementById('aiCommand').value.toLowerCase();
+            const chatDiv = document.getElementById('aiChat');
+            
+            // Add user message
+            addChatMessage('user', command);
+            
+            // Process command with AI logic
+            let response = "";
+            
+            if (command.includes('add domain')) {
+                const domainMatch = command.match(/add domain ([a-zA-Z0-9.-]+)/);
+                if (domainMatch) {
+                    const domain = domainMatch[1];
+                    const sslEnabled = command.includes('ssl') || command.includes('auto ssl');
+                    response = `🤖 AI: Adding domain "${domain}" with ${sslEnabled ? 'auto SSL' : 'no SSL'}...`;
+                    
+                    // Auto-fill form
+                    document.getElementById('domainName').value = domain;
+                    document.getElementById('documentRoot').value = `web/sites/${domain}`;
+                    document.getElementById('enableSSL').value = sslEnabled ? 'auto' : 'disabled';
+                    
+                    setTimeout(() => {
+                        addChatMessage('ai', `✅ Domain "${domain}" configuration prepared. Click "Add Domain" to confirm.`);
+                    }, 1000);
+                } else {
+                    response = "❌ AI: Please specify a domain name. Example: 'add domain example.com'";
+                }
+            }
+            else if (command.includes('ping') && command.includes('all')) {
+                response = "🤖 AI: Initiating ping check for all domains...";
+                setTimeout(() => {
+                    pingAllDomains();
+                    addChatMessage('ai', '✅ Ping check completed for all domains.');
+                }, 1000);
+            }
+            else if (command.includes('remove failed')) {
+                response = "🤖 AI: Identifying and removing domains with failed ping status...";
+                setTimeout(() => {
+                    removeFailedDomains();
+                    addChatMessage('ai', '🗑️ Failed domains have been removed.');
+                }, 1000);
+            }
+            else if (command.includes('generate ssl')) {
+                const domainMatch = command.match(/generate ssl for ([a-zA-Z0-9.-]+)/);
+                if (domainMatch) {
+                    const domain = domainMatch[1];
+                    response = `🤖 AI: Generating SSL certificate for "${domain}"...`;
+                    setTimeout(() => {
+                        addChatMessage('ai', `🔒 SSL certificate generation initiated for "${domain}". This may take a few minutes.`);
+                    }, 1000);
+                } else {
+                    response = "🤖 AI: Generating SSL certificates for all domains...";
+                    setTimeout(() => {
+                        generateSSLAll();
+                        addChatMessage('ai', '🔒 SSL generation process started for all eligible domains.');
+                    }, 1000);
+                }
+            }
+            else {
+                response = "🤖 AI: I understand domain management commands. Try 'add domain example.com', 'ping all domains', or 'generate ssl'.";
+            }
+            
+            addChatMessage('ai', response);
+            document.getElementById('aiCommand').value = '';
+        }
+        
+        function addChatMessage(type, message) {
+            const chatDiv = document.getElementById('aiChat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message chat-${type}`;
+            
+            const prefix = type === 'user' ? '👤 You:' : '🤖 AI:';
+            messageDiv.innerHTML = `<strong>${prefix}</strong> ${message}`;
+            
+            chatDiv.appendChild(messageDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+
+        // Domain Management Functions
+        document.getElementById('addDomainForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const domain = document.getElementById('domainName').value;
+            const documentRoot = document.getElementById('documentRoot').value;
+            const sslConfig = document.getElementById('enableSSL').value;
+            
+            try {
+                showAlert('Adding domain...', 'info');
+                
+                // Simulate API call
+                const newDomain = {
+                    domain: domain,
+                    document_root: documentRoot,
+                    ssl_enabled: sslConfig !== 'disabled',
+                    ssl_config: sslConfig,
+                    status: 'pending',
+                    ping_status: 'pending',
+                    created_date: new Date().toISOString().split('T')[0],
+                    last_ping: 'Never'
+                };
+                
+                domains.push(newDomain);
+                
+                showAlert(`✅ Domain "${domain}" added successfully!`, 'success');
+                document.getElementById('addDomainForm').reset();
+                displayDomains();
+                
+                // Auto-ping new domain
+                setTimeout(() => {
+                    pingDomain(domain);
+                }, 2000);
+                
+            } catch (error) {
+                showAlert(`❌ Failed to add domain: ${error.message}`, 'error');
+            }
+        });
+
+        function pingDomain(targetDomain = null) {
+            const domain = targetDomain || document.getElementById('domainName').value;
+            if (!domain) {
+                showAlert('Please enter a domain name to ping', 'error');
+                return;
+            }
+            
+            showAlert(`📡 Pinging ${domain}...`, 'info');
+            
+            // Simulate ping check
+            setTimeout(() => {
+                const success = Math.random() > 0.2; // 80% success rate
+                const status = success ? 'success' : 'failed';
+                
+                // Update domain status if it exists
+                const existingDomain = domains.find(d => d.domain === domain);
+                if (existingDomain) {
+                    existingDomain.ping_status = status;
+                    existingDomain.last_ping = new Date().toLocaleString();
+                    displayDomains();
+                }
+                
+                const message = success ? 
+                    `✅ Ping successful for ${domain}` : 
+                    `❌ Ping failed for ${domain}`;
+                showAlert(message, success ? 'success' : 'error');
+                
+            }, 2000);
+        }
+
+        function pingAllDomains() {
+            showAlert('📡 Pinging all domains...', 'info');
+            
+            domains.forEach((domain, index) => {
+                setTimeout(() => {
+                    const success = Math.random() > 0.3; // 70% success rate
+                    domain.ping_status = success ? 'success' : 'failed';
+                    domain.last_ping = new Date().toLocaleString();
+                    
+                    if (index === domains.length - 1) {
+                        displayDomains();
+                        showAlert('✅ Ping check completed for all domains', 'success');
+                    }
+                }, index * 500);
+            });
+        }
+
+        function removeFailedDomains() {
+            const failedCount = domains.filter(d => d.ping_status === 'failed').length;
+            
+            if (failedCount === 0) {
+                showAlert('No failed domains to remove', 'info');
+                return;
+            }
+            
+            if (confirm(`Remove ${failedCount} failed domain(s)?`)) {
+                domains = domains.filter(d => d.ping_status !== 'failed');
+                displayDomains();
+                showAlert(`🗑️ Removed ${failedCount} failed domain(s)`, 'success');
+            }
+        }
+
+        function generateSSLAll() {
+            const eligibleDomains = domains.filter(d => d.ping_status === 'success' && !d.ssl_enabled);
+            
+            if (eligibleDomains.length === 0) {
+                showAlert('No domains eligible for SSL generation', 'info');
+                return;
+            }
+            
+            showAlert(`🔒 Generating SSL for ${eligibleDomains.length} domain(s)...`, 'info');
+            
+            eligibleDomains.forEach((domain, index) => {
+                setTimeout(() => {
+                    domain.ssl_enabled = true;
+                    domain.ssl_config = 'auto';
+                    
+                    if (index === eligibleDomains.length - 1) {
+                        displayDomains();
+                        showAlert('🔒 SSL generation completed for all eligible domains', 'success');
+                    }
+                }, index * 1000);
+            });
+        }
+
+        function deleteDomain(domain) {
+            if (confirm(`Are you sure you want to delete "${domain}"?`)) {
+                domains = domains.filter(d => d.domain !== domain);
+                displayDomains();
+                showAlert(`🗑️ Domain "${domain}" deleted successfully!`, 'success');
+            }
+        }
+
+        function displayDomains() {
+            const container = document.getElementById('domainList');
+            
+            if (domains.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">No domains configured. Add your first domain above!</p>';
+                return;
+            }
+            
+            container.innerHTML = domains.map(domain => `
+                <div class="domain-item">
+                    <div class="domain-info">
+                        <h4>${domain.domain}</h4>
+                        <div class="domain-meta">
+                            📁 ${domain.document_root} | 
+                            🔒 ${domain.ssl_enabled ? 'SSL Enabled' : 'SSL Disabled'} |
+                            📅 ${domain.created_date}
+                            <div class="ping-status">
+                                📡 Last Ping: ${domain.last_ping}
+                                <span class="ping-indicator ping-${domain.ping_status}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="status-badge status-${domain.status}">${domain.status}</span>
+                        <button class="btn" onclick="pingDomain('${domain.domain}')">
+                            📡 Ping
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteDomain('${domain.domain}')">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertsContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Subdomain Management Functions
+        function openSubdomainManager() {
+            document.getElementById('subdomainSection').style.display = 'block';
+            showAlert('🌐 Subdomain Manager opened - Full wrap around care active', 'info');
+            addChatMessage('ai', '🌐 Subdomain management system activated. You can now create and manage subdomains with encrypted .lmae configs.');
+        }
+        
+        function hideSubdomainManager() {
+            document.getElementById('subdomainSection').style.display = 'none';
+            showAlert('❌ Subdomain Manager closed', 'info');
+        }
+        
+        function createSubdomain() {
+            const subdomain = prompt('Enter subdomain name (e.g., blog, shop, api):');
+            if (subdomain) {
+                const template = prompt('Enter template type (basic, portfolio, business):', 'basic');
+                showAlert(`🆕 Creating subdomain: ${subdomain}.poweredbymedusa.com with ${template} template`, 'info');
+                
+                // Simulate subdomain creation
+                setTimeout(() => {
+                    showAlert(`✅ Subdomain "${subdomain}.poweredbymedusa.com" created successfully with full wrap around care!`, 'success');
+                    addChatMessage('ai', `🌐 Subdomain "${subdomain}.poweredbymedusa.com" has been created with encrypted .lmae configuration and Yorkshire Champion standards.`);
+                }, 2000);
+            }
+        }
+        
+        function loadSubdomains() {
+            showAlert('📋 Loading subdomain list with encrypted configurations...', 'info');
+            // The iframe will handle the subdomain listing
+            addChatMessage('ai', '📋 Subdomain list loaded. All configurations are encrypted with AES-256-GCM + PQC encryption.');
+        }
+
+        // Enhanced AI Commands for Subdomain Management
+        const originalProcessAICommand = processAICommand;
+        processAICommand = function() {
+            const command = document.getElementById('aiCommand').value.toLowerCase();
+            const chatDiv = document.getElementById('aiChat');
+            
+            // Add user message
+            addChatMessage('user', command);
+            
+            // Process subdomain-specific commands
+            if (command.includes('subdomain')) {
+                if (command.includes('create') || command.includes('add')) {
+                    const subdomainMatch = command.match(/(?:create|add) subdomain ([a-zA-Z0-9-]+)/);
+                    if (subdomainMatch) {
+                        const subdomain = subdomainMatch[1];
+                        addChatMessage('ai', `🤖 AI: Creating subdomain "${subdomain}" with full wrap around care...`);
+                        setTimeout(() => {
+                            createSubdomain();
+                            addChatMessage('ai', `✅ Subdomain "${subdomain}" creation process initiated with encrypted .lmae configuration.`);
+                        }, 1000);
+                    } else {
+                        addChatMessage('ai', '❌ AI: Please specify a subdomain name. Example: "create subdomain blog"');
+                    }
+                }
+                else if (command.includes('list') || command.includes('show')) {
+                    addChatMessage('ai', '🤖 AI: Opening subdomain management interface with encrypted configurations...');
+                    setTimeout(() => {
+                        openSubdomainManager();
+                        addChatMessage('ai', '🌐 Subdomain management interface opened. All data protected with Yorkshire Champion encryption standards.');
+                    }, 1000);
+                }
+                else if (command.includes('manage')) {
+                    addChatMessage('ai', '🤖 AI: Activating full subdomain management system...');
+                    setTimeout(() => {
+                        openSubdomainManager();
+                        addChatMessage('ai', '🌐 Full wrap around care subdomain management system activated.');
+                    }, 1000);
+                }
+                else {
+                    addChatMessage('ai', '🤖 AI: Subdomain commands available: "create subdomain [name]", "list subdomains", "manage subdomains"');
+                }
+                
+                document.getElementById('aiCommand').value = '';
+                return;
+            }
+            
+            // Fall back to original command processing
+            originalProcessAICommand();
+        };
+
+        // Load domains on page load
+        document.addEventListener('DOMContentLoaded', displayDomains);
+    </script>
+</body>
+</html>

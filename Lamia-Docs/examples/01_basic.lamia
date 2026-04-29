@@ -1,0 +1,15 @@
+// Basic Lamia Example
+// Demonstrates core language features
+
+manifest greeting(name: string) -> crystal @standard {
+    create RADIANT_MESSAGE {
+        text: "Hello, " + name + "!",
+        emotion: JOY_3D,
+        protocol: SOCIAL_GREETING
+    }
+}
+
+manifest main() -> crystal @ludicrous {
+    let result = greeting("World");
+    return result;
+}

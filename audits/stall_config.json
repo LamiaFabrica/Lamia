@@ -1,0 +1,11 @@
+{
+  "interval_seconds": 1,
+  "stall_threshold_seconds": 3,
+  "monitored_agents": [
+    "RuleEnforcer",
+    "SecuritySentinel",
+    "MainServerLoop"
+  ]
+}
+
+

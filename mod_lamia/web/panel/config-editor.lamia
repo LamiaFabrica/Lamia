@@ -1,0 +1,453 @@
+/**
+ * MEDUSASERV WYSIWYG CONFIGURATION EDITOR v0.3.0a
+ * ================================================
+ * Visual configuration editor for all server settings
+ * Experience the Sheer Power of the Lamia Native - a web server for all!
+ * © 2025 The Medusa Project | Roylepython | D Hargreaves
+ */
+
+@application ConfigEditor {
+    @port 69
+    @theme "geeky-purple"
+    @realtime_updates true
+    @config_database "./cnf/cnf.fake-db"
+    
+    // ========================================
+    // WYSIWYG CONFIGURATION EDITOR PAGE
+    // ========================================
+    
+    @page "/config-editor" {
+        @title "MedusaServ Configuration Editor"
+        @layout "editor"
+        
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>MedusaServ Configuration Editor v0.3.0a</title>
+                <link rel="stylesheet" href="/assets/css/geeky-purple.css">
+                <link rel="stylesheet" href="/assets/css/config-editor.css">
+                <script src="/assets/js/config-editor.js"></script>
+            </head>
+            <body class="config-editor-theme">
+                
+                <!-- Header -->
+                <header class="editor-header">
+                    <div class="header-content">
+                        <h1 class="editor-title">
+                            <span class="medusa-icon">⚙️</span>
+                            Configuration Editor
+                            <span class="version">v0.3.0a</span>
+                        </h1>
+                        <div class="editor-actions">
+                            <button class="btn-primary" onclick="saveAllConfigs()">💾 Save All</button>
+                            <button class="btn-secondary" onclick="reloadConfigs()">🔄 Reload</button>
+                            <button class="btn-warning" onclick="resetToDefaults()">🔙 Reset Defaults</button>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- Navigation Tabs -->
+                <nav class="config-tabs">
+                    <ul class="tab-list">
+                        <li><a href="#basic-settings" class="tab-link active">🏠 Basic Settings</a></li>
+                        <li><a href="#security-settings" class="tab-link">🛡️ Security</a></li>
+                        <li><a href="#performance-settings" class="tab-link">⚡ Performance</a></li>
+                        <li><a href="#server-modules" class="tab-link">🔧 Server Modules</a></li>
+                        <li><a href="#monitoring-logs" class="tab-link">📊 Monitoring</a></li>
+                        <li><a href="#advanced-settings" class="tab-link">🔬 Advanced</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Main Content -->
+                <main class="config-content">
+                    
+                    <!-- Basic Settings Tab -->
+                    <section id="basic-settings" class="config-section active">
+                        <h2>Basic Server Settings</h2>
+                        <div class="config-group">
+                            <div class="setting-item">
+                                <label for="server_name">Website Name</label>
+                                <input type="text" 
+                                       id="server_name" 
+                                       data-config="Basic Server Settings|server_name"
+                                       placeholder="My Awesome Website">
+                                <span class="setting-help">The name of your website (displayed in browser tabs)</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="web_port">Web Port</label>
+                                <select id="web_port" data-config="Basic Server Settings|web_port">
+                                    <option value="80">80 (HTTP)</option>
+                                    <option value="443" selected>443 (HTTPS)</option>
+                                    <option value="8080">8080 (Development)</option>
+                                    <option value="8443">8443 (Alt HTTPS)</option>
+                                </select>
+                                <span class="setting-help">Port where visitors access your website</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="panel_port">Control Panel Port</label>
+                                <input type="number" 
+                                       id="panel_port" 
+                                       data-config="Basic Server Settings|panel_port"
+                                       min="1" max="65535" value="69">
+                                <span class="setting-help">Port for this control panel (default: 69)</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="website_folder">Website Files Location</label>
+                                <input type="text" 
+                                       id="website_folder" 
+                                       data-config="Basic Server Settings|website_folder"
+                                       value="./web/site">
+                                <button class="btn-small" onclick="selectFolder('website_folder')">📁 Browse</button>
+                                <span class="setting-help">Directory containing your website files</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="server_admin_email">Administrator Email</label>
+                                <input type="email" 
+                                       id="server_admin_email" 
+                                       data-config="Basic Server Settings|server_admin_email"
+                                       placeholder="admin@example.com">
+                                <span class="setting-help">Email for server notifications and alerts</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Security Settings Tab -->
+                    <section id="security-settings" class="config-section">
+                        <h2>Security & Safety Settings</h2>
+                        <div class="config-group">
+                            <div class="setting-item">
+                                <label for="ssl_enabled">HTTPS (SSL/TLS)</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="ssl_enabled" 
+                                           data-config="Security & Safety|ssl_enabled" 
+                                           checked>
+                                    <label for="ssl_enabled" class="toggle-label">Enable HTTPS</label>
+                                </div>
+                                <span class="setting-help">Encrypt connections for security (Highly Recommended)</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="firewall_protection">IceWall Security</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="firewall_protection" 
+                                           data-config="Security & Safety|firewall_protection" 
+                                           checked>
+                                    <label for="firewall_protection" class="toggle-label">Enable Protection</label>
+                                </div>
+                                <span class="setting-help">Advanced threat detection and blocking</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="threat_detection_level">Threat Detection Level</label>
+                                <select id="threat_detection_level" data-config="IceWall Security|threat_detection_level">
+                                    <option value="low">Low (Basic protection)</option>
+                                    <option value="medium">Medium (Balanced)</option>
+                                    <option value="high" selected>High (Recommended)</option>
+                                    <option value="maximum">Maximum (Strict)</option>
+                                </select>
+                                <span class="setting-help">How aggressively to detect and block threats</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="rate_limit_requests">Rate Limiting</label>
+                                <input type="number" 
+                                       id="rate_limit_requests" 
+                                       data-config="IceWall Security|rate_limit_requests"
+                                       min="1" max="1000" value="100">
+                                <span class="setting-help">Maximum requests per IP per minute</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Performance Settings Tab -->
+                    <section id="performance-settings" class="config-section">
+                        <h2>Speed & Performance Settings</h2>
+                        <div class="config-group">
+                            <div class="setting-item">
+                                <label for="use_optimized_modules">High-Performance Modules</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="use_optimized_modules" 
+                                           data-config="Speed & Performance|use_optimized_modules" 
+                                           checked>
+                                    <label for="use_optimized_modules" class="toggle-label">Enable Optimization</label>
+                                </div>
+                                <span class="setting-help">Use NGINX + Apache + Tomcat optimized modules</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="cache_enabled">Caching</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="cache_enabled" 
+                                           data-config="Speed & Performance|cache_enabled" 
+                                           checked>
+                                    <label for="cache_enabled" class="toggle-label">Enable Caching</label>
+                                </div>
+                                <span class="setting-help">Speed up your website by caching files</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="compression_enabled">File Compression</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="compression_enabled" 
+                                           data-config="Speed & Performance|compression_enabled" 
+                                           checked>
+                                    <label for="compression_enabled" class="toggle-label">Enable Compression</label>
+                                </div>
+                                <span class="setting-help">Make files smaller for faster loading</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="worker_processes">Worker Processes</label>
+                                <select id="worker_processes" data-config="Speed & Performance|worker_processes">
+                                    <option value="auto" selected>Auto (Recommended)</option>
+                                    <option value="1">1 Process</option>
+                                    <option value="2">2 Processes</option>
+                                    <option value="4">4 Processes</option>
+                                    <option value="8">8 Processes</option>
+                                </select>
+                                <span class="setting-help">Number of worker processes to handle requests</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Server Modules Tab -->
+                    <section id="server-modules" class="config-section">
+                        <h2>Server Module Configuration</h2>
+                        <div class="config-group">
+                            <h3>NGINX Settings</h3>
+                            <div class="setting-item">
+                                <label for="nginx_enabled">Enable NGINX</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="nginx_enabled" 
+                                           data-config="NGINX Settings|nginx_enabled" 
+                                           checked>
+                                    <label for="nginx_enabled" class="toggle-label">Enable NGINX</label>
+                                </div>
+                                <span class="setting-help">High-performance web serving</span>
+                            </div>
+                            
+                            <h3>Apache Settings</h3>
+                            <div class="setting-item">
+                                <label for="apache_enabled">Enable Apache</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="apache_enabled" 
+                                           data-config="Apache Settings|apache_enabled" 
+                                           checked>
+                                    <label for="apache_enabled" class="toggle-label">Enable Apache</label>
+                                </div>
+                                <span class="setting-help">PHP and CGI compatibility</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="php_enabled">PHP Support</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="php_enabled" 
+                                           data-config="Apache Settings|php_enabled" 
+                                           checked>
+                                    <label for="php_enabled" class="toggle-label">Enable PHP</label>
+                                </div>
+                                <span class="setting-help">Process PHP scripts</span>
+                            </div>
+                            
+                            <h3>Tomcat Settings</h3>
+                            <div class="setting-item">
+                                <label for="tomcat_enabled">Enable Tomcat</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="tomcat_enabled" 
+                                           data-config="Tomcat Settings|tomcat_enabled" 
+                                           checked>
+                                    <label for="tomcat_enabled" class="toggle-label">Enable Tomcat</label>
+                                </div>
+                                <span class="setting-help">Java application support</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Monitoring & Logs Tab -->
+                    <section id="monitoring-logs" class="config-section">
+                        <h2>Monitoring & Logging (Purple Pages)</h2>
+                        <div class="config-group">
+                            <div class="setting-item">
+                                <label for="purple_pages_enabled">Purple Pages System</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="purple_pages_enabled" 
+                                           data-config="Logs & Monitoring|purple_pages_enabled" 
+                                           checked>
+                                    <label for="purple_pages_enabled" class="toggle-label">Enable Logging</label>
+                                </div>
+                                <span class="setting-help">Comprehensive audit and monitoring system</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="log_rotation">Log Rotation</label>
+                                <select id="log_rotation" data-config="Logs & Monitoring|log_rotation">
+                                    <option value="30mins">Every 30 minutes</option>
+                                    <option value="60mins" selected>Every 60 minutes</option>
+                                    <option value="6hours">Every 6 hours</option>
+                                    <option value="12hours">Every 12 hours</option>
+                                    <option value="24hours">Every 24 hours</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <span class="setting-help">How often to rotate log files</span>
+                            </div>
+                            
+                            <div class="setting-item" id="custom_rotation_container" style="display:none;">
+                                <label for="custom_log_rotation">Custom Rotation Time</label>
+                                <input type="text" 
+                                       id="custom_log_rotation" 
+                                       data-config="Logs & Monitoring|custom_log_rotation"
+                                       placeholder="e.g. 2hours">
+                                <span class="setting-help">Custom rotation interval (e.g. 2hours, 90mins)</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="audit_level">Audit Detail Level</label>
+                                <select id="audit_level" data-config="Logs & Monitoring|audit_level">
+                                    <option value="basic">Basic (Errors only)</option>
+                                    <option value="detailed" selected>Detailed (Recommended)</option>
+                                    <option value="debug">Debug (Development)</option>
+                                    <option value="everything">Everything (Verbose)</option>
+                                </select>
+                                <span class="setting-help">How much detail to include in logs</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Advanced Settings Tab -->
+                    <section id="advanced-settings" class="config-section">
+                        <h2>Advanced Configuration</h2>
+                        <div class="config-group">
+                            <h3>Lamia Engine</h3>
+                            <div class="setting-item">
+                                <label for="jit_compilation">JIT Compilation</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="jit_compilation" 
+                                           data-config="Lamia Engine|jit_compilation" 
+                                           checked>
+                                    <label for="jit_compilation" class="toggle-label">Enable JIT</label>
+                                </div>
+                                <span class="setting-help">Just-In-Time compilation for speed</span>
+                            </div>
+                            
+                            <h3>Development Settings</h3>
+                            <div class="setting-item">
+                                <label for="debug_mode">Debug Mode</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="debug_mode" 
+                                           data-config="Development|debug_mode">
+                                    <label for="debug_mode" class="toggle-label">Enable Debug</label>
+                                </div>
+                                <span class="setting-help">Development debugging (disable in production)</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                </main>
+                
+                <!-- Status Bar -->
+                <footer class="config-status">
+                    <div class="status-content">
+                        <span class="status-indicator" id="configStatus">✅ All settings saved</span>
+                        <span class="last-saved" id="lastSaved">Last saved: Never</span>
+                        <button class="btn-small" onclick="exportConfig()">📤 Export</button>
+                        <button class="btn-small" onclick="importConfig()">📥 Import</button>
+                    </div>
+                </footer>
+                
+                <script>
+                    // Initialize configuration editor
+                    document.addEventListener('DOMContentLoaded', function() {
+                        loadConfigFromDatabase();
+                        initializeEventListeners();
+                        startAutoSave();
+                    });
+                </script>
+                
+            </body>
+            </html>
+        }
+    }
+    
+    // ========================================
+    // API ENDPOINTS FOR CONFIG MANAGEMENT
+    // ========================================
+    
+    @api "/api/config/load" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return loadConfigFromFakeDB("./cnf/cnf.fake-db")
+        }
+    }
+    
+    @api "/api/config/save" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return saveConfigToFakeDB(request.body, "./cnf/cnf.fake-db")
+        }
+    }
+    
+    @api "/api/config/export" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return exportConfigData()
+        }
+    }
+    
+    @api "/api/config/import" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return importConfigData(request.body)
+        }
+    }
+}
+
+// ========================================
+// CONFIG DATABASE FUNCTIONS
+// ========================================
+
+@function loadConfigFromFakeDB(db_path) {
+    // Read the fake-db file and parse configuration
+    return parseConfigDatabase(readFile(db_path))
+}
+
+@function saveConfigToFakeDB(config_data, db_path) {
+    // Update the fake-db file with new configuration
+    return updateConfigDatabase(config_data, db_path)
+}
+
+@function parseConfigDatabase(db_content) {
+    // Parse the pipe-delimited configuration format
+    return parsePipeDelimitedConfig(db_content)
+}
+
+@function updateConfigDatabase(new_config, db_path) {
+    // Update the fake-db with new values while preserving structure
+    return updatePipeDelimitedConfig(new_config, db_path)
+}

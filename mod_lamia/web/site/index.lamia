@@ -1,0 +1,54 @@
+/**
+ * DEFAULT MEDUSASERV WEBSITE v0.3.0c - ERGONOMIC LAMIA
+ * ====================================================
+ * Showcasing modern, developer-first Lamia syntax
+ * Zero HTML boilerplate, maximum ergonomics
+ * © 2025 The Medusa Project
+ */
+
+@application DefaultWebsite {
+    @version "0.3.0c"
+    @theme "modern-purple"
+    @port 2000
+    
+    @page "/" {
+        @title "Welcome to MedusaServ"
+        @layout "default"
+        
+        @styles {
+            @theme modern-glass :: gradient="purple-blue" :: glass-blur
+            @container center :: max-width="600px" :: padding="2rem"
+            @typography system :: color="white" :: shadow
+            @animations smooth :: hover-lift :: transitions="all 0.3s ease"
+        }
+        
+        @render {
+            @container main :: class="glass-container" :: center {
+                @image logo://assets/Medusa_Art/MedusaServ.png :: alt="MedusaServ Logo" :: size="120px" :: center :: rounded
+                
+                @text h1 "Welcome to MedusaServ" :: size="3rem" :: shadow :: margin-bottom="1rem"
+                
+                @text "The doorway to your perfect first website" :: size="1.2rem" :: opacity="0.95" :: margin-bottom="2rem"
+                
+                @container status :: class="status-online" :: padding="1rem" :: margin="2rem 0" :: border="2px solid green" :: rounded {
+                    @text strong "✅ Server Status: ONLINE" :: break
+                    @text "Running on Port 80" :: break  
+                    @text "Lamia Interpreter: Active" :: break
+                    @text "Virtual Host Manager: Ready"
+                }
+                
+                @grid features :: columns="auto-fit" :: min-width="150px" :: gap="1rem" :: margin="2rem 0" {
+                    @feature icon="🚀" :: title="Native Lamia" :: text="Processing .lamia files" :: hover-lift
+                    @feature icon="🌐" :: title="Virtual Hosts" :: text="Full CRUD operations" :: hover-lift  
+                    @feature icon="🎨" :: title="GIF3D Engine" :: text="Revolutionary graphics" :: hover-lift
+                }
+                
+                @buttons :: layout="flex" :: gap="1rem" :: center :: margin-top="2rem" {
+                    @link panel://panel :: style="btn-glass" :: text="Control Panel"
+                    @link domains://domains.lamia :: style="btn-glass" :: text="Domains"
+                    @link api://api/virtualhosts :: style="btn-glass" :: text="API Status"
+                }
+            }
+        }
+    }
+}

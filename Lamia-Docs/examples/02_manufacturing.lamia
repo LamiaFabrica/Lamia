@@ -1,0 +1,47 @@
+// Manufacturing Example
+// Generate G-code for CNC machining
+
+manifest create_bracket() -> crystal @realtime {
+    create CNC_OPERATION {
+        type: MILLING,
+        material: ALUMINUM_6061,
+        stock_size: [150, 100, 20],
+        
+        operations: [
+            FACE_MILL {
+                z_height: 0,
+                step_over: 0.75,
+                feed_rate: 1000
+            },
+            
+            POCKET {
+                depth: 10,
+                corners: 4,
+                radius: 5,
+                roughing_pass: true,
+                finishing_pass: true
+            },
+            
+            DRILL_PATTERN {
+                diameter: 6,
+                depth: 15,
+                positions: [
+                    [10, 10],
+                    [140, 10],
+                    [140, 90],
+                    [10, 90]
+                ],
+                peck_drill: true
+            }
+        ],
+        
+        tool_library: [
+            T1: FACE_MILL_50MM,
+            T2: END_MILL_10MM,
+            T3: DRILL_6MM
+        ],
+        
+        gcode: NATIVE_GENERATION,
+        post_processor: HAAS_NGC
+    }
+}

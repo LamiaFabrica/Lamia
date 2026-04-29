@@ -1,0 +1,1203 @@
+/**
+ * © 2025 D Hargreaves AKA Roylepython | All Rights Reserved
+ *
+ * PSIFORCEDB + MEDUSASERV LICENSING PORTAL v1.0.0
+ * ===============================================
+ *
+ * Integrated licensing portal for Discord + Patreon supporters
+ * Grants access to PsiForceDB, MedusaServ, and source code
+ *
+ * REQUIREMENTS FOR LICENSE:
+ * 1. Active Discord server member
+ * 2. Active Patreon supporter (above basic tier - $1+/month)
+ * 3. Linked Discord + Patreon accounts
+ *
+ * SPECIAL ROUTES:
+ * - /staff-license - Free licenses for Lamia Fabrica employees
+ * - /license/link - Link Discord + Patreon accounts
+ * - /license/validate - Validate existing license
+ *
+ * This rewards supporters after being rejected by Kickstarter/WHT
+ * for AI use (AI is used as reasonable adjustment for disabled development)
+ */
+
+@application LicensingPortal {
+    @name "PsiForceDB & MedusaServ Licensing Portal"
+    @version "1.0.0"
+    @port 8443
+    @ssl_enabled true
+    @domains ["licensing.psiforcedb.com", "licensing.lamia.website"]
+
+    // Configuration
+    @discord_bot_token ENV["DISCORD_BOT_TOKEN"]
+    @patreon_access_token ENV["PATREON_ACCESS_TOKEN"]
+    @discord_server_id ENV["DISCORD_SERVER_ID"]
+    @patreon_campaign_id ENV["PATREON_CAMPAIGN_ID"]
+    @minimum_patreon_cents 100
+    @staff_secret_key ENV["LAMIA_STAFF_SECRET"]
+
+    // Database
+    @database_path "/ops/licensing/licenses.db.json"
+    @audit_log_path "/ops/licensing/audit.log"
+
+    // ========================================
+    // MAIN LANDING PAGE
+    // ========================================
+
+    @page "/" {
+        @title "PsiForceDB & MedusaServ Licensing Portal - Official License Server"
+        @description "Get your license for the revolutionary database server and web server. Discord & Patreon supporters get ad-free access and source code."
+        @authentication_required false
+
+        @seo_metadata {
+            @keywords "PsiForceDB, MedusaServ, Lamia Framework, database license, web server license, Patreon, Discord, open source"
+            @author "D Hargreaves (Roylepython)"
+            @og_image "/assets/og-image.png"
+            @twitter_card "summary_large_image"
+        }
+
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta name="description" content="@{description}">
+                <meta name="keywords" content="@{seo_metadata.keywords}">
+                <meta name="author" content="@{seo_metadata.author}">
+
+                <!-- Open Graph / Social Media -->
+                <meta property="og:type" content="website">
+                <meta property="og:url" content="https://licensing.psiforcedb.com/">
+                <meta property="og:title" content="@{title}">
+                <meta property="og:description" content="@{description}">
+                <meta property="og:image" content="https://licensing.psiforcedb.com@{seo_metadata.og_image}">
+
+                <!-- Twitter -->
+                <meta property="twitter:card" content="@{seo_metadata.twitter_card}">
+                <meta property="twitter:url" content="https://licensing.psiforcedb.com/">
+                <meta property="twitter:title" content="@{title}">
+                <meta property="twitter:description" content="@{description}">
+                <meta property="twitter:image" content="https://licensing.psiforcedb.com/assets/twitter-image.png">
+
+                <!-- Schema.org -->
+                <script type="application/ld+json">
+                {
+                  "@context": "https://schema.org",
+                  "@type": "SoftwareApplication",
+                  "name": "PsiForceDB",
+                  "applicationCategory": "DatabaseApplication",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "1.00",
+                    "priceCurrency": "USD"
+                  },
+                  "operatingSystem": "Windows, Linux",
+                  "description": "Revolutionary quantum-ready database server with AI integration"
+                }
+                </script>
+
+                <title>@{title}</title>
+
+                <style>
+                    :root {
+                        --primary: #6441a5;
+                        --discord: #5865F2;
+                        --patreon: #FF424D;
+                        --success: #00D084;
+                        --dark: #1a1a2e;
+                        --light: #f8f9fa;
+                        --supporter: #667eea;
+                        --contributor: #f39c12;
+                        --champion: #e74c3c;
+                        --enterprise: #9b59b6;
+                    }
+
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        min-height: 100vh;
+                        color: var(--dark);
+                    }
+
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        padding: 20px;
+                    }
+
+                    header {
+                        background: rgba(255,255,255,0.95);
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+                        border-radius: 20px;
+                        padding: 40px;
+                        margin-bottom: 30px;
+                        text-align: center;
+                    }
+
+                    h1 {
+                        font-size: 3em;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        margin-bottom: 10px;
+                    }
+
+                    .tagline {
+                        font-size: 1.2em;
+                        color: #666;
+                        margin-bottom: 20px;
+                    }
+
+                    .hero-message {
+                        background: linear-gradient(135deg, rgba(100, 65, 165, 0.1), rgba(118, 75, 162, 0.1));
+                        border-left: 4px solid var(--primary);
+                        padding: 20px;
+                        border-radius: 10px;
+                        margin: 20px 0;
+                    }
+
+                    .hero-message p {
+                        color: #555;
+                        line-height: 1.6;
+                    }
+
+                    .license-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                        gap: 30px;
+                        margin-bottom: 30px;
+                    }
+
+                    .license-tier {
+                        background: white;
+                        border-radius: 20px;
+                        padding: 40px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .license-tier:hover {
+                        transform: translateY(-10px);
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+                    }
+
+                    .license-tier::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 6px;
+                        background: linear-gradient(90deg, var(--tier-color), var(--tier-color-alt));
+                    }
+
+                    .tier-supporter::before {
+                        --tier-color: #667eea;
+                        --tier-color-alt: #764ba2;
+                    }
+                    .tier-contributor::before {
+                        --tier-color: #f39c12;
+                        --tier-color-alt: #e67e22;
+                    }
+                    .tier-champion::before {
+                        --tier-color: #e74c3c;
+                        --tier-color-alt: #c0392b;
+                    }
+                    .tier-enterprise::before {
+                        --tier-color: #9b59b6;
+                        --tier-color-alt: #8e44ad;
+                    }
+
+                    .tier-icon {
+                        font-size: 4em;
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+
+                    .tier-name {
+                        font-size: 2em;
+                        font-weight: bold;
+                        text-align: center;
+                        margin-bottom: 10px;
+                        color: var(--dark);
+                    }
+
+                    .tier-price {
+                        font-size: 2.5em;
+                        font-weight: bold;
+                        text-align: center;
+                        margin-bottom: 10px;
+                    }
+
+                    .tier-period {
+                        text-align: center;
+                        color: #999;
+                        margin-bottom: 30px;
+                        font-size: 1.1em;
+                    }
+
+                    .tier-features {
+                        list-style: none;
+                        margin-bottom: 30px;
+                    }
+
+                    .tier-features li {
+                        padding: 12px 0;
+                        border-bottom: 1px solid #f0f0f0;
+                        color: #555;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .tier-features li:last-child {
+                        border-bottom: none;
+                    }
+
+                    .feature-icon {
+                        color: var(--success);
+                        font-weight: bold;
+                        font-size: 1.2em;
+                    }
+
+                    .tier-button {
+                        display: block;
+                        width: 100%;
+                        padding: 18px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        text-align: center;
+                        border-radius: 12px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.1em;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                    }
+
+                    .tier-button:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                    }
+
+                    .requirements-section {
+                        background: white;
+                        border-radius: 20px;
+                        padding: 40px;
+                        margin-bottom: 30px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                    }
+
+                    .requirements-section h2 {
+                        color: var(--primary);
+                        margin-bottom: 25px;
+                        font-size: 2em;
+                        text-align: center;
+                    }
+
+                    .requirement-steps {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 25px;
+                        margin-top: 30px;
+                    }
+
+                    .requirement-step {
+                        text-align: center;
+                        padding: 25px;
+                        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+                        border-radius: 15px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .requirement-step:hover {
+                        transform: translateY(-5px);
+                        background: linear-gradient(135deg, #e9ecef, #dee2e6);
+                    }
+
+                    .step-number {
+                        display: inline-block;
+                        width: 50px;
+                        height: 50px;
+                        background: linear-gradient(135deg, var(--discord), #4752c4);
+                        color: white;
+                        border-radius: 50%;
+                        line-height: 50px;
+                        font-size: 1.5em;
+                        font-weight: bold;
+                        margin-bottom: 15px;
+                    }
+
+                    .step-title {
+                        font-size: 1.3em;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        color: var(--dark);
+                    }
+
+                    .step-description {
+                        color: #666;
+                        line-height: 1.6;
+                    }
+
+                    .cta-section {
+                        background: linear-gradient(135deg, rgba(88, 101, 242, 0.9), rgba(255, 66, 77, 0.9));
+                        border-radius: 20px;
+                        padding: 60px 40px;
+                        text-align: center;
+                        margin-bottom: 30px;
+                        color: white;
+                    }
+
+                    .cta-section h2 {
+                        font-size: 2.5em;
+                        margin-bottom: 20px;
+                    }
+
+                    .cta-section p {
+                        font-size: 1.3em;
+                        margin-bottom: 30px;
+                        opacity: 0.95;
+                    }
+
+                    .cta-buttons {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        flex-wrap: wrap;
+                    }
+
+                    .btn-discord {
+                        background: var(--discord);
+                        color: white;
+                        padding: 18px 40px;
+                        border-radius: 12px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2em;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 10px;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+                    }
+
+                    .btn-discord:hover {
+                        background: #4752c4;
+                        transform: translateY(-3px);
+                        box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
+                    }
+
+                    .btn-patreon {
+                        background: var(--patreon);
+                        color: white;
+                        padding: 18px 40px;
+                        border-radius: 12px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2em;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 10px;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(255, 66, 77, 0.4);
+                    }
+
+                    .btn-patreon:hover {
+                        background: #e03a48;
+                        transform: translateY(-3px);
+                        box-shadow: 0 8px 25px rgba(255, 66, 77, 0.5);
+                    }
+
+                    footer {
+                        text-align: center;
+                        color: white;
+                        padding: 30px 20px;
+                        font-size: 0.95em;
+                    }
+
+                    footer a {
+                        color: white;
+                        text-decoration: underline;
+                    }
+
+                    .staff-notice {
+                        background: linear-gradient(135deg, #f39c12, #e67e22);
+                        color: white;
+                        padding: 15px;
+                        border-radius: 10px;
+                        text-align: center;
+                        margin-bottom: 20px;
+                        font-weight: bold;
+                    }
+
+                    .staff-notice a {
+                        color: white;
+                        text-decoration: underline;
+                        font-weight: bold;
+                    }
+
+                    @media (max-width: 768px) {
+                        h1 {
+                            font-size: 2em;
+                        }
+
+                        .license-grid {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .requirement-steps {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .cta-buttons {
+                            flex-direction: column;
+                            align-items: center;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <header>
+                        <h1>🚀 PsiForceDB & MedusaServ</h1>
+                        <p class="tagline">Revolutionary Database Server & Web Server</p>
+
+                        <div class="hero-message">
+                            <p><strong>Supporting Development Through Community</strong></p>
+                            <p>After being rejected by Kickstarter and WHT for using AI as a reasonable adjustment for disabled development, we're rewarding our Discord and Patreon supporters directly. Join our community and get exclusive access to cutting-edge technology!</p>
+                        </div>
+                    </header>
+
+                    <div class="staff-notice">
+                        🏢 Lamia Fabrica Staff: <a href="/staff-license">Click here for your free staff license</a>
+                    </div>
+
+                    <div class="license-grid">
+                        <!-- Supporter Tier -->
+                        <div class="license-tier tier-supporter">
+                            <div class="tier-icon">💎</div>
+                            <h3 class="tier-name">Supporter</h3>
+                            <div class="tier-price">$1<sup>+</sup></div>
+                            <div class="tier-period">per month</div>
+                            <ul class="tier-features">
+                                <li><span class="feature-icon">✓</span> PsiForceDB Database Server</li>
+                                <li><span class="feature-icon">✓</span> MedusaServ Web Server</li>
+                                <li><span class="feature-icon">✓</span> Ad-free server access</li>
+                                <li><span class="feature-icon">✓</span> Community Discord access</li>
+                                <li><span class="feature-icon">✓</span> 3 device activations</li>
+                                <li><span class="feature-icon">✓</span> Basic support</li>
+                            </ul>
+                            <a href="/license/link" class="tier-button">Get Started</a>
+                        </div>
+
+                        <!-- Contributor Tier -->
+                        <div class="license-tier tier-contributor">
+                            <div class="tier-icon">🏆</div>
+                            <h3 class="tier-name">Contributor</h3>
+                            <div class="tier-price">$5<sup>+</sup></div>
+                            <div class="tier-period">per month</div>
+                            <ul class="tier-features">
+                                <li><span class="feature-icon">✓</span> Everything in Supporter</li>
+                                <li><span class="feature-icon">✓</span> Lamia Framework access</li>
+                                <li><span class="feature-icon">✓</span> BertieBot AI Assistant</li>
+                                <li><span class="feature-icon">✓</span> 5 device activations</li>
+                                <li><span class="feature-icon">✓</span> Priority support</li>
+                                <li><span class="feature-icon">✓</span> Beta features access</li>
+                            </ul>
+                            <a href="/license/link" class="tier-button">Get Started</a>
+                        </div>
+
+                        <!-- Champion Tier -->
+                        <div class="license-tier tier-champion">
+                            <div class="tier-icon">👑</div>
+                            <h3 class="tier-name">Champion</h3>
+                            <div class="tier-price">$10<sup>+</sup></div>
+                            <div class="tier-period">per month</div>
+                            <ul class="tier-features">
+                                <li><span class="feature-icon">✓</span> Everything in Contributor</li>
+                                <li><span class="feature-icon">✓</span> Full source code access</li>
+                                <li><span class="feature-icon">✓</span> GitHub repository access</li>
+                                <li><span class="feature-icon">✓</span> 10 device activations</li>
+                                <li><span class="feature-icon">✓</span> VIP support</li>
+                                <li><span class="feature-icon">✓</span> Development influence</li>
+                            </ul>
+                            <a href="/license/link" class="tier-button">Get Started</a>
+                        </div>
+
+                        <!-- Enterprise Tier -->
+                        <div class="license-tier tier-enterprise">
+                            <div class="tier-icon">🏢</div>
+                            <h3 class="tier-name">Enterprise</h3>
+                            <div class="tier-price">Custom</div>
+                            <div class="tier-period">contact us</div>
+                            <ul class="tier-features">
+                                <li><span class="feature-icon">✓</span> Everything in Champion</li>
+                                <li><span class="feature-icon">✓</span> Unlimited activations</li>
+                                <li><span class="feature-icon">✓</span> Custom licensing terms</li>
+                                <li><span class="feature-icon">✓</span> Dedicated support</li>
+                                <li><span class="feature-icon">✓</span> SLA guarantees</li>
+                                <li><span class="feature-icon">✓</span> Custom development</li>
+                            </ul>
+                            <a href="mailto:enterprise@psiforcedb.com" class="tier-button">Contact Sales</a>
+                        </div>
+                    </div>
+
+                    <div class="requirements-section">
+                        <h2>📋 How to Get Your License</h2>
+                        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                            Follow these simple steps to activate your PsiForceDB & MedusaServ license
+                        </p>
+
+                        <div class="requirement-steps">
+                            <div class="requirement-step">
+                                <div class="step-number">1</div>
+                                <div class="step-title">Join Discord</div>
+                                <div class="step-description">
+                                    Join our Discord server and become an active member of our community
+                                </div>
+                            </div>
+
+                            <div class="requirement-step">
+                                <div class="step-number">2</div>
+                                <div class="step-title">Support on Patreon</div>
+                                <div class="step-description">
+                                    Become a Patreon supporter at $1/month or higher (above basic tier)
+                                </div>
+                            </div>
+
+                            <div class="requirement-step">
+                                <div class="step-number">3</div>
+                                <div class="step-title">Link Accounts</div>
+                                <div class="step-description">
+                                    Use our portal to link your Discord and Patreon accounts
+                                </div>
+                            </div>
+
+                            <div class="requirement-step">
+                                <div class="step-number">4</div>
+                                <div class="step-title">Get Licensed</div>
+                                <div class="step-description">
+                                    Receive your license key instantly and enjoy ad-free access!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-section">
+                        <h2>Ready to Get Started?</h2>
+                        <p>Join our community today and get instant access to revolutionary technology!</p>
+                        <div class="cta-buttons">
+                            <a href="https://discord.gg/psiforcedb" class="btn-discord">
+                                <span>💬</span> Join Discord Server
+                            </a>
+                            <a href="https://patreon.com/psiforcedb" class="btn-patreon">
+                                <span>❤️</span> Support on Patreon
+                            </a>
+                        </div>
+                    </div>
+
+                    <footer>
+                        <p><strong>PsiForceDB & MedusaServ v@{version}</strong></p>
+                        <p>© 2025 D Hargreaves AKA Roylepython | All Rights Reserved</p>
+                        <p>
+                            <a href="/license/validate">Validate License</a> |
+                            <a href="/terms">Terms of Service</a> |
+                            <a href="/privacy">Privacy Policy</a> |
+                            <a href="/staff-license">Staff License</a>
+                        </p>
+                        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                            Supporting disabled developers through AI-assisted development.<br>
+                            Rejected by Kickstarter & WHT, supported by our amazing community.
+                        </p>
+                    </footer>
+                </div>
+            </body>
+            </html>
+        }
+    }
+
+    // ========================================
+    // SPECIAL STAFF LICENSE ROUTE
+    // ========================================
+
+    @page "/staff-license" {
+        @title "Lamia Fabrica Staff License Portal"
+        @description "Free license portal for Lamia Fabrica employees"
+        @authentication_required false
+
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>@{title}</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                    }
+
+                    .staff-container {
+                        background: white;
+                        border-radius: 20px;
+                        padding: 50px;
+                        max-width: 600px;
+                        width: 100%;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+                        border-top: 6px solid #f39c12;
+                    }
+
+                    .staff-icon {
+                        text-align: center;
+                        font-size: 5em;
+                        margin-bottom: 20px;
+                    }
+
+                    h1 {
+                        text-align: center;
+                        color: #f39c12;
+                        margin-bottom: 10px;
+                        font-size: 2.5em;
+                    }
+
+                    .subtitle {
+                        text-align: center;
+                        color: #666;
+                        margin-bottom: 40px;
+                        font-size: 1.2em;
+                    }
+
+                    .alert {
+                        background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+                        border-left: 4px solid #f39c12;
+                        padding: 20px;
+                        border-radius: 10px;
+                        margin-bottom: 30px;
+                        color: #555;
+                        line-height: 1.6;
+                    }
+
+                    .alert strong {
+                        color: #f39c12;
+                    }
+
+                    .form-group {
+                        margin-bottom: 25px;
+                    }
+
+                    label {
+                        display: block;
+                        margin-bottom: 8px;
+                        color: #333;
+                        font-weight: bold;
+                        font-size: 1.1em;
+                    }
+
+                    input[type="text"],
+                    input[type="email"],
+                    input[type="password"] {
+                        width: 100%;
+                        padding: 15px;
+                        border: 2px solid #e9ecef;
+                        border-radius: 10px;
+                        font-size: 1em;
+                        transition: all 0.3s ease;
+                    }
+
+                    input:focus {
+                        outline: none;
+                        border-color: #f39c12;
+                        box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+                    }
+
+                    .submit-button {
+                        width: 100%;
+                        background: linear-gradient(135deg, #f39c12, #e67e22);
+                        color: white;
+                        border: none;
+                        padding: 18px;
+                        border-radius: 12px;
+                        font-size: 1.2em;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+                    }
+
+                    .submit-button:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+                    }
+
+                    .back-link {
+                        text-align: center;
+                        margin-top: 25px;
+                    }
+
+                    .back-link a {
+                        color: #f39c12;
+                        text-decoration: none;
+                        font-weight: bold;
+                    }
+
+                    .back-link a:hover {
+                        text-decoration: underline;
+                    }
+
+                    .success-message {
+                        display: none;
+                        background: linear-gradient(135deg, #00d084 0%, #00b373 100%);
+                        color: white;
+                        padding: 30px;
+                        border-radius: 15px;
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+
+                    .success-message.show {
+                        display: block;
+                    }
+
+                    .license-key-display {
+                        background: #2c3e50;
+                        color: #00ff88;
+                        padding: 20px;
+                        border-radius: 10px;
+                        font-family: 'Courier New', monospace;
+                        font-size: 1.3em;
+                        text-align: center;
+                        margin: 20px 0;
+                        word-break: break-all;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="staff-container">
+                    <div class="staff-icon">🏢</div>
+                    <h1>Staff License Portal</h1>
+                    <p class="subtitle">Exclusive for Lamia Fabrica Employees</p>
+
+                    <div class="alert">
+                        <strong>⚠️ Internal Use Only</strong><br>
+                        This portal is exclusively for Lamia Fabrica staff members. You will need your employee secret key to generate a free license. Unauthorized access attempts are logged and monitored.
+                    </div>
+
+                    <div id="successMessage" class="success-message">
+                        <h2>✅ License Generated Successfully!</h2>
+                        <p>Your staff license has been created and activated.</p>
+                        <div class="license-key-display" id="licenseKeyDisplay"></div>
+                        <p style="margin-top: 15px;">Save this license key securely. You can use it to activate PsiForceDB and MedusaServ on any device.</p>
+                    </div>
+
+                    <form id="staffLicenseForm" method="POST" action="/api/staff-license/generate">
+                        <div class="form-group">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" required
+                                   placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Employee Email</label>
+                            <input type="email" id="email" name="email" required
+                                   placeholder="your.name@lamiafabrica.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="employee_id">Employee ID</label>
+                            <input type="text" id="employee_id" name="employee_id" required
+                                   placeholder="LF-XXXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="secret_key">Staff Secret Key</label>
+                            <input type="password" id="secret_key" name="secret_key" required
+                                   placeholder="Enter your staff secret key">
+                        </div>
+
+                        <button type="submit" class="submit-button">
+                            🔑 Generate Staff License
+                        </button>
+                    </form>
+
+                    <div class="back-link">
+                        <a href="/">← Back to Public Portal</a>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('staffLicenseForm').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+
+                        const formData = new FormData(this);
+                        const data = Object.fromEntries(formData.entries());
+
+                        try {
+                            const response = await fetch('/api/staff-license/generate', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+
+                            if (result.status === 'success') {
+                                document.getElementById('successMessage').classList.add('show');
+                                document.getElementById('licenseKeyDisplay').textContent = result.data.license_key;
+                                document.getElementById('staffLicenseForm').style.display = 'none';
+                            } else {
+                                alert('Error: ' + result.error.message);
+                            }
+                        } catch (error) {
+                            alert('Failed to generate license. Please contact IT support.');
+                            console.error('Error:', error);
+                        }
+                    });
+                </script>
+            </body>
+            </html>
+        }
+    }
+
+    // ========================================
+    // API ENDPOINTS
+    // ========================================
+
+    @api_endpoints LicensingAPI {
+        @base_path "/api"
+
+        // Staff license generation endpoint
+        @endpoint staff_license_generate {
+            @route "POST /staff-license/generate"
+            @description "Generate free staff license for Lamia Fabrica employees"
+            @access_level "public"
+
+            @lamia_handler {
+                const request_body = getRequestBody()
+                const licensing_funcs = getGlobalVar("licensing_functions")
+
+                // Validate staff secret key
+                const staff_secret = ENV["LAMIA_STAFF_SECRET"]
+                if (request_body.secret_key !== staff_secret) {
+                    // Log unauthorized access attempt
+                    licensing_funcs.log_audit_event({
+                        event_type: "UNAUTHORIZED_STAFF_ACCESS",
+                        severity: "high",
+                        details: {
+                            email: request_body.email,
+                            employee_id: request_body.employee_id,
+                            ip_address: getClientIP(),
+                            timestamp: getCurrentTimestamp()
+                        }
+                    })
+
+                    return {
+                        status: "error",
+                        error: {
+                            code: "INVALID_SECRET_KEY",
+                            message: "Invalid staff secret key. This incident has been logged."
+                        }
+                    }
+                }
+
+                // Validate email domain
+                if (!request_body.email.endsWith("@lamiafabrica.com")) {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "INVALID_EMAIL_DOMAIN",
+                            message: "Email must be a @lamiafabrica.com address"
+                        }
+                    }
+                }
+
+                // Generate staff license
+                const license_result = licensing_funcs.generate_staff_license({
+                    full_name: request_body.full_name,
+                    email: request_body.email,
+                    employee_id: request_body.employee_id,
+                    tier: "ENTERPRISE",
+                    max_activations: 999,
+                    source_access: true,
+                    expires_never: true
+                })
+
+                if (license_result.success) {
+                    // Log successful staff license generation
+                    licensing_funcs.log_audit_event({
+                        event_type: "STAFF_LICENSE_GENERATED",
+                        severity: "info",
+                        details: {
+                            employee_id: request_body.employee_id,
+                            email: request_body.email,
+                            license_key: license_result.license_key,
+                            timestamp: getCurrentTimestamp()
+                        }
+                    })
+
+                    return {
+                        status: "success",
+                        data: {
+                            license_key: license_result.license_key,
+                            tier: "ENTERPRISE",
+                            features: [
+                                "Unlimited activations",
+                                "Full source code access",
+                                "All products included",
+                                "Never expires",
+                                "Priority support"
+                            ]
+                        }
+                    }
+                } else {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "GENERATION_FAILED",
+                            message: license_result.error
+                        }
+                    }
+                }
+            }
+        }
+
+        // License validation endpoint
+        @endpoint license_validate {
+            @route "POST /license/validate"
+            @description "Validate license key and get user entitlements"
+            @access_level "public"
+
+            @lamia_handler {
+                const request_body = getRequestBody()
+                const licensing_funcs = getGlobalVar("licensing_functions")
+
+                const validation_result = licensing_funcs.validate_license({
+                    license_key: request_body.license_key,
+                    product: request_body.product || "PSIFORCEDB",
+                    hardware_fingerprint: request_body.hardware_fingerprint,
+                    client_version: request_body.client_version,
+                    ip_address: getClientIP()
+                })
+
+                if (validation_result.valid) {
+                    return {
+                        status: "success",
+                        data: {
+                            valid: true,
+                            license: validation_result.license,
+                            features: {
+                                ad_free: true,
+                                source_access: validation_result.license.source_access_granted,
+                                priority_support: validation_result.license.tier >= 2,
+                                beta_access: validation_result.license.tier >= 2
+                            },
+                            server_config: validation_result.server_config
+                        }
+                    }
+                } else {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "INVALID_LICENSE",
+                            message: validation_result.message
+                        }
+                    }
+                }
+            }
+        }
+
+        // Account linking endpoint (Discord + Patreon)
+        @endpoint account_link {
+            @route "POST /license/link"
+            @description "Link Discord and Patreon accounts to generate license"
+            @access_level "public"
+
+            @lamia_handler {
+                const request_body = getRequestBody()
+                const licensing_funcs = getGlobalVar("licensing_functions")
+
+                // Verify Discord membership
+                const discord_valid = licensing_funcs.verify_discord_membership(request_body.discord_id)
+                if (!discord_valid) {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "DISCORD_NOT_MEMBER",
+                            message: "You must be a member of our Discord server"
+                        }
+                    }
+                }
+
+                // Verify Patreon subscription (must be >$1/month)
+                const patreon_valid = licensing_funcs.verify_patreon_subscription(request_body.patreon_id)
+                if (!patreon_valid.active || patreon_valid.amount_cents < 100) {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "PATREON_NOT_ELIGIBLE",
+                            message: "You must be a Patreon supporter at $1/month or higher (above basic tier)"
+                        }
+                    }
+                }
+
+                // Generate license
+                const license_result = licensing_funcs.generate_license({
+                    discord_id: request_body.discord_id,
+                    patreon_id: request_body.patreon_id,
+                    hardware_fingerprint: request_body.hardware_fingerprint
+                })
+
+                if (license_result.success) {
+                    return {
+                        status: "success",
+                        data: {
+                            license_key: license_result.license_key,
+                            tier: license_result.tier,
+                            products: license_result.products,
+                            expires_at: license_result.expires_at
+                        }
+                    }
+                } else {
+                    return {
+                        status: "error",
+                        error: {
+                            code: "LICENSE_GENERATION_FAILED",
+                            message: license_result.error
+                        }
+                    }
+                }
+            }
+        }
+
+        // Discord OAuth callback
+        @endpoint discord_oauth {
+            @route "GET /oauth/discord/callback"
+            @description "Handle Discord OAuth callback"
+            @access_level "public"
+
+            @lamia_handler {
+                const code = getQueryParam("code")
+                const licensing_funcs = getGlobalVar("licensing_functions")
+
+                const discord_result = licensing_funcs.exchange_discord_code(code)
+
+                if (discord_result.success) {
+                    setSessionVar("discord_id", discord_result.user.id)
+                    setSessionVar("discord_username", discord_result.user.username)
+                    redirect("/license/link")
+                } else {
+                    redirect("/?error=discord_auth_failed")
+                }
+            }
+        }
+
+        // Patreon OAuth callback
+        @endpoint patreon_oauth {
+            @route "GET /oauth/patreon/callback"
+            @description "Handle Patreon OAuth callback"
+            @access_level "public"
+
+            @lamia_handler {
+                const code = getQueryParam("code")
+                const licensing_funcs = getGlobalVar("licensing_functions")
+
+                const patreon_result = licensing_funcs.exchange_patreon_code(code)
+
+                if (patreon_result.success) {
+                    setSessionVar("patreon_id", patreon_result.user.id)
+                    setSessionVar("patreon_email", patreon_result.user.email)
+                    redirect("/license/link")
+                } else {
+                    redirect("/?error=patreon_auth_failed")
+                }
+            }
+        }
+    }
+
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+
+    @on_startup {
+        @lamia_code {
+            log("PsiForceDB & MedusaServ Licensing Portal v1.0.0")
+            log("Initializing licensing server...")
+
+            // Load licensing functions library
+            const licensing_lib = loadLibrary("psiforce_licensing_server.so")
+            setGlobalVar("licensing_functions", licensing_lib)
+
+            // Initialize Discord bot
+            licensing_lib.initialize_discord({
+                bot_token: ENV["DISCORD_BOT_TOKEN"],
+                server_id: ENV["DISCORD_SERVER_ID"]
+            })
+
+            // Initialize Patreon integration
+            licensing_lib.initialize_patreon({
+                access_token: ENV["PATREON_ACCESS_TOKEN"],
+                campaign_id: ENV["PATREON_CAMPAIGN_ID"]
+            })
+
+            // Load existing licenses from database
+            licensing_lib.load_database(ENV["DATABASE_PATH"] || "/ops/licensing/licenses.db.json")
+
+            // Start background sync loop (Discord + Patreon real-time updates)
+            licensing_lib.start_sync_loop()
+
+            log("✓ Licensing server ready")
+            log("✓ Discord bot connected")
+            log("✓ Patreon integration active")
+            log("✓ Staff license route available at /staff-license")
+            log("✓ Serving on: licensing.psiforcedb.com, licensing.lamia.website")
+        }
+    }
+
+    @on_shutdown {
+        @lamia_code {
+            log("Shutting down licensing server...")
+            const licensing_lib = getGlobalVar("licensing_functions")
+            licensing_lib.save_database()
+            licensing_lib.shutdown()
+            log("✓ Licensing server stopped")
+        }
+    }
+}
+
+// Plugin metadata
+@plugin_metadata {
+    @generated_at "2025-01-14T00:00:00Z"
+    @version "1.0.0"
+    @author "D Hargreaves (Roylepython)"
+    @provides ["licensing_portal", "discord_integration", "patreon_integration", "staff_licenses"]
+    @requires ["psiforce_licensing_server.so", "medusa_discord_integration.so", "medusa_patreon_integration.so"]
+    @deployment_domains ["licensing.psiforcedb.com", "licensing.lamia.website"]
+    @staff_route_enabled true
+    @minimum_patreon_tier "$1/month (above basic)"
+}

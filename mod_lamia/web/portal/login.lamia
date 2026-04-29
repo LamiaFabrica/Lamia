@@ -1,0 +1,777 @@
+/**
+ * MEDUSASERV ENTERPRISE LOGIN v0.3.0c
+ * Corporate/Clean styling with purple chromatic highlights
+ * Integrates with existing Lamia component library
+ */
+
+@component "medusaserv_login" {
+    @version "0.3.0c"
+    @theme "enterprise_corporate"
+    @logo_path "/mnt/c/Build/Medusa_Art/MedusaServ.png"
+    
+    @include "components/header.lamia"
+    
+    @render {
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>MedusaServ v0.3.0c - Enterprise Login</title>
+            <link rel="icon" type="image/png" href="@{logo_path}">
+            @include_styles
+        </head>
+        <body class="enterprise-body">
+            <!-- Corporate Header Bar -->
+            <header class="enterprise-header">
+                <div class="header-content">
+                    <div class="brand-section">
+                        <img src="@{logo_path}" alt="MedusaServ" class="brand-logo">
+                        <div class="brand-text">
+                            <h1>MedusaServ</h1>
+                            <span class="version-tag">Enterprise v0.3.0c</span>
+                        </div>
+                    </div>
+                    <div class="enterprise-badge">
+                        <span class="security-indicator">🔒 Secure Access Portal</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Login Container -->
+            <main class="login-main">
+                <div class="login-container">
+                    <!-- Welcome Section -->
+                    <section class="welcome-section">
+                        <h2>Enterprise Access Portal</h2>
+                        <div class="security-highlight">
+                            <div class="highlight-bar"></div>
+                            <p>Secure authentication required for MedusaServ v0.3.0c Enterprise Edition</p>
+                        </div>
+                        
+                        <!-- Status Messages -->
+                        @if @{request.success == "password_reset"} {
+                            <div class="alert alert-success">
+                                <strong>✅ Success:</strong> Root password has been reset successfully. You can now login with the new password.
+                            </div>
+                        }
+                        
+                        @if @{request.error == "auth_failed"} {
+                            <div class="alert alert-error">
+                                <strong>❌ Error:</strong> Invalid username or password. Please try again.
+                            </div>
+                        }
+                        
+                        @if @{request.error == "reset_failed"} {
+                            <div class="alert alert-error">
+                                <strong>❌ Error:</strong> Password reset failed. Please contact system administrator.
+                            </div>
+                        }
+                        
+                        @if @{request.error == "password_mismatch"} {
+                            <div class="alert alert-error">
+                                <strong>❌ Error:</strong> Passwords do not match. Please try again.
+                            </div>
+                        }
+                        
+                        @if @{request.error == "missing_password"} {
+                            <div class="alert alert-error">
+                                <strong>❌ Error:</strong> Please provide both password fields.
+                            </div>
+                        }
+                    </section>
+
+                    <!-- Login Form -->
+                    <form class="login-form" method="POST" action="/login">
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="username" 
+                                    name="username" 
+                                    class="form-input"
+                                    placeholder="Enter your username"
+                                    required 
+                                    autocomplete="username"
+                                >
+                                <div class="input-accent"></div>
+                            </div>
+                        </div>
+
+                        <div class="chromatic-divider"></div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="form-input"
+                                    placeholder="Enter your password"
+                                    required 
+                                    autocomplete="current-password"
+                                >
+                                <div class="input-accent"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-button">
+                            <span class="button-text">Sign In</span>
+                            <div class="button-accent"></div>
+                        </button>
+                    </form>
+
+                    <!-- Password Reset Section -->
+                    <div class="reset-section" id="resetSection" style="display: none;">
+                        <h3>🔑 Root Password Reset</h3>
+                        <p>Reset the root account password using the emergency reset script</p>
+                        <form class="reset-form" method="POST" action="/reset-password">
+                            <input type="hidden" name="action" value="reset_root_password">
+                            <div class="form-group">
+                                <label for="new_password" class="form-label">New Root Password</label>
+                                <div class="input-wrapper">
+                                    <input 
+                                        type="password" 
+                                        id="new_password" 
+                                        name="new_password" 
+                                        class="form-input"
+                                        placeholder="Enter new root password"
+                                        required 
+                                        minlength="8"
+                                    >
+                                    <div class="input-accent"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <div class="input-wrapper">
+                                    <input 
+                                        type="password" 
+                                        id="confirm_password" 
+                                        name="confirm_password" 
+                                        class="form-input"
+                                        placeholder="Confirm new password"
+                                        required 
+                                        minlength="8"
+                                    >
+                                    <div class="input-accent"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-button reset-button">
+                                <span class="button-text">🔄 Reset Root Password</span>
+                                <div class="button-accent"></div>
+                            </button>
+                        </form>
+                        <div class="reset-actions">
+                            <button onclick="showLogin()" class="btn-link">← Back to Login</button>
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="system-status">
+                        <div class="status-indicator active"></div>
+                        <span>All systems operational</span>
+                        <div class="reset-link">
+                            <button onclick="showReset()" class="btn-link">🔑 Root Password Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Background Elements -->
+                <div class="background-pattern">
+                    <div class="pattern-element element-1"></div>
+                    <div class="pattern-element element-2"></div>
+                    <div class="pattern-element element-3"></div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="enterprise-footer">
+                <div class="footer-content">
+                    <span>© 2025 MedusaServ Enterprise Edition</span>
+                    <div class="footer-highlights">
+                        <span class="highlight">v0.3.0c</span>
+                        <span class="highlight">Military-Grade Security</span>
+                    </div>
+                </div>
+            </footer>
+        </body>
+        <script>
+            function showReset() {
+                document.querySelector('.login-form').style.display = 'none';
+                document.querySelector('.welcome-section').style.display = 'none';
+                document.getElementById('resetSection').style.display = 'block';
+            }
+            
+            function showLogin() {
+                document.querySelector('.login-form').style.display = 'flex';
+                document.querySelector('.welcome-section').style.display = 'block';
+                document.getElementById('resetSection').style.display = 'none';
+            }
+            
+            // Password confirmation validation
+            document.addEventListener('DOMContentLoaded', function() {
+                const resetForm = document.querySelector('.reset-form');
+                if (resetForm) {
+                    resetForm.addEventListener('submit', function(e) {
+                        const newPassword = document.getElementById('new_password').value;
+                        const confirmPassword = document.getElementById('confirm_password').value;
+                        
+                        if (newPassword !== confirmPassword) {
+                            e.preventDefault();
+                            alert('Passwords do not match. Please try again.');
+                            return false;
+                        }
+                        
+                        if (newPassword.length < 8) {
+                            e.preventDefault();
+                            alert('Password must be at least 8 characters long.');
+                            return false;
+                        }
+                        
+                        if (!confirm('Are you sure you want to reset the root password? This will immediately update the system authentication.')) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                }
+            });
+        </script>
+        </html>
+    }
+    
+    @styles {
+        /* Corporate Foundation */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .enterprise-body {
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #343a40;
+            line-height: 1.6;
+        }
+
+        /* Enterprise Header */
+        .enterprise-header {
+            background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 50%, #9b59b6 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(111, 66, 193, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enterprise-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: headerShimmer 3s ease-in-out infinite;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            height: 60px;
+            width: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .brand-text h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .version-tag {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .enterprise-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .security-indicator {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Main Login Area */
+        .login-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            position: relative;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 8px 16px rgba(111, 66, 193, 0.1);
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 10;
+            border-top: 4px solid #6f42c1;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 1rem;
+        }
+
+        .security-highlight {
+            position: relative;
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.05), rgba(142, 68, 173, 0.05));
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #6f42c1;
+        }
+
+        .highlight-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #6f42c1, #8e44ad, #9b59b6);
+            border-radius: 1px;
+        }
+
+        .security-highlight p {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Form Styling */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.875rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fff;
+            transition: all 0.2s ease;
+            color: #495057;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+        }
+
+        .form-input:focus + .input-accent {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        .input-accent {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #6f42c1, #8e44ad);
+            border-radius: 1px;
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.3s ease;
+        }
+
+        /* Chromatic Divider */
+        .chromatic-divider {
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #6f42c1 25%, 
+                #8e44ad 50%, 
+                #9b59b6 75%, 
+                transparent 100%
+            );
+            border-radius: 1px;
+            margin: 0.5rem 0;
+        }
+
+        /* Submit Button */
+        .submit-button {
+            position: relative;
+            background: linear-gradient(135deg, #6f42c1, #8e44ad);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(135deg, #5a2d91, #7d3c98);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .button-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .button-accent {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-button:hover .button-accent {
+            left: 100%;
+        }
+
+        /* System Status */
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        /* Password Reset Styles */
+        .reset-section {
+            text-align: center;
+        }
+
+        .reset-section h3 {
+            color: #6f42c1;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .reset-section p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        .reset-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .reset-button:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+        }
+
+        .reset-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #6f42c1;
+            cursor: pointer;
+            font-size: 0.875rem;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: #5a2d91;
+        }
+
+        .reset-link {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        /* Background Pattern */
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .pattern-element {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.05), rgba(142, 68, 173, 0.05));
+        }
+
+        .element-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: -5%;
+            animation: float1 6s ease-in-out infinite;
+        }
+
+        .element-2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: -5%;
+            animation: float2 8s ease-in-out infinite;
+        }
+
+        .element-3 {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 20%;
+            animation: float3 10s ease-in-out infinite;
+        }
+
+        /* Enterprise Footer */
+        .enterprise-footer {
+            background: #343a40;
+            padding: 1rem 0;
+            color: #adb5bd;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .footer-highlights {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .highlight {
+            background: #6f42c1;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes headerShimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -20px) rotate(180deg); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-15px, 15px) rotate(-180deg); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10px, -10px) rotate(90deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+    }
+}
+
+// Authentication API Handler
+@api {
+    @method "POST"
+    
+    // Handle standard login
+    @if @{request.username && request.password} {
+        @auth_validate {
+            @username @{request.username}
+            @password @{request.password}
+            @auth_file "/ops/MedusaServ/auth/users.auth"
+            
+            @on_success {
+                @session_create @{request.username}
+                @redirect "/portal/"
+            }
+            
+            @on_failure {
+                @set_error "Invalid username or password"
+                @redirect "/portal/login.lamia?error=auth_failed"
+            }
+        }
+    }
+    
+    // Handle root password reset
+    @if @{request.action == "reset_root_password"} {
+        @if @{request.new_password && request.confirm_password} {
+            @if @{request.new_password == request.confirm_password} {
+                @root_password_reset {
+                    @new_password @{request.new_password}
+                    @script_path "/ops/MedusaServ/scripts/reset_root_password.sh"
+                    @auth_file "/ops/MedusaServ/auth/users.auth"
+                    
+                    @on_success {
+                        @log "Root password reset successfully"
+                        @redirect "/portal/login.lamia?success=password_reset"
+                    }
+                    
+                    @on_failure {
+                        @log "Root password reset failed"
+                        @redirect "/portal/login.lamia?error=reset_failed"
+                    }
+                }
+            } @else {
+                @redirect "/portal/login.lamia?error=password_mismatch"
+            }
+        } @else {
+            @redirect "/portal/login.lamia?error=missing_password"
+        }
+    }
+}

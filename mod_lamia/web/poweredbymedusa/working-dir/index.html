@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powered by Medusa - Temporary Development URL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            max-width: 700px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .medusa-logo {
+            margin-bottom: 2rem;
+            display: block;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #fff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .temp-url-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 0.9rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .status {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 255, 150, 0.15);
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 150, 0.4);
+        }
+        .temp-info {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 165, 0, 0.15);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 165, 0, 0.4);
+            color: #ffb366;
+        }
+        .buttons {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 600;
+            min-width: 150px;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+        .server-info {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- MedusaServ Logo -->
+        <svg class="medusa-logo" style="height: 100px; width: auto;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="medusaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#8b3f8b;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ab47bc;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#medusaGrad)" />
+            <text x="100" y="125" font-family="Arial, sans-serif" font-size="75" font-weight="bold" fill="white" text-anchor="middle">M</text>
+        </svg>
+        
+        <div class="temp-url-badge">
+            🔗 TEMPORARY DEVELOPMENT URL
+        </div>
+        
+        <h1>Welcome to Powered by Medusa</h1>
+        <p>You're viewing the temporary development URL while DNS propagation takes place</p>
+        
+        <div class="temp-info">
+            <strong>🌐 How Temporary URLs Work</strong><br>
+            This special URL allows you to preview your website before your domain name points to our servers. Perfect for testing and development!<br><br>
+            <strong>Current URL:</strong> http://172.236.28.155/?user=poweredbymedusa/<br>
+            <strong>Future Domain:</strong> www.poweredbymedusa.com
+        </div>
+        
+        <div class="status">
+            <strong>✅ Development Environment Ready</strong><br>
+            MedusaServ v0.3.0c Running<br>
+            Yorkshire Champion Standards Active<br>
+            All systems operational
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <strong>High Performance</strong><br>
+                Native C++ server with lightning-fast response times
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <strong>Security First</strong><br>
+                Military-grade encryption with Icewall protection
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌐</div>
+                <strong>Global Ready</strong><br>
+                Full domain and subdomain management support
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <strong>Instant Deploy</strong><br>
+                Deploy changes instantly to your working directory
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <a href="/panel" class="btn">Control Panel</a>
+            <a href="mailto:support@poweredbymedusa.com" class="btn">Get Support</a>
+        </div>
+        
+        <div class="server-info">
+            <strong>Server:</strong> MedusaServ/0.3.0c<br>
+            <strong>IP:</strong> 172.236.28.155<br>
+            <strong>Status:</strong> Development Environment
+        </div>
+    </div>
+</body>
+</html>

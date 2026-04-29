@@ -1,0 +1,468 @@
+/**
+ * MEDUSASERV PORTAL CONFIG MANAGER v0.3.0a
+ * =========================================
+ * Portal-inspired configuration switcher with visual database editor
+ * Experience the Sheer Power of the Lamia Native - a web server for all!
+ * © 2025 The Medusa Project | Roylepython | D Hargreaves
+ */
+
+@application PortalConfigManager {
+    @port 69
+    @theme "portal-aperture"
+    @realtime_updates true
+    @jupyter_enabled true
+    @phpmyadmin_style true
+    
+    // ========================================
+    // PORTAL-STYLE CONFIGURATION MANAGER
+    // ========================================
+    
+    @page "/portal-config" {
+        @title "Aperture Science Configuration Manager"
+        @layout "portal"
+        
+        @render {
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>MedusaServ Portal Config Manager v0.3.0a</title>
+                <link rel="stylesheet" href="/assets/css/portal-theme.css">
+                <link rel="stylesheet" href="/assets/css/phpmyadmin-grid.css">
+                <link rel="stylesheet" href="/assets/css/jupyter-integration.css">
+                <script src="/assets/js/portal-config.js"></script>
+                <script src="/assets/js/database-editor.js"></script>
+                <script src="/assets/js/jupyter-connector.js"></script>
+            </head>
+            <body class="portal-theme">
+                
+                <!-- Portal Header -->
+                <header class="portal-header">
+                    <div class="aperture-logo">
+                        <div class="aperture-icon">
+                            <svg class="rotating-aperture" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#FF6B00" stroke-width="2"/>
+                                <path d="M50,5 L65,35 L95,50 L65,65 L50,95 L35,65 L5,50 L35,35 Z" 
+                                      fill="#FF6B00" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        <h1 class="portal-title">
+                            Aperture Science Configuration Portal
+                            <span class="glados-voice">v0.3.0a - "The cake is not a lie"</span>
+                        </h1>
+                    </div>
+                    <div class="test-chamber-number">
+                        Test Chamber: <span id="activeConfig">medusaserv.lamia</span>
+                    </div>
+                </header>
+                
+                <!-- Configuration Switcher Dropdown -->
+                <nav class="config-switcher">
+                    <div class="portal-dropdown-container">
+                        <label class="portal-label">Select Configuration Test Chamber:</label>
+                        <div class="portal-dropdown">
+                            <button class="portal-dropdown-btn" onclick="toggleConfigList()">
+                                <span class="config-icon">🔧</span>
+                                <span id="currentConfigName">medusaserv.lamia</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="portal-dropdown-content" id="configDropdown">
+                                <div class="dropdown-header">Available Configuration Files</div>
+                                
+                                <!-- Core Configurations -->
+                                <div class="config-category">
+                                    <div class="category-title">🎮 Core Test Chambers</div>
+                                    <a href="#" onclick="loadConfig('medusaserv.lamia')" class="config-item active">
+                                        <span class="status-led online"></span>
+                                        medusaserv.lamia
+                                        <span class="config-badge">Main</span>
+                                    </a>
+                                    <a href="#" onclick="loadConfig('nginx-high-performance.lamia')" class="config-item">
+                                        <span class="status-led"></span>
+                                        nginx-high-performance.lamia
+                                        <span class="config-badge">NGINX</span>
+                                    </a>
+                                    <a href="#" onclick="loadConfig('apache-compatibility.lamia')" class="config-item">
+                                        <span class="status-led"></span>
+                                        apache-compatibility.lamia
+                                        <span class="config-badge">Apache</span>
+                                    </a>
+                                    <a href="#" onclick="loadConfig('tomcat-java.lamia')" class="config-item">
+                                        <span class="status-led"></span>
+                                        tomcat-java.lamia
+                                        <span class="config-badge">Tomcat</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- Database Configurations -->
+                                <div class="config-category">
+                                    <div class="category-title">💾 Database Chambers</div>
+                                    <a href="#" onclick="loadConfig('cnf.fake-db')" class="config-item">
+                                        <span class="status-led"></span>
+                                        cnf.fake-db
+                                        <span class="config-badge">Database</span>
+                                    </a>
+                                    <a href="#" onclick="loadConfig('vhosts.fake-db')" class="config-item">
+                                        <span class="status-led"></span>
+                                        vhosts.fake-db
+                                        <span class="config-badge">VHosts</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- Security Configurations -->
+                                <div class="config-category">
+                                    <div class="category-title">🛡️ Security Chambers</div>
+                                    <a href="#" onclick="loadConfig('icewall.lamia')" class="config-item">
+                                        <span class="status-led"></span>
+                                        icewall.lamia
+                                        <span class="config-badge">IceWall</span>
+                                    </a>
+                                    <a href="#" onclick="loadConfig('ssl-certificates.lamia')" class="config-item">
+                                        <span class="status-led"></span>
+                                        ssl-certificates.lamia
+                                        <span class="config-badge">SSL</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- Custom Configurations -->
+                                <div class="config-category">
+                                    <div class="category-title">🔬 Experimental Chambers</div>
+                                    <a href="#" onclick="createNewConfig()" class="config-item new-config">
+                                        <span class="plus-icon">+</span>
+                                        Create New Configuration
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="portal-quick-actions">
+                            <button class="portal-btn orange" onclick="openJupyterLab()">
+                                <span class="icon">📊</span> Jupyter Lab
+                            </button>
+                            <button class="portal-btn blue" onclick="openDatabaseEditor()">
+                                <span class="icon">🗄️</span> Database Editor
+                            </button>
+                            <button class="portal-btn green" onclick="validateConfig()">
+                                <span class="icon">✅</span> Validate
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Main Content Area -->
+                <main class="portal-content">
+                    
+                    <!-- Tab Navigation -->
+                    <div class="portal-tabs">
+                        <button class="portal-tab active" onclick="showTab('visual-editor')">
+                            <span class="tab-icon">🎨</span> Visual Editor
+                        </button>
+                        <button class="portal-tab" onclick="showTab('database-manager')">
+                            <span class="tab-icon">💾</span> Database Manager
+                        </button>
+                        <button class="portal-tab" onclick="showTab('jupyter-notebook')">
+                            <span class="tab-icon">📓</span> Jupyter Notebook
+                        </button>
+                        <button class="portal-tab" onclick="showTab('raw-editor')">
+                            <span class="tab-icon">📝</span> Raw Editor
+                        </button>
+                    </div>
+                    
+                    <!-- Visual Editor Tab (Portal Style) -->
+                    <section id="visual-editor" class="tab-content active">
+                        <div class="portal-editor">
+                            <div class="editor-toolbar">
+                                <button class="tool-btn" onclick="addSection()">➕ Add Section</button>
+                                <button class="tool-btn" onclick="deleteSection()">🗑️ Delete</button>
+                                <button class="tool-btn" onclick="duplicateSection()">📋 Duplicate</button>
+                                <button class="tool-btn" onclick="moveUp()">⬆️ Move Up</button>
+                                <button class="tool-btn" onclick="moveDown()">⬇️ Move Down</button>
+                                <button class="tool-btn save" onclick="saveChanges()">💾 Save</button>
+                            </div>
+                            
+                            <div class="config-tree" id="configTree">
+                                <!-- Dynamic configuration tree will be loaded here -->
+                            </div>
+                            
+                            <div class="property-editor" id="propertyEditor">
+                                <h3>Property Editor</h3>
+                                <div id="propertyFields">
+                                    <!-- Dynamic property fields will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Database Manager Tab (phpMyAdmin Style) -->
+                    <section id="database-manager" class="tab-content">
+                        <div class="phpmyadmin-container">
+                            <div class="db-toolbar">
+                                <button class="db-btn" onclick="executeQuery()">▶️ Execute</button>
+                                <button class="db-btn" onclick="exportData()">📤 Export</button>
+                                <button class="db-btn" onclick="importData()">📥 Import</button>
+                                <button class="db-btn" onclick="refreshTable()">🔄 Refresh</button>
+                                <select id="tableSelect" onchange="loadTable(this.value)">
+                                    <option value="cnf.fake-db">Configuration Database</option>
+                                    <option value="vhosts.fake-db">Virtual Hosts Database</option>
+                                    <option value="users.fake-db">Users Database</option>
+                                    <option value="logs.fake-db">Logs Database</option>
+                                </select>
+                            </div>
+                            
+                            <!-- SQL Query Box -->
+                            <div class="sql-query-box">
+                                <label>SQL Query (Lamia SQL Syntax):</label>
+                                <textarea id="sqlQuery" placeholder="SELECT * FROM config WHERE section = 'Basic Server Settings'"></textarea>
+                            </div>
+                            
+                            <!-- Data Grid (phpMyAdmin Style) -->
+                            <div class="data-grid-container">
+                                <table class="phpmyadmin-table" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" onclick="selectAll(this)"></th>
+                                            <th>Section</th>
+                                            <th>Setting Key</th>
+                                            <th>Setting Value</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Options</th>
+                                            <th>Example</th>
+                                            <th>Editable</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dataTableBody">
+                                        <!-- Dynamic rows will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="pagination">
+                                <button onclick="previousPage()">◀ Previous</button>
+                                <span>Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                                <button onclick="nextPage()">Next ▶</button>
+                                <select id="rowsPerPage" onchange="changeRowsPerPage(this.value)">
+                                    <option value="25">25 rows</option>
+                                    <option value="50">50 rows</option>
+                                    <option value="100">100 rows</option>
+                                    <option value="all">All rows</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Jupyter Notebook Tab -->
+                    <section id="jupyter-notebook" class="tab-content">
+                        <div class="jupyter-container">
+                            <div class="jupyter-toolbar">
+                                <button class="jupyter-btn" onclick="newNotebook()">📓 New Notebook</button>
+                                <button class="jupyter-btn" onclick="runCell()">▶️ Run Cell</button>
+                                <button class="jupyter-btn" onclick="runAllCells()">⏩ Run All</button>
+                                <button class="jupyter-btn" onclick="addCell()">➕ Add Cell</button>
+                                <button class="jupyter-btn" onclick="deleteCell()">🗑️ Delete Cell</button>
+                                <select id="cellType">
+                                    <option value="code">Code Cell</option>
+                                    <option value="markdown">Markdown Cell</option>
+                                    <option value="lamia">Lamia Cell</option>
+                                </select>
+                            </div>
+                            
+                            <div class="jupyter-notebook" id="jupyterNotebook">
+                                <!-- Cell 1: Configuration Analysis -->
+                                <div class="jupyter-cell code-cell">
+                                    <div class="cell-number">[1]:</div>
+                                    <div class="cell-input">
+                                        <textarea class="code-editor">
+# Load and analyze MedusaServ configuration
+import medusaserv.config as config
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load configuration database
+df = config.load_fake_db('./cnf/cnf.fake-db')
+print(f"Loaded {len(df)} configuration settings")
+
+# Display configuration summary
+df.groupby('section').count()['setting_key'].plot(kind='bar')
+plt.title('Configuration Settings by Section')
+plt.show()
+                                        </textarea>
+                                    </div>
+                                    <div class="cell-output">
+                                        <pre>Loaded 87 configuration settings</pre>
+                                        <div class="plot-output">[Bar chart visualization]</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cell 2: Performance Metrics -->
+                                <div class="jupyter-cell code-cell">
+                                    <div class="cell-number">[2]:</div>
+                                    <div class="cell-input">
+                                        <textarea class="code-editor">
+# Analyze server performance settings
+performance_settings = df[df['section'] == 'Speed & Performance']
+performance_settings[['setting_key', 'setting_value', 'description']]
+                                        </textarea>
+                                    </div>
+                                    <div class="cell-output">
+                                        <table class="jupyter-table">
+                                            <tr><th>setting_key</th><th>setting_value</th><th>description</th></tr>
+                                            <tr><td>use_optimized_modules</td><td>enabled</td><td>High-performance modules</td></tr>
+                                            <tr><td>cache_enabled</td><td>enabled</td><td>Speed up with caching</td></tr>
+                                            <tr><td>compression_enabled</td><td>enabled</td><td>File compression</td></tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cell 3: Lamia Configuration -->
+                                <div class="jupyter-cell lamia-cell">
+                                    <div class="cell-number">[3]:</div>
+                                    <div class="cell-input">
+                                        <textarea class="code-editor">
+@configuration_check {
+    @validate "cnf.fake-db"
+    @analyze_performance true
+    @suggest_optimizations true
+    
+    @report {
+        print("Configuration Health Check")
+        print("========================")
+        checkSSLConfiguration()
+        checkSecuritySettings()
+        checkPerformanceSettings()
+        suggestOptimizations()
+    }
+}
+                                        </textarea>
+                                    </div>
+                                    <div class="cell-output">
+                                        <pre>
+Configuration Health Check
+========================
+✅ SSL Configuration: Enabled (TLS 1.3, 1.2)
+✅ Security: IceWall Enabled, High Detection Level
+✅ Performance: All optimizations enabled
+📊 Suggestion: Consider enabling HTTP/3 for better performance
+                                        </pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Raw Editor Tab -->
+                    <section id="raw-editor" class="tab-content">
+                        <div class="raw-editor-container">
+                            <div class="editor-header">
+                                <span class="file-path" id="currentFilePath">./cnf/medusaserv.lamia</span>
+                                <div class="editor-actions">
+                                    <button onclick="formatCode()">🎨 Format</button>
+                                    <button onclick="validateSyntax()">✅ Validate</button>
+                                    <button onclick="saveRawFile()">💾 Save</button>
+                                </div>
+                            </div>
+                            <div class="line-numbers" id="lineNumbers"></div>
+                            <textarea class="raw-code-editor" id="rawEditor" spellcheck="false"></textarea>
+                        </div>
+                    </section>
+                    
+                </main>
+                
+                <!-- GLaDOS Status Bar -->
+                <footer class="glados-status">
+                    <div class="status-content">
+                        <div class="glados-message">
+                            <span class="glados-icon">🤖</span>
+                            <span id="gladosMessage">Hello, and again, welcome to the Aperture Science Configuration Portal</span>
+                        </div>
+                        <div class="status-indicators">
+                            <span class="indicator" id="connectionStatus">
+                                <span class="led green"></span> Connected
+                            </span>
+                            <span class="indicator" id="validationStatus">
+                                <span class="led green"></span> Valid
+                            </span>
+                            <span class="indicator" id="testChamberStatus">
+                                <span class="led orange"></span> Testing
+                            </span>
+                        </div>
+                    </div>
+                </footer>
+                
+                <!-- Portal Effects -->
+                <div class="portal-effects">
+                    <div class="portal blue-portal" id="bluePortal"></div>
+                    <div class="portal orange-portal" id="orangePortal"></div>
+                </div>
+                
+                <script>
+                    // Initialize Portal Configuration Manager
+                    document.addEventListener('DOMContentLoaded', function() {
+                        initializePortalManager();
+                        loadConfigurationList();
+                        connectToJupyterLab();
+                        initializeDatabaseEditor();
+                        startGLaDOSMessages();
+                    });
+                </script>
+                
+            </body>
+            </html>
+        }
+    }
+    
+    // ========================================
+    // API ENDPOINTS FOR PORTAL MANAGER
+    // ========================================
+    
+    @api "/api/portal/configs" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return listAllConfigFiles("./cnf/")
+        }
+    }
+    
+    @api "/api/portal/load-config" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return loadConfigFile(request.body.filename)
+        }
+    }
+    
+    @api "/api/portal/jupyter/connect" {
+        @method "GET"
+        @response_type "application/json"
+        
+        @handler {
+            return connectJupyterKernel()
+        }
+    }
+    
+    @api "/api/portal/database/query" {
+        @method "POST"
+        @response_type "application/json"
+        
+        @handler {
+            return executeFakeDBQuery(request.body.query, request.body.database)
+        }
+    }
+}
+
+// Runtime metadata
+@runtime_metadata {
+    @generated_at "2025-08-16T19:00:00Z"
+    @portal_version "0.3.0a"
+    @theme "portal-aperture"
+    @jupyter_integration true
+    @phpmyadmin_style true
+    @glados_personality true
+    @lamia_native_power true
+}
